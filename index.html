@@ -147,12 +147,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   </div>
   <div class="saved-badge" id="saved-badge" style="display:none">💾 Selección guardada automáticamente</div>
   <div id="food-categories"></div>
-  <button class="btn-generate" onclick="generateRecipes()">✨ Generar recetas con IA</button>
+  <button class="btn-generate" onclick="generateRecipes()">✨ Generar menú de 3 días</button>
   <div style="height:20px"></div>
 </div>
 
 <div id="screen-recipes" class="screen">
-  <p class="section-sub">7 recetas semanales personalizadas con tus alimentos seleccionados.</p>
+  <p class="section-sub">Menú de 3 días personalizado: comida, cena y postre.</p>
   <div id="recipes-container">
     <div class="empty-state"><div class="empty-icon">🍽️</div><p>Selecciona tus alimentos y pulsa "Generar recetas".</p></div>
   </div>
@@ -400,41 +400,95 @@ async function generateRecipes() {
   if (selectedFoods.size < 5) { alert('Selecciona al menos 5 alimentos.'); return; }
   showScreen('recipes');
   const container = document.getElementById('recipes-container');
-  container.innerHTML = `<div class="loading"><div class="spinner"></div><p>Generando 5 recetas personalizadas con IA…</p></div>`;
+  container.innerHTML = `<div class="loading"><div class="spinner"></div><p>Generando tu menú de 3 días con IA……</p></div>`;
   const diet = DIETS[currentDiet];
   const foodList = Array.from(selectedFoods).slice(0,60).join(', ');
   const antiNote = antiFilter ? ' Todos los alimentos son antiinflamatorios.' : '';
-  const prompt = `Nutricionista experto en dieta ${diet.name}.${antiNote} Crea 5 recetas con estos alimentos: ${foodList}. Solo JSON, sin texto extra:
-[{"name":"Nombre","time":"20 min","difficulty":"Fácil","description":"Una frase.","ingredients":["200g Pollo","2 Huevos"],"steps":["Paso 1.","Paso 2.","Paso 3."],"shopItems":["200g Pollo","2 Huevos"]}]
-shopItems: cantidad+nombre. Máximo 3 pasos por receta.`;
+  const prompt = `Eres nutricionista experto en dieta ${diet.name}.${antiNote} Crea un menú de 3 días (comida, cena y postre cada día) usando estos alimentos: ${foodList}.
+
+Responde SOLO con este JSON exacto sin backticks ni texto extra:
+[
+  {
+    "dia": 1,
+    "comida": {"name":"Nombre","time":"30 min","difficulty":"Fácil","description":"Una frase.","ingredients":["200g Pollo"],"steps":["Paso 1.","Paso 2."],"shopItems":["200g Pollo"]},
+    "cena": {"name":"Nombre","time":"20 min","difficulty":"Fácil","description":"Una frase.","ingredients":["2 Huevos"],"steps":["Paso 1.","Paso 2."],"shopItems":["2 Huevos"]},
+    "postre": {"name":"Nombre","time":"10 min","difficulty":"Fácil","description":"Una frase.","ingredients":["100g Fresas"],"steps":["Paso 1."],"shopItems":["100g Fresas"]}
+  },
+  {"dia": 2, "comida": {...}, "cena": {...}, "postre": {...}},
+  {"dia": 3, "comida": {...}, "cena": {...}, "postre": {...}}
+]
+shopItems: cantidad+nombre. Máximo 3 pasos por plato.`;
 
   try {
     const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ messages:[{role:"user",content:prompt}] }) });
     const data = await res.json();
     const text = data.content[0].text.trim().replace(/```json|```/g,'').trim();
-    const recipes = JSON.parse(text);
-    renderRecipes(recipes);
-    buildShopList(recipes);
+    const days = JSON.parse(text);
+    renderDayMenus(days);
+    buildShopListFromDays(days);
   } catch(e) {
     container.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Error al generar recetas. Inténtalo de nuevo.</p></div>`;
   }
 }
 
-function renderRecipes(recipes) {
+function renderDayMenus(days) {
   const c = document.getElementById('recipes-container');
   c.innerHTML = '';
-  recipes.forEach((r,i) => {
-    const card = document.createElement('div');
-    card.className = 'recipe-card';
-    card.innerHTML = `<div class="recipe-top"><div class="recipe-num">Receta ${i+1} de 7</div><div class="recipe-title">${r.name}</div><div class="recipe-meta"><span class="recipe-tag">⏱ ${r.time}</span><span class="recipe-tag">👨‍🍳 ${r.difficulty}</span></div><div class="recipe-desc">${r.description}</div></div><div class="recipe-expand" onclick="toggleDetail(${i})"><span>Ver receta completa</span><span id="icon-${i}">▾</span></div><div class="recipe-detail" id="detail-${i}"><div class="detail-label">Ingredientes</div><ul class="ingredient-list">${r.ingredients.map(x=>`<li>${x}</li>`).join('')}</ul><div class="detail-label" style="margin-top:14px">Preparación</div><ol class="steps-list">${r.steps.map(x=>`<li>${x}</li>`).join('')}</ol></div>`;
-    c.appendChild(card);
+  const dayNames = ['Lunes', 'Martes', 'Miércoles'];
+  const mealTypes = [
+    { key: 'comida', label: '🍽️ Comida', color: '#1a5c35' },
+    { key: 'cena', label: '🌙 Cena', color: '#2d4a8a' },
+    { key: 'postre', label: '🍓 Postre', color: '#8a2d4a' }
+  ];
+  days.forEach((day, di) => {
+    const dayHeader = document.createElement('div');
+    dayHeader.style.cssText = 'font-family:Playfair Display,serif;font-size:20px;font-weight:600;color:var(--text);margin:20px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--green-light)';
+    dayHeader.textContent = 'Día ' + day.dia + ' — ' + dayNames[di];
+    c.appendChild(dayHeader);
+    mealTypes.forEach(meal => {
+      const r = day[meal.key];
+      if (!r) return;
+      const id = 'detail-' + di + '-' + meal.key;
+      const card = document.createElement('div');
+      card.className = 'recipe-card';
+      card.innerHTML = `
+        <div class="recipe-top">
+          <div class="recipe-num" style="color:${meal.color}">${meal.label}</div>
+          <div class="recipe-title">${r.name}</div>
+          <div class="recipe-meta">
+            <span class="recipe-tag">⏱ ${r.time}</span>
+            <span class="recipe-tag">👨‍🍳 ${r.difficulty}</span>
+          </div>
+          <div class="recipe-desc">${r.description}</div>
+        </div>
+        <div class="recipe-expand" onclick="toggleDetail('${id}')">
+          <span>Ver receta completa</span><span id="icon-${id}">▾</span>
+        </div>
+        <div class="recipe-detail" id="${id}">
+          <div class="detail-label">Ingredientes</div>
+          <ul class="ingredient-list">${r.ingredients.map(x=>`<li>${x}</li>`).join('')}</ul>
+          <div class="detail-label" style="margin-top:14px">Preparación</div>
+          <ol class="steps-list">${r.steps.map(x=>`<li>${x}</li>`).join('')}</ol>
+        </div>`;
+      c.appendChild(card);
+    });
   });
 }
 
-function toggleDetail(i) {
-  const d = document.getElementById('detail-'+i);
+function toggleDetail(id) {
+  const d = document.getElementById('detail-'+id);
   d.classList.toggle('open');
-  document.getElementById('icon-'+i).textContent = d.classList.contains('open') ? '▴' : '▾';
+  document.getElementById('icon-'+id).textContent = d.classList.contains('open') ? '▴' : '▾';
+}
+
+function buildShopListFromDays(days) {
+  const allRecipes = [];
+  days.forEach(day => {
+    if (day.comida) allRecipes.push(day.comida);
+    if (day.cena) allRecipes.push(day.cena);
+    if (day.postre) allRecipes.push(day.postre);
+  });
+  buildShopList(allRecipes);
 }
 
 function stripQty(name) {
