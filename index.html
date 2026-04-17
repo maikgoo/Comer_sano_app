@@ -702,7 +702,9 @@ async function generateRecipes() {
 Alimentos disponibles: ${foodList}
 
 Responde SOLO con un array JSON válido sin backticks ni texto adicional:
-[{"name":"Nombre","time":"25 min","difficulty":"Fácil","description":"Descripción breve en 2 frases.","ingredients":["200g ingrediente","etc"],"steps":["Paso 1...","Paso 2...","Paso 3..."],"shopItems":["Ingrediente 1","Ingrediente 2"]}]`;
+[{"name":"Nombre","time":"25 min","difficulty":"Fácil","description":"Descripción breve en 2 frases.","ingredients":["200g Pollo","2 Huevos"],"steps":["Paso 1...","Paso 2...","Paso 3..."],"shopItems":["200g Pollo","2 Huevos","1 Aguacate"]}]
+
+IMPORTANTE: En shopItems incluye SIEMPRE la cantidad antes del nombre. Correcto: "300g Salmon", "4 Huevos", "1 lata Atun". Nunca solo el nombre sin cantidad.`;
 
   try {
     const res = await fetch("/.netlify/functions/claude", {
