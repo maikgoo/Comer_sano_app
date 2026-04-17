@@ -400,21 +400,16 @@ async function generateRecipes() {
   if (selectedFoods.size < 5) { alert('Selecciona al menos 5 alimentos.'); return; }
   showScreen('recipes');
   const container = document.getElementById('recipes-container');
-  container.innerHTML = `<div class="loading"><div class="spinner"></div><p>Generando 7 recetas personalizadas con IA…</p></div>`;
+  container.innerHTML = `<div class="loading"><div class="spinner"></div><p>Generando 5 recetas personalizadas con IA…</p></div>`;
   const diet = DIETS[currentDiet];
   const foodList = Array.from(selectedFoods).slice(0,60).join(', ');
   const antiNote = antiFilter ? ' Todos los alimentos son antiinflamatorios.' : '';
-  const prompt = `Eres un nutricionista experto en dieta ${diet.name}.${antiNote} Con estos alimentos disponibles, crea exactamente 7 recetas saludables, variadas y prácticas para una semana. Usa solo alimentos de la lista.
-
-Alimentos: ${foodList}
-
-Responde SOLO con JSON válido sin backticks:
-[{"name":"Nombre","time":"25 min","difficulty":"Fácil","description":"2 frases.","ingredients":["200g Pollo","2 Huevos"],"steps":["Paso 1...","Paso 2..."],"shopItems":["200g Pollo","2 Huevos","1 Aguacate"]}]
-
-En shopItems incluye cantidad + nombre. Ejemplo: "200g Salmón", "2 Huevos", "1 Aguacate".`;
+  const prompt = `Nutricionista experto en dieta ${diet.name}.${antiNote} Crea 5 recetas con estos alimentos: ${foodList}. Solo JSON, sin texto extra:
+[{"name":"Nombre","time":"20 min","difficulty":"Fácil","description":"Una frase.","ingredients":["200g Pollo","2 Huevos"],"steps":["Paso 1.","Paso 2.","Paso 3."],"shopItems":["200g Pollo","2 Huevos"]}]
+shopItems: cantidad+nombre. Máximo 3 pasos por receta.`;
 
   try {
-    const res = await fetch("/.netlify/functions/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ messages:[{role:"user",content:prompt}] }) });
+    const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ messages:[{role:"user",content:prompt}] }) });
     const data = await res.json();
     const text = data.content[0].text.trim().replace(/```json|```/g,'').trim();
     const recipes = JSON.parse(text);
