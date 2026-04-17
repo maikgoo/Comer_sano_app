@@ -103,7 +103,7 @@ body {
   gap: 3px;
   font-family: 'DM Sans', sans-serif;
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   transition: color 0.2s;
   position: relative;
@@ -133,8 +133,8 @@ body {
   align-items: center;
   margin-bottom: 16px;
 }
-.counter-text { font-size: 13px; color: var(--green-dark); font-weight: 500; }
-.select-all-btn { font-size: 12px; color: var(--green-mid); cursor: pointer; font-weight: 400; }
+.counter-text { font-size: 15px; color: var(--green-dark); font-weight: 500; }
+.select-all-btn { font-size: 14px; color: var(--green-mid); cursor: pointer; font-weight: 400; }
 
 /* CATEGORY CARD */
 .category-card {
@@ -151,7 +151,7 @@ body {
   margin-bottom: 12px;
 }
 .category-name {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--text);
   display: flex;
@@ -159,7 +159,7 @@ body {
   gap: 6px;
 }
 .toggle-all-cat {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--green-mid);
   cursor: pointer;
   padding: 3px 8px;
@@ -171,7 +171,7 @@ body {
 /* FOOD CHIPS */
 .food-grid { display: flex; flex-wrap: wrap; gap: 6px; }
 .food-chip {
-  font-size: 11px;
+  font-size: 14px;
   padding: 5px 11px;
   border-radius: 20px;
   cursor: pointer;
@@ -192,12 +192,12 @@ body {
 /* GENERATE BUTTON */
 .btn-generate {
   width: 100%;
-  padding: 16px;
+  padding: 18px;
   background: var(--green-dark);
   color: white;
   border: none;
   border-radius: var(--radius);
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 500;
   font-family: 'DM Sans', sans-serif;
   cursor: pointer;
@@ -219,7 +219,7 @@ body {
   padding: 16px;
 }
 .recipe-num {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--accent);
   font-weight: 500;
   letter-spacing: 0.5px;
@@ -228,7 +228,7 @@ body {
 }
 .recipe-title {
   font-family: 'Playfair Display', serif;
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 600;
   color: var(--text);
   margin-bottom: 8px;
@@ -241,7 +241,7 @@ body {
   margin-bottom: 10px;
 }
 .recipe-tag {
-  font-size: 11px;
+  font-size: 13px;
   padding: 3px 10px;
   border-radius: 20px;
   background: var(--green-pale);
@@ -249,7 +249,7 @@ body {
   border: 1px solid var(--green-light);
 }
 .recipe-desc {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-muted);
   line-height: 1.6;
 }
@@ -261,7 +261,7 @@ body {
   background: var(--green-pale);
   cursor: pointer;
   border-top: 1px solid var(--border);
-  font-size: 13px;
+  font-size: 15px;
   color: var(--green-dark);
   font-weight: 500;
 }
@@ -271,7 +271,7 @@ body {
 .recipe-detail { display: none; padding: 16px; border-top: 1px solid var(--border); }
 .recipe-detail.open { display: block; }
 .detail-label {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.8px;
   text-transform: uppercase;
@@ -280,7 +280,7 @@ body {
 }
 .ingredient-list { list-style: none; margin-bottom: 16px; }
 .ingredient-list li {
-  font-size: 13px;
+  font-size: 15px;
   padding: 6px 0;
   border-bottom: 1px solid var(--border);
   color: var(--text);
@@ -297,7 +297,7 @@ body {
 }
 .steps-list { list-style: none; counter-reset: steps; }
 .steps-list li {
-  font-size: 13px;
+  font-size: 15px;
   padding: 8px 0 8px 36px;
   border-bottom: 1px solid var(--border);
   color: var(--text);
@@ -331,9 +331,9 @@ body {
 }
 .super-tabs::-webkit-scrollbar { display: none; }
 .super-tab {
-  padding: 7px 16px;
+  padding: 9px 18px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   border: 1px solid var(--border);
   background: var(--white);
@@ -359,7 +359,7 @@ body {
   padding: 10px 14px;
   background: var(--green-pale);
   border-bottom: 1px solid var(--border);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--green-dark);
 }
@@ -394,7 +394,7 @@ body {
 }
 .shop-name {
   flex: 1;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text);
   transition: all 0.15s;
 }
@@ -404,7 +404,7 @@ body {
 }
 .shop-links { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
 .shop-link {
-  font-size: 10px;
+  font-size: 13px;
   color: var(--green-dark);
   text-decoration: none;
   padding: 2px 7px;
@@ -431,7 +431,7 @@ body {
   animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-.loading p { font-size: 14px; color: var(--text-muted); text-align: center; }
+.loading p { font-size: 16px; color: var(--text-muted); text-align: center; }
 
 /* EMPTY STATE */
 .empty-state {
@@ -440,11 +440,11 @@ body {
   color: var(--text-muted);
 }
 .empty-icon { font-size: 40px; margin-bottom: 12px; }
-.empty-state p { font-size: 14px; line-height: 1.6; }
+.empty-state p { font-size: 16px; line-height: 1.6; }
 
 /* SECTION SUBTITLE */
 .section-sub {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-muted);
   margin-bottom: 16px;
   line-height: 1.6;
@@ -795,11 +795,12 @@ function renderShop() {
 
   filtered.forEach(item => {
     const idx = shopItems.indexOf(item);
+    const cleanName = item.name.replace(/^[\d.,]+\s*(g|kg|ml|l|cl|ud|unidad|unidades|cucharadas?|cucharaditas?|tazas?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?)\s*/i, '').trim();
     const links = item.supers.map(s => {
       const urls = {
-        mercadona: `https://tienda.mercadona.es/search-results?query=${encodeURIComponent(item.name)}`,
-        lidl: `https://www.lidl.es/es/buscar?query=${encodeURIComponent(item.name)}`,
-        consum: `https://www.consum.es/es/buscar?text=${encodeURIComponent(item.name)}`
+        mercadona: `https://tienda.mercadona.es/search-results?query=${encodeURIComponent(cleanName)}`,
+        lidl: `https://www.lidl.es/es/buscar?query=${encodeURIComponent(cleanName)}`,
+        consum: `https://www.consum.es/es/buscar?text=${encodeURIComponent(cleanName)}`
       };
       const labels = { mercadona: 'Mercadona', lidl: 'Lidl', consum: 'Consum' };
       return `<a href="${urls[s]}" class="shop-link" target="_blank">${labels[s]}</a>`;
