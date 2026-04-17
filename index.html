@@ -5,511 +5,147 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Antiinflamatoria">
+<meta name="apple-mobile-web-app-title" content="Come Sano">
 <meta name="theme-color" content="#1a5c35">
-<title>Dieta Antiinflamatoria</title>
+<title>Come Sano</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --green-dark: #1a5c35;
-  --green-mid: #2d8653;
-  --green-light: #e8f5ee;
-  --green-pale: #f2faf6;
-  --accent: #e07b39;
-  --text: #1c2b22;
-  --text-muted: #6b7f73;
-  --border: rgba(26,92,53,0.12);
-  --bg: #f9fdf9;
-  --white: #ffffff;
-  --radius: 14px;
-  --radius-sm: 8px;
+  --green-dark: #1a5c35; --green-mid: #2d8653; --green-light: #e8f5ee; --green-pale: #f2faf6;
+  --accent: #e07b39; --text: #1c2b22; --text-muted: #6b7f73; --border: rgba(26,92,53,0.12);
+  --bg: #f9fdf9; --white: #ffffff; --radius: 14px; --radius-sm: 8px;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  max-width: 430px;
-  margin: 0 auto;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-  overflow-x: hidden;
-}
-
-/* HEADER */
-.header {
-  background: var(--green-dark);
-  padding: 52px 20px 20px;
-  position: relative;
-  overflow: hidden;
-}
-.header::before {
-  content: '';
-  position: absolute;
-  top: -40px; right: -40px;
-  width: 160px; height: 160px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 50%;
-}
-.header::after {
-  content: '';
-  position: absolute;
-  bottom: -20px; left: 20px;
-  width: 80px; height: 80px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 50%;
-}
-.header-leaf {
-  font-size: 32px;
-  display: block;
-  margin-bottom: 6px;
-}
-.header h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 24px;
-  font-weight: 600;
-  color: white;
-  line-height: 1.2;
-  margin-bottom: 4px;
-}
-.header p {
-  font-size: 13px;
-  color: rgba(255,255,255,0.65);
-  font-weight: 300;
-}
-
-/* NAV */
-.nav {
-  display: flex;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  box-shadow: 0 2px 12px rgba(26,92,53,0.06);
-}
-.nav-btn {
-  flex: 1;
-  padding: 12px 4px 10px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  font-family: 'DM Sans', sans-serif;
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 400;
-  transition: color 0.2s;
-  position: relative;
-}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); max-width: 430px; margin: 0 auto; min-height: 100vh; overflow-x: hidden; }
+.header { background: var(--green-dark); padding: 48px 20px 18px; position: relative; overflow: hidden; }
+.header::before { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+.header h1 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: white; margin-bottom: 3px; }
+.header p { font-size: 13px; color: rgba(255,255,255,0.65); font-weight: 300; }
+.nav { display: flex; background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(26,92,53,0.06); }
+.nav-btn { flex: 1; padding: 11px 4px 9px; border: none; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); font-size: 11px; font-weight: 400; position: relative; }
 .nav-btn.active { color: var(--green-dark); font-weight: 500; }
-.nav-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 20%; right: 20%;
-  height: 2px;
-  background: var(--green-dark);
-  border-radius: 2px 2px 0 0;
-}
+.nav-btn.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2px; background: var(--green-dark); border-radius: 2px 2px 0 0; }
 .nav-icon { font-size: 19px; }
-
-/* SCREENS */
 .screen { display: none; padding: 16px; min-height: calc(100vh - 140px); }
 .screen.active { display: block; }
-
-/* COUNTER BAR */
-.counter-bar {
-  background: var(--green-light);
-  border-radius: var(--radius-sm);
-  padding: 10px 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
+.diet-selector-label { font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 8px; }
+.diet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.diet-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px; cursor: pointer; transition: all 0.15s; }
+.diet-card.active { border-color: var(--green-dark); background: var(--green-light); }
+.diet-card-icon { font-size: 20px; margin-bottom: 4px; }
+.diet-card-name { font-size: 13px; font-weight: 500; color: var(--text); }
+.diet-card.active .diet-card-name { color: var(--green-dark); }
+.diet-card-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.3; }
+.anti-toggle { display: flex; align-items: center; justify-content: space-between; background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; cursor: pointer; }
+.anti-toggle.active { border-color: var(--accent); background: #fff8f3; }
+.anti-left { display: flex; align-items: center; gap: 10px; }
+.anti-text { font-size: 13px; font-weight: 500; }
+.anti-sub { font-size: 11px; color: var(--text-muted); }
+.toggle-sw { width: 40px; height: 22px; background: var(--border); border-radius: 11px; position: relative; transition: background 0.2s; flex-shrink: 0; }
+.toggle-sw.on { background: var(--accent); }
+.toggle-sw::after { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: left 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.toggle-sw.on::after { left: 20px; }
+.counter-bar { background: var(--green-light); border-radius: var(--radius-sm); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
 .counter-text { font-size: 15px; color: var(--green-dark); font-weight: 500; }
-.select-all-btn { font-size: 14px; color: var(--green-mid); cursor: pointer; font-weight: 400; }
-
-/* CATEGORY CARD */
-.category-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 14px;
-  margin-bottom: 10px;
-}
-.category-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-.category-name {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.toggle-all-cat {
-  font-size: 13px;
-  color: var(--green-mid);
-  cursor: pointer;
-  padding: 3px 8px;
-  border: 1px solid var(--green-light);
-  border-radius: 20px;
-  background: var(--green-pale);
-}
-
-/* FOOD CHIPS */
+.counter-btns { display: flex; gap: 10px; }
+.cbtn { font-size: 13px; color: var(--green-mid); cursor: pointer; }
+.cbtn.red { color: #c0392b; }
+.saved-badge { font-size: 12px; color: var(--green-mid); margin-bottom: 12px; }
+.category-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); padding: 14px; margin-bottom: 10px; }
+.category-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.category-name { font-size: 15px; font-weight: 500; color: var(--text); }
+.toggle-all-cat { font-size: 12px; color: var(--green-mid); cursor: pointer; padding: 3px 8px; border: 1px solid var(--green-light); border-radius: 20px; background: var(--green-pale); }
 .food-grid { display: flex; flex-wrap: wrap; gap: 6px; }
-.food-chip {
-  font-size: 14px;
-  padding: 5px 11px;
-  border-radius: 20px;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-muted);
-  transition: all 0.15s;
-  user-select: none;
-  -webkit-user-select: none;
-}
-.food-chip.selected {
-  background: var(--green-light);
-  border-color: var(--green-mid);
-  color: var(--green-dark);
-  font-weight: 500;
-}
-
-/* GENERATE BUTTON */
-.btn-generate {
-  width: 100%;
-  padding: 18px;
-  background: var(--green-dark);
-  color: white;
-  border: none;
-  border-radius: var(--radius);
-  font-size: 17px;
-  font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  margin-top: 16px;
-  letter-spacing: 0.2px;
-  transition: background 0.2s, transform 0.1s;
-}
-.btn-generate:active { transform: scale(0.98); background: var(--green-mid); }
-
-/* RECIPE CARD */
-.recipe-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  overflow: hidden;
-  margin-bottom: 12px;
-}
-.recipe-top {
-  padding: 16px;
-}
-.recipe-num {
-  font-size: 13px;
-  color: var(--accent);
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-.recipe-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 21px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 8px;
-  line-height: 1.3;
-}
-.recipe-meta {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-.recipe-tag {
-  font-size: 13px;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: var(--green-pale);
-  color: var(--green-dark);
-  border: 1px solid var(--green-light);
-}
-.recipe-desc {
-  font-size: 15px;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-.recipe-expand {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background: var(--green-pale);
-  cursor: pointer;
-  border-top: 1px solid var(--border);
-  font-size: 15px;
-  color: var(--green-dark);
-  font-weight: 500;
-}
-.recipe-expand-icon { transition: transform 0.2s; }
-.recipe-expand-icon.open { transform: rotate(180deg); }
-
+.food-chip { font-size: 13px; padding: 5px 12px; border-radius: 20px; cursor: pointer; border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); transition: all 0.15s; user-select: none; -webkit-user-select: none; }
+.food-chip.selected { background: var(--green-light); border-color: var(--green-mid); color: var(--green-dark); font-weight: 500; }
+.food-chip.anti { border-color: #e07b39; }
+.btn-generate { width: 100%; padding: 17px; background: var(--green-dark); color: white; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 16px; }
+.btn-generate:active { opacity: 0.9; transform: scale(0.98); }
+.recipe-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; margin-bottom: 12px; }
+.recipe-top { padding: 16px; }
+.recipe-num { font-size: 12px; color: var(--accent); font-weight: 500; text-transform: uppercase; margin-bottom: 4px; }
+.recipe-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 8px; line-height: 1.3; }
+.recipe-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.recipe-tag { font-size: 12px; padding: 3px 10px; border-radius: 20px; background: var(--green-pale); color: var(--green-dark); border: 1px solid var(--green-light); }
+.recipe-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+.recipe-expand { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--green-pale); cursor: pointer; border-top: 1px solid var(--border); font-size: 14px; color: var(--green-dark); font-weight: 500; }
 .recipe-detail { display: none; padding: 16px; border-top: 1px solid var(--border); }
 .recipe-detail.open { display: block; }
-.detail-label {
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-}
+.detail-label { font-size: 12px; font-weight: 500; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
 .ingredient-list { list-style: none; margin-bottom: 16px; }
-.ingredient-list li {
-  font-size: 15px;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.ingredient-list li::before {
-  content: '';
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--green-mid);
-  flex-shrink: 0;
-}
+.ingredient-list li { font-size: 14px; padding: 6px 0; border-bottom: 1px solid var(--border); color: var(--text); display: flex; align-items: center; gap: 8px; }
+.ingredient-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green-mid); flex-shrink: 0; }
 .steps-list { list-style: none; counter-reset: steps; }
-.steps-list li {
-  font-size: 15px;
-  padding: 8px 0 8px 36px;
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
-  line-height: 1.5;
-  position: relative;
-  counter-increment: steps;
-}
-.steps-list li::before {
-  content: counter(steps);
-  position: absolute;
-  left: 0;
-  top: 8px;
-  width: 22px; height: 22px;
-  background: var(--green-dark);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-/* SHOP */
-.super-tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 16px;
-  overflow-x: auto;
-  padding-bottom: 2px;
-}
+.steps-list li { font-size: 14px; padding: 8px 0 8px 36px; border-bottom: 1px solid var(--border); color: var(--text); line-height: 1.5; position: relative; counter-increment: steps; }
+.steps-list li::before { content: counter(steps); position: absolute; left: 0; top: 8px; width: 22px; height: 22px; background: var(--green-dark); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+.super-tabs { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 2px; }
 .super-tabs::-webkit-scrollbar { display: none; }
-.super-tab {
-  padding: 9px 18px;
-  border-radius: 20px;
-  font-size: 14px;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  background: var(--white);
-  color: var(--text-muted);
-  white-space: nowrap;
-  font-family: 'DM Sans', sans-serif;
-  transition: all 0.15s;
-}
-.super-tab.active {
-  background: var(--green-dark);
-  color: white;
-  border-color: var(--green-dark);
-}
-
-.shop-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-.shop-card-header {
-  padding: 10px 14px;
-  background: var(--green-pale);
-  border-bottom: 1px solid var(--border);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--green-dark);
-}
-.shop-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 14px;
-  border-bottom: 1px solid var(--border);
-}
+.super-tab { padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text-muted); white-space: nowrap; font-family: 'DM Sans', sans-serif; }
+.super-tab.active { background: var(--green-dark); color: white; border-color: var(--green-dark); }
+.shop-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; margin-bottom: 10px; }
+.shop-card-header { padding: 10px 14px; background: var(--green-pale); border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 500; color: var(--green-dark); }
+.shop-item { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid var(--border); }
 .shop-item:last-child { border-bottom: none; }
-.shop-check {
-  width: 20px; height: 20px;
-  border: 1.5px solid var(--border);
-  border-radius: 6px;
-  cursor: pointer;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s;
-}
-.shop-check.checked {
-  background: var(--green-dark);
-  border-color: var(--green-dark);
-}
-.shop-check.checked::after {
-  content: '✓';
-  color: white;
-  font-size: 11px;
-  font-weight: 500;
-}
-.shop-name {
-  flex: 1;
-  font-size: 15px;
-  color: var(--text);
-  transition: all 0.15s;
-}
-.shop-name.done {
-  text-decoration: line-through;
-  color: var(--text-muted);
-}
+.shop-check { width: 20px; height: 20px; border: 1.5px solid var(--border); border-radius: 6px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.shop-check.checked { background: var(--green-dark); border-color: var(--green-dark); }
+.shop-check.checked::after { content: '✓'; color: white; font-size: 11px; font-weight: 500; }
+.shop-name { flex: 1; font-size: 14px; color: var(--text); }
+.shop-name.done { text-decoration: line-through; color: var(--text-muted); }
 .shop-links { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
-.shop-link {
-  font-size: 13px;
-  color: var(--green-dark);
-  text-decoration: none;
-  padding: 2px 7px;
-  border: 1px solid var(--green-light);
-  border-radius: 20px;
-  background: var(--green-pale);
-  white-space: nowrap;
-}
-
-/* LOADING */
-.loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  gap: 16px;
-}
-.spinner {
-  width: 36px; height: 36px;
-  border: 3px solid var(--green-light);
-  border-top-color: var(--green-dark);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
+.shop-link { font-size: 11px; color: var(--green-dark); text-decoration: none; padding: 3px 8px; border: 1px solid var(--green-light); border-radius: 20px; background: var(--green-pale); white-space: nowrap; }
+.progress-bar { height: 3px; background: var(--green-light); border-radius: 3px; margin-bottom: 12px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--green-dark); border-radius: 3px; transition: width 0.3s; }
+.loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 16px; }
+.spinner { width: 36px; height: 36px; border: 3px solid var(--green-light); border-top-color: var(--green-dark); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.loading p { font-size: 16px; color: var(--text-muted); text-align: center; }
-
-/* EMPTY STATE */
-.empty-state {
-  text-align: center;
-  padding: 50px 20px;
-  color: var(--text-muted);
-}
+.loading p { font-size: 15px; color: var(--text-muted); text-align: center; }
+.empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
 .empty-icon { font-size: 40px; margin-bottom: 12px; }
-.empty-state p { font-size: 16px; line-height: 1.6; }
-
-/* SECTION SUBTITLE */
-.section-sub {
-  font-size: 15px;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-  line-height: 1.6;
-}
-
-/* PROGRESS BAR */
-.progress-bar {
-  height: 3px;
-  background: var(--green-light);
-  border-radius: 3px;
-  margin-bottom: 20px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: var(--green-dark);
-  border-radius: 3px;
-  transition: width 0.3s;
-}
-
-/* INSTALL BANNER */
-.install-banner {
-  background: var(--accent);
-  color: white;
-  padding: 12px 16px;
-  font-size: 12px;
-  text-align: center;
-  display: none;
-}
+.empty-state p { font-size: 15px; line-height: 1.6; }
+.section-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; }
+.install-banner { background: var(--accent); color: white; padding: 12px 16px; font-size: 12px; text-align: center; display: none; }
 .install-banner.show { display: block; }
 </style>
 </head>
 <body>
 
-<div class="install-banner" id="install-banner">
-  📱 Añade esta app a tu pantalla de inicio: Safari → compartir → "Añadir a pantalla de inicio"
-</div>
+<div class="install-banner" id="install-banner">📱 Safari → compartir → "Añadir a pantalla de inicio"</div>
 
 <div class="header">
-  <span class="header-leaf">🌿</span>
-  <h1>Dieta antiinflamatoria</h1>
-  <p>Recetas semanales · Lista de la compra</p>
+  <h1>🌿 Come Sano</h1>
+  <p>Recetas saludables · Lista de la compra</p>
 </div>
 
 <nav class="nav">
-  <button class="nav-btn active" onclick="showScreen('foods')">
-    <span class="nav-icon">🥦</span>Alimentos
-  </button>
-  <button class="nav-btn" onclick="showScreen('recipes')">
-    <span class="nav-icon">🍳</span>Recetas
-  </button>
-  <button class="nav-btn" onclick="showScreen('shop')">
-    <span class="nav-icon">🛒</span>Compra
-  </button>
+  <button class="nav-btn active" onclick="showScreen('foods')"><span class="nav-icon">🥦</span>Alimentos</button>
+  <button class="nav-btn" onclick="showScreen('recipes')"><span class="nav-icon">🍳</span>Recetas</button>
+  <button class="nav-btn" onclick="showScreen('shop')"><span class="nav-icon">🛒</span>Compra</button>
 </nav>
 
 <div id="screen-foods" class="screen active">
-  <p class="section-sub">Activa los alimentos que quieres incluir en tus recetas. Desactiva los que no te gusten.</p>
+  <div style="margin-bottom:16px">
+    <div class="diet-selector-label">Elige tu dieta</div>
+    <div class="diet-grid" id="diet-grid"></div>
+  </div>
+  <div class="anti-toggle" id="anti-toggle" onclick="toggleAnti()">
+    <div class="anti-left">
+      <span style="font-size:20px">🔥</span>
+      <div>
+        <div class="anti-text">Filtro antiinflamatorio</div>
+        <div class="anti-sub">Solo alimentos que reducen la inflamación</div>
+      </div>
+    </div>
+    <div class="toggle-sw" id="anti-sw"></div>
+  </div>
   <div class="counter-bar">
-    <span class="counter-text" id="counter-text">0 alimentos seleccionados</span>
-    <div style="display:flex;gap:10px">
-      <span class="select-all-btn" onclick="selectAll()">Seleccionar todos</span>
-      <span class="select-all-btn" style="color:#c0392b" onclick="deselectAll()">Deseleccionar todos</span>
+    <span class="counter-text" id="counter-text">0 seleccionados</span>
+    <div class="counter-btns">
+      <span class="cbtn" onclick="selectAll()">Todos ✓</span>
+      <span class="cbtn red" onclick="deselectAll()">Ninguno ✗</span>
     </div>
   </div>
+  <div class="saved-badge" id="saved-badge" style="display:none">💾 Selección guardada automáticamente</div>
   <div id="food-categories"></div>
   <button class="btn-generate" onclick="generateRecipes()">✨ Generar recetas con IA</button>
   <div style="height:20px"></div>
@@ -518,15 +154,12 @@ body {
 <div id="screen-recipes" class="screen">
   <p class="section-sub">7 recetas semanales personalizadas con tus alimentos seleccionados.</p>
   <div id="recipes-container">
-    <div class="empty-state">
-      <div class="empty-icon">🍽️</div>
-      <p>Selecciona tus alimentos y pulsa<br>"Generar recetas con IA" para empezar.</p>
-    </div>
+    <div class="empty-state"><div class="empty-icon">🍽️</div><p>Selecciona tus alimentos y pulsa "Generar recetas".</p></div>
   </div>
 </div>
 
 <div id="screen-shop" class="screen">
-  <p class="section-sub">Lista de la compra generada automáticamente. Filtra por supermercado.</p>
+  <p class="section-sub">Lista de la compra. Filtra por supermercado.</p>
   <div class="super-tabs">
     <div class="super-tab active" onclick="filterSuper('all',this)">🛒 Todos</div>
     <div class="super-tab" onclick="filterSuper('mercadona',this)">Mercadona</div>
@@ -534,115 +167,185 @@ body {
     <div class="super-tab" onclick="filterSuper('consum',this)">Consum</div>
   </div>
   <div id="shop-container">
-    <div class="empty-state">
-      <div class="empty-icon">🛒</div>
-      <p>Genera tus recetas primero para ver<br>la lista de la compra.</p>
-    </div>
+    <div class="empty-state"><div class="empty-icon">🛒</div><p>Genera tus recetas primero.</p></div>
   </div>
 </div>
 
 <script>
-const FOODS = {
-  "🫒 Aceites y grasas": ["Aceite de oliva","Aceite de coco","Aceite de aguacate","Aceite de macadamia","Aceite de nuez","Aceite de sésamo","Aceite de TCM","Aceitunas","Ghee","Mantequilla","Mantequilla francesa/italiana","Nata orgánica"],
-  "🥦 Verduras": ["Acelgas","Achicoria","Aguacates","Ajo","Alcachofas","Apio","Apionabo","Berros","Berza","Bok choy","Brécol","Boniato","Cebolla","Cebolla tierna","Cebollino","Chirivía","Col china","Col rizada (kale)","Coles de Bruselas","Coliflor","Colinabo","Endivias","Escarola","Espárragos","Espinacas","Hinojo","Hojas de diente de león","Hojas de mostaza","Jicama","Lechuga romana","Lechuga mantequilla","Lechuga hoja roja","Lombarda","Mezclum","Mizuna","Nabo","Nopales","Ocra","Palmitos","Pataca","Puerros","Rábanos","Rábano japonés","Radicchio","Raíz de taro","Remolacha cruda","Repollo","Rúcula","Setas","Tomate pelado sin semillas","Verdolaga","Zanahoria cruda"],
-  "🍎 Frutas": ["Albaricoques","Arándanos","Bananas verdes","Caqui","Castaña","Ciruelas","Cítricos","Dátiles","Frambuesas","Fresas","Granadas","Higos","Kiwis","Mango verde","Manzanas","Melocotones","Moras","Nectarinas","Papaya verde","Peras","Plátanos verdes","Yacón"],
-  "🥩 Proteínas animales": ["Alce","Atún enlatado","Bisonte","Cerdo","Codorniz","Cordero","Gambas","Huevos ecológicos","Jamón curado","Langosta","Langostino","Mejillones","Ostras","Pato","Pavo","Perca americana","Perdiz","Pescado blanco","Pollo","Sardinas","Venado","Vieiras","Almejas","Anchoas","Cangrejo","Calamar","Fletán"],
-  "🧀 Lácteos y fermentados": ["Crema agria orgánica","Kéfir de cabra","Kimchi","Leche de cabra","Leche de coco","Miso","Mozzarella de búfala","Parmesano","Queso de cabra","Queso de oveja","Queso suizo","Yogur de cabra","Yogur de coco","Yogur de oveja","Chucrut crudo"],
-  "🌰 Frutos secos y semillas": ["Avellanas","Chufas","Nueces","Nueces de Brasil","Nueces de macadamia","Nueces pecanas","Piñones","Pistachos","Semillas de cáñamo","Semillas de lino","Semillas de sésamo","Harina de almendra","Harina de coco"],
-  "🌿 Hierbas y especias": ["Albahaca","Cilantro","Menta","Perejil","Perilla","Vinagres","Hierbas y condimentos en general"],
-  "🫘 Legumbres y carbohidratos": ["Legumbres (olla a presión)","Mandioca/Yuca","Mijo","Sorgo","Fideos de algas","Fideos shirataki","Fideos coreanos de boniato","Psyllium"],
-  "🌊 Algas": ["Algas en general","Algas marinas","Verduras de mar"],
-  "🍫 Edulcorantes": ["Chocolate negro 72%","Eritritol","Fruta monje","Stevia","Xilitol"]
+const DIETS = {
+  antiinflamatoria: { name:"Antiinflamatoria", icon:"🔥", desc:"Reduce la inflamación", foods:{
+    "🫒 Aceites y grasas":["Aceite de oliva","Aceite de coco","Aceite de aguacate","Aceite de macadamia","Aceite de nuez","Aceite de sésamo","Aceitunas","Ghee","Mantequilla","Nata orgánica"],
+    "🥦 Verduras":["Acelgas","Aguacate","Ajo","Alcachofas","Apio","Berros","Brécol","Boniato","Cebolla","Cebolla tierna","Col rizada","Coles de Bruselas","Coliflor","Endivias","Espárragos","Espinacas","Hinojo","Lechuga romana","Lombarda","Nabo","Ocra","Puerros","Rábanos","Remolacha cruda","Repollo","Rúcula","Setas","Tomate pelado","Zanahoria cruda"],
+    "🍎 Frutas":["Albaricoques","Arándanos","Ciruelas","Cítricos","Frambuesas","Fresas","Granadas","Higos","Kiwis","Manzanas","Melocotones","Moras","Peras"],
+    "🥩 Proteínas animales":["Atún enlatado","Cordero","Gambas","Huevos ecológicos","Jamón curado","Mejillones","Ostras","Pato","Pavo","Pescado blanco","Pollo","Sardinas","Venado","Vieiras","Almejas","Anchoas","Calamar"],
+    "🧀 Lácteos y fermentados":["Kéfir de cabra","Kimchi","Leche de coco","Miso","Mozzarella de búfala","Parmesano","Queso de cabra","Queso de oveja","Yogur de cabra","Yogur de coco","Chucrut crudo"],
+    "🌰 Frutos secos y semillas":["Avellanas","Nueces","Nueces de macadamia","Nueces pecanas","Pistachos","Semillas de cáñamo","Semillas de lino","Semillas de sésamo","Harina de almendra","Harina de coco"],
+    "🌿 Hierbas y especias":["Albahaca","Cilantro","Cúrcuma","Jengibre","Menta","Perejil","Vinagres"],
+    "🫘 Legumbres y carbohidratos":["Legumbres","Mijo","Fideos de algas","Fideos shirataki"],
+    "🍫 Edulcorantes":["Chocolate negro 72%","Eritritol","Stevia"]
+  }},
+  vegana: { name:"Vegana", icon:"🌱", desc:"Sin productos animales", foods:{
+    "🫒 Aceites y grasas":["Aceite de oliva","Aceite de coco","Aceite de aguacate","Aceite de girasol","Aceite de sésamo","Aceitunas","Margarina vegana"],
+    "🥦 Verduras":["Acelgas","Aguacate","Ajo","Alcachofas","Apio","Berros","Brécol","Boniato","Calabacín","Calabaza","Cebolla","Col rizada","Coles de Bruselas","Coliflor","Espárragos","Espinacas","Hinojo","Lechuga","Lombarda","Nabo","Puerros","Rábanos","Remolacha","Repollo","Rúcula","Setas","Tomate","Zanahoria","Berenjena","Pimiento"],
+    "🍎 Frutas":["Arándanos","Banana","Ciruelas","Frambuesas","Fresas","Granada","Kiwi","Mango","Manzana","Melocotón","Naranja","Pera","Piña","Uvas"],
+    "🫘 Legumbres y proteínas vegetales":["Lentejas","Garbanzos","Alubias negras","Alubias blancas","Tofu","Tempeh","Edamame","Seitán","Guisantes","Habas"],
+    "🌾 Cereales":["Arroz integral","Avena","Quinoa","Mijo","Pan integral","Pasta integral"],
+    "🌰 Frutos secos y semillas":["Almendras","Anacardos","Avellanas","Nueces","Pistachos","Semillas de chía","Semillas de girasol","Semillas de lino","Semillas de sésamo","Tahini"],
+    "🥛 Bebidas vegetales":["Leche de almendra","Leche de avena","Leche de coco","Leche de soja","Yogur de coco","Yogur de soja"],
+    "🌿 Hierbas y especias":["Albahaca","Cilantro","Cúrcuma","Jengibre","Menta","Orégano","Perejil","Romero","Tomillo"],
+    "🍫 Otros":["Chocolate negro 70%","Levadura nutricional","Miso","Chucrut","Kimchi","Stevia","Sirope de agave"]
+  }},
+  vegetariana: { name:"Vegetariana", icon:"🥗", desc:"Sin carne ni pescado", foods:{
+    "🫒 Aceites y grasas":["Aceite de oliva","Aceite de coco","Aceite de aguacate","Aceite de girasol","Aceite de sésamo","Aceitunas","Mantequilla","Ghee"],
+    "🥦 Verduras":["Acelgas","Aguacate","Ajo","Alcachofas","Apio","Berros","Brécol","Boniato","Calabacín","Calabaza","Cebolla","Col rizada","Coles de Bruselas","Coliflor","Espárragos","Espinacas","Lechuga","Lombarda","Nabo","Puerros","Rábanos","Remolacha","Repollo","Rúcula","Setas","Tomate","Zanahoria","Berenjena","Pimiento"],
+    "🍎 Frutas":["Arándanos","Banana","Ciruelas","Frambuesas","Fresas","Granada","Kiwi","Mango","Manzana","Melocotón","Naranja","Pera","Piña","Uvas"],
+    "🥚 Huevos y lácteos":["Huevos","Leche","Yogur natural","Queso fresco","Queso de cabra","Mozzarella","Parmesano","Kéfir","Mantequilla","Nata"],
+    "🫘 Legumbres y proteínas":["Lentejas","Garbanzos","Alubias","Tofu","Tempeh","Edamame","Guisantes","Habas"],
+    "🌾 Cereales":["Arroz integral","Avena","Quinoa","Mijo","Pan integral","Pasta integral"],
+    "🌰 Frutos secos y semillas":["Almendras","Anacardos","Avellanas","Nueces","Pistachos","Semillas de chía","Semillas de girasol","Semillas de lino","Semillas de sésamo"],
+    "🌿 Hierbas y especias":["Albahaca","Cilantro","Cúrcuma","Jengibre","Menta","Orégano","Perejil","Romero","Tomillo"],
+    "🍫 Otros":["Chocolate negro 70%","Miso","Chucrut","Kimchi","Stevia","Miel"]
+  }},
+  carnivora: { name:"Carnívora", icon:"🥩", desc:"Solo productos animales", foods:{
+    "🥩 Carnes":["Ternera","Cordero","Cerdo","Pollo","Pavo","Pato","Conejo","Venado","Bisonte","Hígado de ternera","Corazón de ternera","Riñones","Tuétano","Bacon","Jamón curado","Lomo curado"],
+    "🐟 Pescados y mariscos":["Salmón","Sardinas","Atún","Caballa","Anchoas","Trucha","Bacalao","Merluza","Gambas","Langostinos","Mejillones","Ostras","Almejas","Vieiras","Langosta"],
+    "🥚 Huevos":["Huevos de gallina","Huevos de codorniz"],
+    "🧀 Lácteos":["Mantequilla","Ghee","Nata","Queso curado","Queso de cabra","Queso de oveja","Parmesano","Kéfir","Yogur natural"],
+    "🫙 Grasas animales":["Grasa de ternera","Grasa de cerdo","Sebo","Tuétano","Aceite de hígado de bacalao"]
+  }},
+  keto: { name:"Keto", icon:"⚡", desc:"Muy baja en carbohidratos", foods:{
+    "🫒 Grasas saludables":["Aceite de oliva","Aceite de coco","Aceite de TCM","Mantequilla","Ghee","Nata","Aceitunas","Aguacate"],
+    "🥩 Proteínas":["Ternera","Cordero","Cerdo","Pollo","Pavo","Salmón","Sardinas","Atún","Gambas","Huevos","Bacon","Jamón curado"],
+    "🥦 Verduras bajas en carbos":["Espinacas","Col rizada","Brécol","Coliflor","Espárragos","Pepino","Apio","Lechuga","Rúcula","Setas","Pimiento","Cebollino"],
+    "🧀 Lácteos":["Queso curado","Queso de cabra","Mozzarella","Parmesano","Mantequilla","Nata","Yogur griego natural","Kéfir","Queso crema"],
+    "🌰 Frutos secos y semillas":["Nueces de macadamia","Nueces pecanas","Almendras","Avellanas","Semillas de chía","Semillas de lino","Semillas de sésamo"],
+    "🌿 Condimentos":["Cúrcuma","Jengibre","Ajo","Vinagre de manzana","Mostaza"],
+    "🍫 Ocasionales":["Chocolate negro 85%","Eritritol","Stevia"]
+  }},
+  if: { name:"Intermittent Fasting", icon:"⏰", desc:"Ventana de alimentación", foods:{
+    "🥦 Verduras":["Brécol","Espinacas","Col rizada","Coliflor","Espárragos","Pepino","Apio","Lechuga","Rúcula","Tomate","Pimiento","Cebolla","Ajo","Setas","Zanahoria","Boniato"],
+    "🍎 Frutas":["Arándanos","Fresas","Frambuesas","Manzana","Pera","Naranja","Kiwi","Banana","Melocotón"],
+    "🥩 Proteínas":["Pollo","Pavo","Ternera","Salmón","Atún","Sardinas","Huevos","Gambas","Tofu","Lentejas","Garbanzos"],
+    "🌾 Carbohidratos complejos":["Arroz integral","Quinoa","Avena","Boniato","Pan integral","Pasta integral"],
+    "🫒 Grasas saludables":["Aceite de oliva","Aguacate","Nueces","Almendras","Semillas de chía"],
+    "🧀 Lácteos y alternativas":["Yogur griego","Queso fresco","Kéfir","Leche de almendra","Leche de avena"],
+    "💧 Durante el ayuno":["Agua","Café negro","Té verde","Té negro","Caldo de huesos"],
+    "🌿 Condimentos":["Limón","Vinagre de manzana","Hierbas frescas","Especias"]
+  }},
+  slowcarb: { name:"Slow Carb", icon:"🐢", desc:"Tim Ferriss · 4-Hour Body", foods:{
+    "🫘 Legumbres (base de cada comida)":["Lentejas","Garbanzos","Alubias negras","Alubias blancas","Alubias pintas","Guisantes","Habas"],
+    "🥩 Proteínas":["Huevos","Pollo","Pavo","Ternera","Cerdo","Salmón","Sardinas","Atún","Gambas","Tofu"],
+    "🥦 Verduras permitidas":["Espinacas","Col rizada","Brécol","Coliflor","Espárragos","Pepino","Apio","Lechuga","Rúcula","Tomate","Pimiento","Cebolla","Ajo","Setas","Judías verdes","Aceitunas"],
+    "🫒 Grasas":["Aceite de oliva","Aceite de coco","Mantequilla","Aguacate","Nueces","Almendras"],
+    "🌿 Condimentos":["Salsa picante","Mostaza","Vinagre","Ajo","Limón","Hierbas y especias"],
+    "☕ Bebidas":["Agua","Café negro","Té sin azúcar","Leche de almendra sin azúcar"]
+  }},
+  lowcarb: { name:"Low Carb", icon:"📉", desc:"Reducción de carbohidratos", foods:{
+    "🥩 Proteínas":["Ternera","Cordero","Cerdo","Pollo","Pavo","Salmón","Sardinas","Atún","Gambas","Mejillones","Huevos","Jamón curado","Bacon"],
+    "🫒 Grasas saludables":["Aceite de oliva","Aceite de coco","Mantequilla","Ghee","Aguacate","Aceitunas","Nata"],
+    "🥦 Verduras bajas en carbos":["Espinacas","Col rizada","Brécol","Coliflor","Espárragos","Pepino","Apio","Lechuga","Rúcula","Setas","Pimiento","Judías verdes","Berenjena","Calabacín"],
+    "🧀 Lácteos":["Queso curado","Queso de cabra","Mozzarella","Mantequilla","Nata","Yogur griego natural","Kéfir"],
+    "🌰 Frutos secos y semillas":["Almendras","Nueces","Nueces de macadamia","Avellanas","Semillas de chía","Semillas de lino","Semillas de sésamo"],
+    "🍎 Frutas bajas en azúcar":["Arándanos","Fresas","Frambuesas","Moras","Limón"],
+    "🌿 Condimentos":["Ajo","Jengibre","Cúrcuma","Vinagre de manzana","Mostaza","Hierbas frescas"],
+    "🍫 Ocasionales":["Chocolate negro 85%","Eritritol","Stevia"]
+  }}
 };
+
+const ANTI_FOODS = new Set(["Aceite de oliva","Aceite de coco","Aceite de aguacate","Aceite de macadamia","Aceite de nuez","Aceite de sésamo","Aceitunas","Ghee","Aguacate","Ajo","Alcachofas","Berros","Brécol","Boniato","Cebolla","Col rizada","Coles de Bruselas","Coliflor","Espárragos","Espinacas","Rúcula","Setas","Zanahoria","Remolacha","Arándanos","Frambuesas","Fresas","Moras","Granada","Kiwi","Manzana","Pollo","Pavo","Salmón","Sardinas","Anchoas","Atún","Huevos","Gambas","Mejillones","Ostras","Kéfir","Yogur de cabra","Yogur de coco","Queso de cabra","Leche de coco","Chucrut","Kimchi","Miso","Nueces","Almendras","Nueces de macadamia","Semillas de lino","Semillas de sésamo","Semillas de chía","Cúrcuma","Jengibre","Albahaca","Perejil","Cilantro","Menta","Lentejas","Garbanzos","Alubias negras","Chocolate negro 85%","Chocolate negro 70%","Chocolate negro 72%","Stevia","Eritritol","Limón","Parmesano","Vinagre","Té verde","Cordero","Pato","Venado","Atún enlatado"]);
 
 const SUPER_MAP = {
-  "Aceite de oliva":["mercadona","lidl","consum"],
-  "Aceite de coco":["mercadona","lidl"],
-  "Aceite de aguacate":["mercadona"],
-  "Aceitunas":["mercadona","lidl","consum"],
-  "Ghee":["mercadona"],
-  "Mantequilla":["mercadona","lidl","consum"],
-  "Brécol":["mercadona","lidl","consum"],
-  "Coliflor":["mercadona","lidl","consum"],
-  "Espinacas":["mercadona","lidl","consum"],
-  "Col rizada (kale)":["mercadona","lidl"],
-  "Aguacate":["mercadona","lidl","consum"],
-  "Boniato":["mercadona","lidl","consum"],
-  "Zanahoria cruda":["mercadona","lidl","consum"],
-  "Ajo":["mercadona","lidl","consum"],
-  "Cebolla":["mercadona","lidl","consum"],
-  "Tomate pelado sin semillas":["mercadona","lidl","consum"],
-  "Setas":["mercadona","lidl","consum"],
-  "Puerros":["mercadona","lidl","consum"],
-  "Espárragos":["mercadona","lidl","consum"],
-  "Rúcula":["mercadona","lidl","consum"],
-  "Arándanos":["mercadona","lidl","consum"],
-  "Fresas":["mercadona","lidl","consum"],
-  "Manzanas":["mercadona","lidl","consum"],
-  "Peras":["mercadona","lidl","consum"],
-  "Limón":["mercadona","lidl","consum"],
-  "Kiwis":["mercadona","lidl","consum"],
-  "Frambuesas":["mercadona","lidl","consum"],
-  "Pollo":["mercadona","lidl","consum"],
-  "Pavo":["mercadona","lidl","consum"],
-  "Sardinas":["mercadona","lidl","consum"],
-  "Atún enlatado":["mercadona","lidl","consum"],
-  "Huevos ecológicos":["mercadona","lidl","consum"],
-  "Gambas":["mercadona","lidl","consum"],
-  "Pescado blanco":["mercadona","lidl","consum"],
-  "Almejas":["mercadona","lidl","consum"],
-  "Mejillones":["mercadona","lidl","consum"],
-  "Jamón curado":["mercadona","lidl","consum"],
-  "Kéfir de cabra":["mercadona"],
-  "Yogur de cabra":["mercadona","consum"],
-  "Queso de cabra":["mercadona","lidl","consum"],
-  "Leche de coco":["mercadona","lidl"],
-  "Miso":["consum"],
-  "Kimchi":["consum","lidl"],
-  "Chucrut crudo":["lidl","consum"],
-  "Nueces":["mercadona","lidl","consum"],
-  "Almendras":["mercadona","lidl","consum"],
-  "Pistachos":["mercadona","lidl","consum"],
-  "Avellanas":["mercadona","lidl","consum"],
-  "Semillas de lino":["mercadona","lidl"],
-  "Semillas de sésamo":["mercadona","lidl"],
-  "Harina de almendra":["mercadona","consum"],
-  "Legumbres (olla a presión)":["mercadona","lidl","consum"],
-  "Mijo":["lidl","consum"],
-  "Fideos shirataki":["consum"],
-  "Chocolate negro 72%":["mercadona","lidl","consum"],
-  "Eritritol":["mercadona"],
-  "Stevia":["mercadona","lidl","consum"]
+  "Aceite de oliva":["mercadona","lidl","consum"],"Aceite de coco":["mercadona","lidl"],"Aceite de aguacate":["mercadona"],"Aceite de girasol":["mercadona","lidl","consum"],"Aceitunas":["mercadona","lidl","consum"],"Ghee":["mercadona"],"Mantequilla":["mercadona","lidl","consum"],"Margarina vegana":["mercadona","lidl"],"Aguacate":["mercadona","lidl","consum"],"Ajo":["mercadona","lidl","consum"],"Brécol":["mercadona","lidl","consum"],"Coliflor":["mercadona","lidl","consum"],"Espinacas":["mercadona","lidl","consum"],"Col rizada":["mercadona","lidl"],"Boniato":["mercadona","lidl","consum"],"Zanahoria":["mercadona","lidl","consum"],"Cebolla":["mercadona","lidl","consum"],"Tomate":["mercadona","lidl","consum"],"Setas":["mercadona","lidl","consum"],"Puerros":["mercadona","lidl","consum"],"Espárragos":["mercadona","lidl","consum"],"Rúcula":["mercadona","lidl","consum"],"Berenjena":["mercadona","lidl","consum"],"Pimiento":["mercadona","lidl","consum"],"Pepino":["mercadona","lidl","consum"],"Calabacín":["mercadona","lidl","consum"],"Apio":["mercadona","lidl","consum"],"Lechuga":["mercadona","lidl","consum"],"Remolacha":["mercadona","lidl","consum"],"Arándanos":["mercadona","lidl","consum"],"Fresas":["mercadona","lidl","consum"],"Manzana":["mercadona","lidl","consum"],"Pera":["mercadona","lidl","consum"],"Naranja":["mercadona","lidl","consum"],"Kiwi":["mercadona","lidl","consum"],"Banana":["mercadona","lidl","consum"],"Frambuesas":["mercadona","lidl","consum"],"Mango":["mercadona","lidl"],"Melocotón":["mercadona","lidl","consum"],"Limón":["mercadona","lidl","consum"],"Pollo":["mercadona","lidl","consum"],"Pavo":["mercadona","lidl","consum"],"Ternera":["mercadona","lidl","consum"],"Cerdo":["mercadona","lidl","consum"],"Cordero":["mercadona","lidl"],"Salmón":["mercadona","lidl","consum"],"Sardinas":["mercadona","lidl","consum"],"Atún":["mercadona","lidl","consum"],"Caballa":["mercadona","lidl"],"Huevos":["mercadona","lidl","consum"],"Gambas":["mercadona","lidl","consum"],"Mejillones":["mercadona","lidl","consum"],"Pescado blanco":["mercadona","lidl","consum"],"Almejas":["mercadona","lidl","consum"],"Bacon":["mercadona","lidl","consum"],"Jamón curado":["mercadona","lidl","consum"],"Kéfir":["mercadona","consum"],"Yogur natural":["mercadona","lidl","consum"],"Yogur griego":["mercadona","lidl","consum"],"Queso de cabra":["mercadona","lidl","consum"],"Queso curado":["mercadona","lidl","consum"],"Mozzarella":["mercadona","lidl","consum"],"Parmesano":["mercadona","lidl","consum"],"Leche de coco":["mercadona","lidl"],"Leche de almendra":["mercadona","lidl","consum"],"Leche de avena":["mercadona","lidl","consum"],"Leche de soja":["mercadona","lidl","consum"],"Yogur de coco":["mercadona","lidl"],"Nata":["mercadona","lidl","consum"],"Nueces":["mercadona","lidl","consum"],"Almendras":["mercadona","lidl","consum"],"Pistachos":["mercadona","lidl","consum"],"Avellanas":["mercadona","lidl","consum"],"Nueces de macadamia":["mercadona"],"Semillas de lino":["mercadona","lidl"],"Semillas de sésamo":["mercadona","lidl"],"Semillas de chía":["mercadona","lidl","consum"],"Tahini":["mercadona","consum"],"Lentejas":["mercadona","lidl","consum"],"Garbanzos":["mercadona","lidl","consum"],"Alubias negras":["mercadona","lidl","consum"],"Alubias blancas":["mercadona","lidl","consum"],"Tofu":["mercadona","consum"],"Tempeh":["consum"],"Seitán":["mercadona","consum"],"Arroz integral":["mercadona","lidl","consum"],"Avena":["mercadona","lidl","consum"],"Quinoa":["mercadona","lidl","consum"],"Mijo":["lidl","consum"],"Pan integral":["mercadona","lidl","consum"],"Pasta integral":["mercadona","lidl","consum"],"Cúrcuma":["mercadona","lidl","consum"],"Jengibre":["mercadona","lidl","consum"],"Miso":["consum"],"Chucrut":["lidl","consum"],"Kimchi":["consum","lidl"],"Chocolate negro 85%":["mercadona","lidl","consum"],"Chocolate negro 70%":["mercadona","lidl","consum"],"Chocolate negro 72%":["mercadona","lidl","consum"],"Eritritol":["mercadona"],"Stevia":["mercadona","lidl","consum"],"Vinagre de manzana":["mercadona","lidl","consum"],"Mostaza":["mercadona","lidl","consum"]
 };
 
+let currentDiet = 'antiinflamatoria';
+let antiFilter = false;
 let selectedFoods = new Set();
 let shopItems = [];
-let currentFilter = 'all';
+let currentSuperFilter = 'all';
 
 function init() {
+  loadProfile();
+  renderDietGrid();
+  renderFoods();
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isIOS && !window.navigator.standalone) document.getElementById('install-banner').classList.add('show');
+}
+
+function loadProfile() {
+  try {
+    const saved = localStorage.getItem('comesano_v2');
+    if (saved) {
+      const p = JSON.parse(saved);
+      currentDiet = p.diet || 'antiinflamatoria';
+      antiFilter = p.anti || false;
+      selectedFoods = new Set(p.foods || []);
+    }
+  } catch(e) {}
+  document.getElementById('anti-toggle').classList.toggle('active', antiFilter);
+  document.getElementById('anti-sw').classList.toggle('on', antiFilter);
+}
+
+function saveProfile() {
+  try {
+    localStorage.setItem('comesano_v2', JSON.stringify({ diet: currentDiet, anti: antiFilter, foods: Array.from(selectedFoods) }));
+    const b = document.getElementById('saved-badge');
+    b.style.display = 'block';
+    b.textContent = '💾 Guardado';
+    setTimeout(() => { b.textContent = '💾 Selección guardada automáticamente'; }, 1200);
+  } catch(e) {}
+}
+
+function renderDietGrid() {
+  const grid = document.getElementById('diet-grid');
+  grid.innerHTML = '';
+  for (const [key, d] of Object.entries(DIETS)) {
+    const card = document.createElement('div');
+    card.className = 'diet-card' + (key === currentDiet ? ' active' : '');
+    card.innerHTML = `<div class="diet-card-icon">${d.icon}</div><div class="diet-card-name">${d.name}</div><div class="diet-card-desc">${d.desc}</div>`;
+    card.onclick = () => selectDiet(key);
+    grid.appendChild(card);
+  }
+}
+
+function selectDiet(key) {
+  if (key === currentDiet) return;
+  currentDiet = key;
+  selectedFoods = new Set();
+  document.querySelectorAll('.diet-card').forEach((c, i) => c.classList.toggle('active', Object.keys(DIETS)[i] === key));
+  renderFoods();
+  saveProfile();
+}
+
+function toggleAnti() {
+  antiFilter = !antiFilter;
+  document.getElementById('anti-toggle').classList.toggle('active', antiFilter);
+  document.getElementById('anti-sw').classList.toggle('on', antiFilter);
+  selectedFoods = new Set([...selectedFoods].filter(f => !antiFilter || ANTI_FOODS.has(f)));
+  renderFoods();
+  saveProfile();
+}
+
+function renderFoods() {
   const container = document.getElementById('food-categories');
-  for (const [cat, foods] of Object.entries(FOODS)) {
+  container.innerHTML = '';
+  const diet = DIETS[currentDiet];
+  for (const [cat, foods] of Object.entries(diet.foods)) {
+    const filtered = antiFilter ? foods.filter(f => ANTI_FOODS.has(f)) : foods;
+    if (!filtered.length) continue;
     const catId = 'cat_' + cat.replace(/[^a-z]/gi,'_');
     const div = document.createElement('div');
     div.className = 'category-card';
     div.innerHTML = `
       <div class="category-header">
         <span class="category-name">${cat}</span>
-        <span class="toggle-all-cat" onclick="toggleCat('${catId}','${cat}')">Activar todos</span>
+        <span class="toggle-all-cat" onclick="toggleCat('${catId}','${CSS.escape(cat)}')">Activar todos</span>
       </div>
       <div class="food-grid" id="${catId}">
-        ${foods.map(f => `<span class="food-chip" data-food="${f.replace(/"/g,'&quot;')}">${f}</span>`).join('')}
+        ${filtered.map(f => `<span class="food-chip ${selectedFoods.has(f)?'selected':''} ${ANTI_FOODS.has(f)&&!antiFilter?'anti':''}" data-food="${f.replace(/"/g,'&quot;')}">${f}${ANTI_FOODS.has(f)&&!antiFilter?' 🔥':''}</span>`).join('')}
       </div>`;
     container.appendChild(div);
   }
-
-  // iOS install banner
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isStandalone = window.navigator.standalone;
-  if (isIOS && !isStandalone) {
-    document.getElementById('install-banner').classList.add('show');
-  }
-
   updateCounter();
 }
 
@@ -652,11 +355,14 @@ document.addEventListener('click', function(e) {
     if (selectedFoods.has(food)) { selectedFoods.delete(food); e.target.classList.remove('selected'); }
     else { selectedFoods.add(food); e.target.classList.add('selected'); }
     updateCounter();
+    saveProfile();
   }
 });
 
 function toggleCat(catId, cat) {
-  const foods = FOODS[cat];
+  const diet = DIETS[currentDiet];
+  const rawCat = Object.keys(diet.foods).find(k => k === cat || CSS.escape(k) === cat) || cat;
+  const foods = antiFilter ? (diet.foods[rawCat]||[]).filter(f => ANTI_FOODS.has(f)) : (diet.foods[rawCat]||[]);
   const chips = document.querySelectorAll('#' + catId + ' .food-chip');
   const allOn = foods.every(f => selectedFoods.has(f));
   chips.forEach(chip => {
@@ -665,126 +371,87 @@ function toggleCat(catId, cat) {
     else { selectedFoods.add(food); chip.classList.add('selected'); }
   });
   updateCounter();
+  saveProfile();
 }
 
 function selectAll() {
-  document.querySelectorAll('.food-chip').forEach(chip => {
-    const food = chip.getAttribute('data-food');
-    selectedFoods.add(food);
-    chip.classList.add('selected');
-  });
-  updateCounter();
+  document.querySelectorAll('.food-chip').forEach(chip => { selectedFoods.add(chip.getAttribute('data-food')); chip.classList.add('selected'); });
+  updateCounter(); saveProfile();
 }
 
 function deselectAll() {
-  document.querySelectorAll('.food-chip').forEach(chip => {
-    const food = chip.getAttribute('data-food');
-    selectedFoods.delete(food);
-    chip.classList.remove('selected');
-  });
-  updateCounter();
+  document.querySelectorAll('.food-chip').forEach(chip => { selectedFoods.delete(chip.getAttribute('data-food')); chip.classList.remove('selected'); });
+  updateCounter(); saveProfile();
 }
 
 function updateCounter() {
-  document.getElementById('counter-text').textContent = selectedFoods.size + ' alimentos seleccionados';
+  document.getElementById('counter-text').textContent = selectedFoods.size + ' seleccionados';
 }
 
 function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('screen-' + name).classList.add('active');
-  const idx = ['foods','recipes','shop'].indexOf(name);
-  document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+  document.querySelectorAll('.nav-btn')[['foods','recipes','shop'].indexOf(name)].classList.add('active');
   window.scrollTo(0,0);
 }
 
 async function generateRecipes() {
-  if (selectedFoods.size < 5) {
-    alert('Selecciona al menos 5 alimentos para generar recetas.');
-    return;
-  }
+  if (selectedFoods.size < 5) { alert('Selecciona al menos 5 alimentos.'); return; }
   showScreen('recipes');
   const container = document.getElementById('recipes-container');
-  container.innerHTML = `<div class="loading"><div class="spinner"></div><p>Generando tus 7 recetas antiinflamatorias<br>personalizadas con IA…</p></div>`;
+  container.innerHTML = `<div class="loading"><div class="spinner"></div><p>Generando 7 recetas personalizadas con IA…</p></div>`;
+  const diet = DIETS[currentDiet];
+  const foodList = Array.from(selectedFoods).slice(0,60).join(', ');
+  const antiNote = antiFilter ? ' Todos los alimentos son antiinflamatorios.' : '';
+  const prompt = `Eres un nutricionista experto en dieta ${diet.name}.${antiNote} Con estos alimentos disponibles, crea exactamente 7 recetas saludables, variadas y prácticas para una semana. Usa solo alimentos de la lista.
 
-  const foodList = Array.from(selectedFoods).slice(0, 60).join(', ');
+Alimentos: ${foodList}
 
-  const prompt = `Eres un nutricionista especialista en dieta antiinflamatoria. Con los siguientes alimentos disponibles, crea exactamente 7 recetas saludables, variadas y prácticas para una semana. Usa solo alimentos de la lista.
+Responde SOLO con JSON válido sin backticks:
+[{"name":"Nombre","time":"25 min","difficulty":"Fácil","description":"2 frases.","ingredients":["200g Pollo","2 Huevos"],"steps":["Paso 1...","Paso 2..."],"shopItems":["200g Pollo","2 Huevos","1 Aguacate"]}]
 
-Alimentos disponibles: ${foodList}
-
-Responde SOLO con un array JSON válido sin backticks ni texto adicional:
-[{"name":"Nombre","time":"25 min","difficulty":"Fácil","description":"Descripción breve en 2 frases.","ingredients":["200g Pollo","2 Huevos"],"steps":["Paso 1...","Paso 2...","Paso 3..."],"shopItems":["200g Pollo","2 Huevos","1 Aguacate"]}]
-
-IMPORTANTE: En shopItems incluye la cantidad y el nombre. Ejemplo: "200g Salmon", "2 Huevos", "1 Aguacate", "3 cucharadas Aceite de oliva".`;
+En shopItems incluye cantidad + nombre. Ejemplo: "200g Salmón", "2 Huevos", "1 Aguacate".`;
 
   try {
-    const res = await fetch("/.netlify/functions/claude", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messages: [{ role: "user", content: prompt }]
-      })
-    });
+    const res = await fetch("/.netlify/functions/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ messages:[{role:"user",content:prompt}] }) });
     const data = await res.json();
-    let text = data.content[0].text.trim();
-    text = text.replace(/```json|```/g,'').trim();
+    const text = data.content[0].text.trim().replace(/```json|```/g,'').trim();
     const recipes = JSON.parse(text);
     renderRecipes(recipes);
     buildShopList(recipes);
   } catch(e) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>No se pudieron generar las recetas.<br>Inténtalo de nuevo.</p></div>`;
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Error al generar recetas. Inténtalo de nuevo.</p></div>`;
   }
 }
 
 function renderRecipes(recipes) {
-  const container = document.getElementById('recipes-container');
-  container.innerHTML = '';
-  recipes.forEach((r, i) => {
+  const c = document.getElementById('recipes-container');
+  c.innerHTML = '';
+  recipes.forEach((r,i) => {
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    card.innerHTML = `
-      <div class="recipe-top">
-        <div class="recipe-num">Receta ${i+1} de 7</div>
-        <div class="recipe-title">${r.name}</div>
-        <div class="recipe-meta">
-          <span class="recipe-tag">⏱ ${r.time}</span>
-          <span class="recipe-tag">👨‍🍳 ${r.difficulty}</span>
-        </div>
-        <div class="recipe-desc">${r.description}</div>
-      </div>
-      <div class="recipe-expand" onclick="toggleDetail(${i})">
-        <span>Ver receta completa</span>
-        <span class="recipe-expand-icon" id="icon-${i}">▾</span>
-      </div>
-      <div class="recipe-detail" id="detail-${i}">
-        <div class="detail-label">Ingredientes</div>
-        <ul class="ingredient-list">${r.ingredients.map(ing => `<li>${ing}</li>`).join('')}</ul>
-        <div class="detail-label" style="margin-top:14px">Preparación</div>
-        <ol class="steps-list">${r.steps.map(s => `<li>${s}</li>`).join('')}</ol>
-      </div>`;
-    container.appendChild(card);
+    card.innerHTML = `<div class="recipe-top"><div class="recipe-num">Receta ${i+1} de 7</div><div class="recipe-title">${r.name}</div><div class="recipe-meta"><span class="recipe-tag">⏱ ${r.time}</span><span class="recipe-tag">👨‍🍳 ${r.difficulty}</span></div><div class="recipe-desc">${r.description}</div></div><div class="recipe-expand" onclick="toggleDetail(${i})"><span>Ver receta completa</span><span id="icon-${i}">▾</span></div><div class="recipe-detail" id="detail-${i}"><div class="detail-label">Ingredientes</div><ul class="ingredient-list">${r.ingredients.map(x=>`<li>${x}</li>`).join('')}</ul><div class="detail-label" style="margin-top:14px">Preparación</div><ol class="steps-list">${r.steps.map(x=>`<li>${x}</li>`).join('')}</ol></div>`;
+    c.appendChild(card);
   });
 }
 
 function toggleDetail(i) {
-  const detail = document.getElementById('detail-' + i);
-  const icon = document.getElementById('icon-' + i);
-  const isOpen = detail.classList.toggle('open');
-  icon.textContent = isOpen ? '▴' : '▾';
+  const d = document.getElementById('detail-'+i);
+  d.classList.toggle('open');
+  document.getElementById('icon-'+i).textContent = d.classList.contains('open') ? '▴' : '▾';
 }
 
 function stripQty(name) {
-  return name.replace(/^[\d.,\/]+\s*(kg|ml|cl|cucharaditas?|cucharadas?|unidades?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?|tazas?|ud|g|l)?\s*/i, "").replace(/^[^a-zA-ZÀ-ɏ]+/, "").trim();
+  return name.replace(/^[\d.,\/]+\s*(kg|ml|cl|cucharaditas?|cucharadas?|unidades?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?|tazas?|ud|g|l)?\s*/i,'').replace(/^[^a-zA-Z\u00C0-\u024F]+/,'').trim();
 }
 
 function buildShopList(recipes) {
   const all = new Set();
   recipes.forEach(r => { if(r.shopItems) r.shopItems.forEach(item => all.add(item)); });
   shopItems = Array.from(all).map(name => {
-    const cleanForMap = stripQty(name).toLowerCase();
-    const key = Object.keys(SUPER_MAP).find(k => k.toLowerCase() === cleanForMap)
-             || Object.keys(SUPER_MAP).find(k => cleanForMap.includes(k.toLowerCase()) && k.toLowerCase().split(' ').length >= cleanForMap.split(' ').length);
+    const clean = stripQty(name).toLowerCase();
+    const key = Object.keys(SUPER_MAP).find(k => k.toLowerCase() === clean);
     return { name, supers: key ? SUPER_MAP[key] : ["mercadona","lidl","consum"], checked: false };
   });
   renderShop();
@@ -793,54 +460,32 @@ function buildShopList(recipes) {
 function renderShop() {
   const container = document.getElementById('shop-container');
   if (!shopItems.length) return;
-
-  const filtered = currentFilter === 'all' ? shopItems : shopItems.filter(i => i.supers.includes(currentFilter));
-  if (!filtered.length) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p>No hay productos asignados a este supermercado.</p></div>`;
-    return;
-  }
-
+  const filtered = currentSuperFilter === 'all' ? shopItems : shopItems.filter(i => i.supers.includes(currentSuperFilter));
+  if (!filtered.length) { container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p>No hay productos en este supermercado.</p></div>`; return; }
   const done = filtered.filter(i => i.checked).length;
-  container.innerHTML = `
-    <div class="progress-bar"><div class="progress-fill" style="width:${filtered.length ? Math.round(done/filtered.length*100) : 0}%"></div></div>
-    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">${done} de ${filtered.length} productos en el carrito</div>`;
-
+  container.innerHTML = `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(done/filtered.length*100)}%"></div></div><div style="font-size:13px;color:var(--text-muted);margin-bottom:12px">${done} de ${filtered.length} marcados</div>`;
   const card = document.createElement('div');
   card.className = 'shop-card';
-  card.innerHTML = `<div class="shop-card-header">${filtered.length} productos · toca para marcar</div>`;
-
+  card.innerHTML = `<div class="shop-card-header">${filtered.length} productos</div>`;
   filtered.forEach(item => {
     const idx = shopItems.indexOf(item);
-    const cleanName = stripQty(item.name);
+    const cn = stripQty(item.name);
     const links = item.supers.map(s => {
-      const urls = {
-        mercadona: `https://tienda.mercadona.es/search-results?query=${encodeURIComponent(cleanName)}`,
-        lidl: `https://www.lidl.es/es/buscar?query=${encodeURIComponent(cleanName)}`,
-        consum: `https://www.consum.es/es/buscar?text=${encodeURIComponent(cleanName)}`
-      };
-      const labels = { mercadona: 'Mercadona', lidl: 'Lidl', consum: 'Consum' };
-      return `<a href="${urls[s]}" class="shop-link" target="_blank">${labels[s]}</a>`;
+      const urls = { mercadona:`https://tienda.mercadona.es/search-results?query=${encodeURIComponent(cn)}`, lidl:`https://www.lidl.es/es/buscar?query=${encodeURIComponent(cn)}`, consum:`https://www.consum.es/es/buscar?text=${encodeURIComponent(cn)}` };
+      return `<a href="${urls[s]}" class="shop-link" target="_blank">${{mercadona:'Mercadona',lidl:'Lidl',consum:'Consum'}[s]}</a>`;
     }).join('');
-
     const row = document.createElement('div');
     row.className = 'shop-item';
-    row.innerHTML = `
-      <div class="shop-check ${item.checked ? 'checked' : ''}" onclick="toggleCheck(${idx})"></div>
-      <div class="shop-name ${item.checked ? 'done' : ''}">${item.name}</div>
-      <div class="shop-links">${links}</div>`;
+    row.innerHTML = `<div class="shop-check ${item.checked?'checked':''}" onclick="toggleCheck(${idx})"></div><div class="shop-name ${item.checked?'done':''}">${item.name}</div><div class="shop-links">${links}</div>`;
     card.appendChild(row);
   });
-
   container.appendChild(card);
 }
 
-function toggleCheck(idx) {
-  shopItems[idx].checked = !shopItems[idx].checked;
-  renderShop();
-}
+function toggleCheck(idx) { shopItems[idx].checked = !shopItems[idx].checked; renderShop(); }
 
 function filterSuper(name, el) {
-  currentFilter = name;
+  currentSuperFilter = name;
   document.querySelectorAll('.super-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   renderShop();
