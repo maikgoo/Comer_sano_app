@@ -714,9 +714,9 @@ async function generateRecipes() {
 Alimentos disponibles: ${foodList}
 
 Responde SOLO con un array JSON válido sin backticks ni texto adicional:
-[{"name":"Nombre","time":"25 min","difficulty":"Fácil","description":"Descripción breve en 2 frases.","ingredients":["200g Pollo","2 Huevos"],"steps":["Paso 1...","Paso 2...","Paso 3..."],"shopItems":["200g Pollo","2 Huevos","1 Aguacate"]}]
+[{"name":"Nombre","time":"25 min","difficulty":"Fácil","description":"Descripción breve en 2 frases.","ingredients":["200g Pollo","2 Huevos"],"steps":["Paso 1...","Paso 2...","Paso 3..."],"shopItems":["Pollo","Huevos","Aguacate"]}]
 
-IMPORTANTE: En shopItems incluye SIEMPRE la cantidad antes del nombre. Correcto: "300g Salmon", "4 Huevos", "1 lata Atun". Nunca solo el nombre sin cantidad.`;
+IMPORTANTE: En shopItems pon SOLO el nombre del producto sin cantidades ni unidades. Correcto: "Salmon", "Huevos", "Aguacate", "Aceite de oliva". Incorrecto: "300g Salmon", "2 Huevos", "1 lata Atun".`;
 
   try {
     const res = await fetch("/.netlify/functions/claude", {
@@ -807,7 +807,7 @@ function renderShop() {
 
   filtered.forEach(item => {
     const idx = shopItems.indexOf(item);
-    const cleanName = item.name.replace(/^[\d.,]+\s*(g|kg|ml|l|cl|ud|unidad|unidades|cucharadas?|cucharaditas?|tazas?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?)\s*/i, '').trim();
+    const cleanName = item.name.replace(/^[\d.,\/]+\s*(kg|ml|cl|cucharaditas?|cucharadas?|unidades?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?|tazas?|ud|g|l)?\s*/i, '').replace(/^[^a-zA-Z\u00C0-\u024F]+/, '').trim();
     const links = item.supers.map(s => {
       const urls = {
         mercadona: `https://tienda.mercadona.es/search-results?query=${encodeURIComponent(cleanName)}`,
