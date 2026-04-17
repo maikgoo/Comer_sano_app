@@ -782,10 +782,9 @@ function buildShopList(recipes) {
   const all = new Set();
   recipes.forEach(r => { if(r.shopItems) r.shopItems.forEach(item => all.add(item)); });
   shopItems = Array.from(all).map(name => {
-    const cleanForMap = stripQty(name);
-    const key = Object.keys(SUPER_MAP).find(k =>
-      cleanForMap.toLowerCase().includes(k.toLowerCase()) || k.toLowerCase().includes(cleanForMap.toLowerCase())
-    );
+    const cleanForMap = stripQty(name).toLowerCase();
+    const key = Object.keys(SUPER_MAP).find(k => k.toLowerCase() === cleanForMap)
+             || Object.keys(SUPER_MAP).find(k => cleanForMap.includes(k.toLowerCase()) && k.toLowerCase().split(' ').length >= cleanForMap.split(' ').length);
     return { name, supers: key ? SUPER_MAP[key] : ["mercadona","lidl","consum"], checked: false };
   });
   renderShop();
