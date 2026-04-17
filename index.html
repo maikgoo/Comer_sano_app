@@ -566,7 +566,7 @@ const SUPER_MAP = {
   "Coliflor":["mercadona","lidl","consum"],
   "Espinacas":["mercadona","lidl","consum"],
   "Col rizada (kale)":["mercadona","lidl"],
-  "Aguacates":["mercadona","lidl","consum"],
+  "Aguacate":["mercadona","lidl","consum"],
   "Boniato":["mercadona","lidl","consum"],
   "Zanahoria cruda":["mercadona","lidl","consum"],
   "Ajo":["mercadona","lidl","consum"],
@@ -714,9 +714,9 @@ async function generateRecipes() {
 Alimentos disponibles: ${foodList}
 
 Responde SOLO con un array JSON válido sin backticks ni texto adicional:
-[{"name":"Nombre","time":"25 min","difficulty":"Fácil","description":"Descripción breve en 2 frases.","ingredients":["200g Pollo","2 Huevos"],"steps":["Paso 1...","Paso 2...","Paso 3..."],"shopItems":["Pollo","Huevos","Aguacate"]}]
+[{"name":"Nombre","time":"25 min","difficulty":"Fácil","description":"Descripción breve en 2 frases.","ingredients":["200g Pollo","2 Huevos"],"steps":["Paso 1...","Paso 2...","Paso 3..."],"shopItems":["200g Pollo","2 Huevos","1 Aguacate"]}]
 
-IMPORTANTE: En shopItems pon SOLO el nombre del producto sin cantidades ni unidades. Correcto: "Salmon", "Huevos", "Aguacate", "Aceite de oliva". Incorrecto: "300g Salmon", "2 Huevos", "1 lata Atun".`;
+IMPORTANTE: En shopItems incluye la cantidad y el nombre. Ejemplo: "200g Salmon", "2 Huevos", "1 Aguacate", "3 cucharadas Aceite de oliva".`;
 
   try {
     const res = await fetch("/.netlify/functions/claude", {
