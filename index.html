@@ -520,7 +520,11 @@ function renderShop() {
     const idx = shopItems.indexOf(item);
     const cn = stripQty(item.name);
     const links = item.supers.map(s => {
-      const urls = { mercadona:`https://tienda.mercadona.es/search-results?query=${encodeURIComponent(cn)}`, lidl:`https://www.lidl.es/busqueda?q=${encodeURIComponent(cn)}`, consum:`https://www.consum.es/search?q=${encodeURIComponent(cn)}` };
+      const urls = { 
+        mercadona: `https://tienda.mercadona.es/search-results?query=${encodeURIComponent(cn)}`, 
+        lidl: `https://www.lidl.es/q/search?q=${encodeURIComponent(cn)}`, 
+        consum: `https://www.consum.es/solr-search/content/?keys=${encodeURIComponent(cn)}` 
+      };
       return `<a href="${urls[s]}" class="shop-link" target="_blank">${{mercadona:'Mercadona',lidl:'Lidl',consum:'Consum'}[s]}</a>`;
     }).join('');
     const row = document.createElement('div');
