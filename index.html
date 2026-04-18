@@ -1264,11 +1264,12 @@ function parseShopItem(raw) {
   return { qty: null, unit: null, name: cleanIngredientName(s) };
 }
 
-// Genera clave de agrupación normalizada: quita plurales simples y acento para comparar
+// Genera clave de agrupación normalizada: quita acentos, ñ→n, plurales simples
 function groupKey(name) {
   return name.toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // quita acentos
-    .replace(/es$/, '').replace(/s$/, '')              // quita plural simple
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/n~/g, 'n').replace(/ñ/g, 'n')
+    .replace(/es$/, '').replace(/s$/, '')
     .trim();
 }
 
@@ -1335,25 +1336,32 @@ function buildShopList(recipes) {
 
 // Categorías de la compra en orden lógico de supermercado
 const SHOP_CATEGORIES = [
-  { label: '🥩 Carne', emoji: '🥩', keywords: ['pollo','pavo','ternera','cerdo','cordero','conejo','pato','venado','bacon','jamón','lomo','chuleta','muslo','pechuga','contramuslo','costilla','hamburguesa','salchicha','chorizo','morcilla','butifarra'] },
-  { label: '🐟 Pescado y marisco', emoji: '🐟', keywords: ['salmón','merluza','bacalao','atún','sardina','anchoa','caballa','trucha','lubina','dorada','rape','gamba','langostino','mejillón','almeja','calamar','sepia','pulpo','ostra','vieira','marisco','pescado','boquerón'] },
-  { label: '🥚 Huevos y lácteos', emoji: '🥚', keywords: ['huevo','leche','yogur','kéfir','queso','mantequilla','nata','ghee','mozzarella','parmesano','requesón','crema','cuajada'] },
-  { label: '🥦 Verdura y hortaliza', emoji: '🥦', keywords: ['lechuga','espinaca','acelga','rúcula','canónigo','brócoli','coliflor','col','repollo','lombarda','zanahoria','pepino','tomate','pimiento','calabacín','berenjena','cebolla','ajo','puerro','apio','espárrago','alcachofa','judía','champiñón','seta','remolacha','nabo','chirivía','hinojo','endibia','escarola','rábano','boniato','patata','yuca','batata','calabaza','maíz','aguacate'] },
-  { label: '🍎 Fruta', emoji: '🍎', keywords: ['manzana','pera','naranja','limón','lima','mandarina','kiwi','plátano','banana','fresa','frambuesa','arándano','mora','cereza','melocotón','nectarina','albaricoque','ciruela','uva','mango','piña','papaya','granada','higo','melón','sandía','coco'] },
-  { label: '🌾 Cereales y pasta', emoji: '🌾', keywords: ['arroz','pasta','fideos','quinoa','avena','mijo','cuscús','bulgur','pan','harina','galleta','tostada','cereales','macarrón','espagueti','tallarín','lasaña'] },
-  { label: '🫘 Legumbres', emoji: '🫘', keywords: ['lenteja','garbanzo','alubia','judía','guisante','haba','soja','edamame','tofu','tempeh','seitán'] },
-  { label: '🫒 Aceites y grasas', emoji: '🫒', keywords: ['aceite','mantequilla','ghee','margarina','aceituna','tahini'] },
-  { label: '🌰 Frutos secos y semillas', emoji: '🌰', keywords: ['nuez','almendra','avellana','pistacho','anacardo','cacahuete','macadamia','piñón','semilla','chía','lino','sésamo','girasol','calabaza','cáñamo'] },
-  { label: '🧀 Conservas y fermentados', emoji: '🧀', keywords: ['conserva','lata','miso','chucrut','kimchi','vinagre','salsa','caldo','tomate triturado','concentrado'] },
-  { label: '🍫 Dulces y otros', emoji: '🍫', keywords: ['chocolate','cacao','miel','sirope','agave','stevia','eritritol','azúcar','mermelada','vainilla'] },
-  { label: '🌿 Especias y hierbas', emoji: '🌿', keywords: ['sal','pimienta','cúrcuma','jengibre','canela','comino','pimentón','curry','orégano','tomillo','romero','albahaca','perejil','cilantro','menta','hierbabuena','cebollino','laurel','nuez moscada','mostaza','paprika','cayena','ajo en polvo','cebolla en polvo'] },
-  { label: '🥛 Bebidas vegetales', emoji: '🥛', keywords: ['leche de','bebida de','avena','almendra','soja','coco','arroz','agua','té','café','infusión'] },
+  { label: '🥩 Carne', emoji: '🥩', keywords: ['pollo','pavo','ternera','cerdo','cordero','conejo','pato','venado','bacon','jamon','lomo','chuleta','muslo','pechuga','contramuslo','costilla','hamburguesa','salchicha','chorizo','morcilla','butifarra','panceta'] },
+  { label: '🐟 Pescado y marisco', emoji: '🐟', keywords: ['salmon','merluza','bacalao','atun','sardina','anchoa','caballa','trucha','lubina','dorada','rape','gamba','langostino','mejillon','almeja','calamar','sepia','pulpo','ostra','vieira','marisco','pescado','boqueron','berberecho','chirla','langosta','bogavante'] },
+  { label: '🥚 Huevos y lácteos', emoji: '🥚', keywords: ['huevo','leche','yogur','kefir','queso','mantequilla','nata','ghee','mozzarella','parmesano','requeson','crema','cuajada','ricotta','mascarpone','burrata'] },
+  { label: '🥦 Verdura y hortaliza', emoji: '🥦', keywords: ['lechuga','espinaca','acelga','rucula','canonigo','brocoli','coliflor','col','repollo','lombarda','zanahoria','pepino','tomate','pimiento','calabacin','berenjena','cebolla','ajo','puerro','apio','esparrago','alcachofa','judia','champiñon','champinon','seta','remolacha','nabo','chirivía','hinojo','endibia','escarola','rabano','boniato','patata','yuca','batata','calabaza','maiz','aguacate','brocoli','alcachofa','rabano','pak choi','cardo'] },
+  { label: '🍎 Fruta', emoji: '🍎', keywords: ['manzana','pera','naranja','limon','lima','mandarina','kiwi','platano','banana','fresa','frambuesa','arandano','mora','cereza','melocoton','nectarina','albaricoque','ciruela','uva','mango','piña','papaya','granada','higo','melon','sandia','coco','pomelo','maracuya','chirimoya','paraguayo'] },
+  { label: '🌾 Cereales y pasta', emoji: '🌾', keywords: ['arroz','pasta','fideos','quinoa','avena','mijo','cuscus','bulgur','pan','harina','galleta','tostada','cereales','macarron','espagueti','tallarín','lasaña','espelta','centeno','tapioca','polenta','tortilla de maiz','crackers'] },
+  { label: '🫘 Legumbres', emoji: '🫘', keywords: ['lenteja','garbanzo','alubia','guisante','haba','soja','edamame','tofu','tempeh','seitan','judion','mungo'] },
+  { label: '🫒 Aceites y grasas', emoji: '🫒', keywords: ['aceite','mantequilla','ghee','margarina','aceituna','tahini','manteca'] },
+  { label: '🌰 Frutos secos y semillas', emoji: '🌰', keywords: ['nuez','almendra','avellana','pistacho','anacardo','cacahuete','macadamia','piñon','semilla','chia','lino','sesamo','girasol','cañamo'] },
+  { label: '🥫 Conservas y fermentados', emoji: '🥫', keywords: ['conserva','lata','miso','chucrut','kimchi','vinagre','salsa','caldo','concentrado','tomate frito','tomate natural','mejillon en lata','sardina en lata','atun en lata','anchoa en lata','pisto','sofrito'] },
+  { label: '🍷 Vinos y bebidas', emoji: '🍷', keywords: ['vino','cerveza','sidra','vermut','cava','champan','licor','brandy','whisky','ron','vodka','gin','agua con gas','refresco','zumo','jugo','mosto'] },
+  { label: '🍫 Dulces y edulcorantes', emoji: '🍫', keywords: ['chocolate','cacao','miel','sirope','agave','stevia','eritritol','azucar','mermelada','vainilla','panela','xilitol','monk fruit'] },
+  { label: '🌿 Especias y hierbas', emoji: '🌿', keywords: ['sal','pimienta','curcuma','jengibre','canela','comino','pimenton','curry','oregano','tomillo','romero','albahaca','perejil','cilantro','menta','hierbabuena','cebollino','laurel','nuez moscada','mostaza','paprika','cayena','eneldo','estragón','cardamomo','anís','clavo','azafran','cebolla en polvo','ajo en polvo'] },
+  { label: '🥛 Bebidas vegetales', emoji: '🥛', keywords: ['leche de','bebida de','agua','te ','cafe','infusion'] },
 ];
 
+function normalizeForCategory(s) {
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // quita acentos
+    .replace(/ñ/g, 'n');
+}
+
 function getShopCategory(itemName) {
-  const clean = itemName.toLowerCase();
+  const clean = normalizeForCategory(stripQty(itemName));
   for (const cat of SHOP_CATEGORIES) {
-    if (cat.keywords.some(k => clean.includes(k))) return cat.label;
+    if (cat.keywords.some(k => clean.includes(normalizeForCategory(k)))) return cat.label;
   }
   return '🛍️ Otros';
 }
