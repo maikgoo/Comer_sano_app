@@ -858,9 +858,9 @@ function renderDayMenus(days) {
         </div>
         <div class="recipe-detail" id="${id}">
           <div class="detail-label">Ingredientes</div>
-          <ul class="ingredient-list">${(r.ingredients||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
+          <ul class="ingredient-list">${(r.ingredients||[]).map(x => `<li>${typeof x === 'object' ? (x.amount ? x.amount+' '+x.name : JSON.stringify(x)) : x}</li>`).join('')}</ul>
           <div class="detail-label" style="margin-top:14px">Preparación</div>
-          <ol class="steps-list">${(r.steps||[]).filter(s=>s).map(x=>`<li>${x}</li>`).join('')}</ol>
+          <ol class="steps-list">${(r.steps||[]).filter(s=>s).map(x => `<li>${typeof x === 'object' ? (x.description || x.step || JSON.stringify(x)) : x}</li>`).join('')}</ol>
         </div>`;
       c.appendChild(card);
     });
