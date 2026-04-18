@@ -566,20 +566,35 @@ async function generateRecipes() {
   const seasonNote = seasonFilter ? ` Prioriza productos de temporada en España en el mes ${new Date().toLocaleString('es-ES',{month:'long'})}.` : '';
   const budgetNote = budgetFilter ? ' Usa ingredientes económicos (pollo, huevos, legumbres, verduras baratas). Evita carnes caras, mariscos y pescados premium.' : '';
   const methodList = Array.from(cookMethods).join(', ');
-  const prompt = `Nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}
-Menú 3 días (comida+cena+postre) para ${persons} persona${persons>1?'s':''}, dificultad ${difficulty}.
-Alimentos disponibles: ${foodList}.
-Métodos de cocción: ${methodList}. Indica tiempo y temperatura en cada paso si aplica.
+  const prompt = `Eres nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}
+Crea un menú de 3 días para ${persons} persona${persons>1?'s':''}, dificultad ${difficulty}.
+Alimentos: ${foodList}.
+Métodos de cocción: ${methodList}.
 
-JSON exacto, sin texto extra, sin backticks:
-[{"dia":1,"comida":{"name":"","time":"","difficulty":"","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]},"cena":{...},"postre":{...}},{"dia":2,...},{"dia":3,...}]
-
-Reglas: cantidades para ${persons} persona${persons>1?'s':''}. shopItems=cantidad+nombre. Máximo 4 pasos. macros=totales del plato. Steps concisos.`;
+Responde ÚNICAMENTE con este JSON, sin backticks, sin texto antes ni después:
+[
+  {
+    "dia": 1,
+    "comida": {"name":"","time":"","difficulty":"${difficulty}","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]},
+    "cena": {"name":"","time":"","difficulty":"${difficulty}","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]},
+    "postre": {"name":"","time":"","difficulty":"Fácil","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]}
+  },
+  {"dia": 2, "comida": {}, "cena": {}, "postre": {}},
+  {"dia": 3, "comida": {}, "cena": {}, "postre": {}}
+]
+Reglas: cantidades para ${persons} persona${persons>1?'s':''}. shopItems=cantidad+nombre. Máximo 3 pasos por plato. macros=totales del plato completo.`;
 
   try {
     const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ messages:[{role:"user",content:prompt}] }) });
     const data = await res.json();
-    const text = data.content[0].text.trim().replace(/```json|```/g,'').trim();
+    let text = data.content[0].text.trim();
+    // Limpiar backticks y texto extra
+    text = text.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
+    // Extraer solo el array JSON
+    const start = text.indexOf('[');
+    const end = text.lastIndexOf(']');
+    if (start === -1 || end === -1) throw new Error('No JSON array found');
+    text = text.slice(start, end + 1);
     const days = JSON.parse(text);
     renderDayMenus(days);
     buildShopListFromDays(days);
