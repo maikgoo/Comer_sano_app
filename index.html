@@ -812,10 +812,10 @@ function renderDayMenus(days) {
     // Resumen kcal del día
     const mealsOfDay = getMealsOrdered().map(k => day[k]).filter(r => r && r.macros);
     if (mealsOfDay.length > 0) {
-      const totalKcal = mealsOfDay.reduce((a, r) => a + (r.macros.kcal || 0), 0);
-      const totalProt = mealsOfDay.reduce((a, r) => a + (r.macros.proteinas || 0), 0);
-      const totalCarb = mealsOfDay.reduce((a, r) => a + (r.macros.carbos || 0), 0);
-      const totalFat  = mealsOfDay.reduce((a, r) => a + (r.macros.grasas || 0), 0);
+      const totalKcal = Math.round(mealsOfDay.reduce((a, r) => a + (r.macros.kcal || 0), 0) / persons);
+      const totalProt = Math.round(mealsOfDay.reduce((a, r) => a + (r.macros.proteinas || 0), 0) / persons);
+      const totalCarb = Math.round(mealsOfDay.reduce((a, r) => a + (r.macros.carbos || 0), 0) / persons);
+      const totalFat  = Math.round(mealsOfDay.reduce((a, r) => a + (r.macros.grasas || 0), 0) / persons);
       const targetNote = kcalTarget > 0
         ? ` <span style="color:${Math.abs(totalKcal-kcalTarget)<100?'var(--green-mid)':'var(--accent)'}"> · objetivo ${kcalTarget} kcal</span>`
         : '';
@@ -832,10 +832,10 @@ function renderDayMenus(days) {
       const id = 'detail-' + di + '-' + mealKey;
       const macrosHtml = r.macros ? `
         <div class="macros-bar">
-          <div class="macro-pill"><div class="macro-val">${r.macros.kcal}</div><div class="macro-lbl">kcal/p</div></div>
-          <div class="macro-pill"><div class="macro-val">${r.macros.proteinas}g</div><div class="macro-lbl">Proteína</div></div>
-          <div class="macro-pill"><div class="macro-val">${r.macros.carbos}g</div><div class="macro-lbl">Carbos</div></div>
-          <div class="macro-pill"><div class="macro-val">${r.macros.grasas}g</div><div class="macro-lbl">Grasas</div></div>
+          <div class="macro-pill"><div class="macro-val">${Math.round(r.macros.kcal/persons)}</div><div class="macro-lbl">kcal/p</div></div>
+          <div class="macro-pill"><div class="macro-val">${Math.round(r.macros.proteinas/persons)}g</div><div class="macro-lbl">Proteína</div></div>
+          <div class="macro-pill"><div class="macro-val">${Math.round(r.macros.carbos/persons)}g</div><div class="macro-lbl">Carbos</div></div>
+          <div class="macro-pill"><div class="macro-val">${Math.round(r.macros.grasas/persons)}g</div><div class="macro-lbl">Grasas</div></div>
         </div>` : '';
       const methodTag = r.method ? `<span class="recipe-tag">🔥 ${r.method}</span>` : '';
       const card = document.createElement('div');
