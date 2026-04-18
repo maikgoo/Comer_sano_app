@@ -200,9 +200,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <div id="screen-foods" class="screen active">
 
   <!-- 1. SELECTOR DE DIETA -->
-  <div style="margin-bottom:16px">
-    <div class="diet-selector-label">🥗 Elige tu dieta</div>
-    <div class="diet-grid" id="diet-grid"></div>
+  <div class="options-panel" style="margin-bottom:14px">
+    <div class="diet-selector-label">🎯 Elige tu dieta</div>
+    <div class="diet-grid" id="diet-grid" style="margin-top:10px;margin-bottom:0"></div>
   </div>
 
   <!-- 2. ALERGIAS E INTOLERANCIAS -->
@@ -220,24 +220,24 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <div class="option-label">👥 Personas</div>
       <div class="persons-ctrl">
         <button class="persons-btn" onclick="changePersons(-1)">−</button>
-        <span class="persons-val" id="persons-val">2</span>
+        <span class="persons-val" id="persons-val">1</span>
         <button class="persons-btn" onclick="changePersons(1)">+</button>
       </div>
     </div>
 
     <!-- Días de menú -->
     <div class="option-row">
-      <div class="option-label">📅 Días de menú</div>
+      <div class="option-label">📅 Días a planificar</div>
       <div class="persons-ctrl">
         <button class="persons-btn" onclick="changeDays(-1)">−</button>
-        <span class="persons-val" id="days-val">3</span>
+        <span class="persons-val" id="days-val">1</span>
         <button class="persons-btn" onclick="changeDays(1)">+</button>
       </div>
     </div>
 
     <!-- Platos al día -->
     <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
-      <div class="option-label">🍽️ Platos al día</div>
+      <div class="option-label">🍽️ ¿Qué comidas incluir?</div>
       <div class="method-grid">
         <button class="method-btn active" id="meal-desayuno" onclick="toggleMeal('desayuno',this)">☀️ Desayuno</button>
         <button class="method-btn" id="meal-comida" onclick="toggleMeal('comida',this)">🍽️ Comida</button>
@@ -463,7 +463,7 @@ const DIETS = {
     "🥛 Bebidas vegetales":["Leche de almendra","Leche de avena","Leche de coco","Leche de soja","Yogur de coco","Yogur de soja"],
     "🍫 Otros":["Chocolate negro 70%","Levadura nutricional","Miso","Chucrut","Kimchi","Stevia","Sirope de agave"]
   }},
-  antiinflamatoria: { name:"Antiinflamatoria", icon:"🔥", desc:"Reduce la inflamación", foods:{
+  antiinflamatoria: { name:"Antiinflamatoria", icon:"💚", desc:"Reduce la inflamación", foods:{
     "🫒 Aceites y grasas":["Aceite de oliva","Aceite de coco","Aceite de aguacate","Aceite de macadamia","Aceite de nuez","Aceite de sésamo","Aceitunas","Ghee","Mantequilla","Nata orgánica"],
     "🥦 Verduras y hortalizas":["Acelgas","Ajo","Ajo tierno","Ajo negro","Alcachofa","Apio","Berenjena","Berenjena rayada","Boniato","Brócoli","Calabacín verde","Calabacín blanco","Calabaza","Canónigos","Cebolla","Cebolla tierna","Cebolla morada","Cebollino","Col lombarda","Col rizada","Coliflor","Endibia","Escarola","Espárragos verdes","Espárrago grueso","Espinacas","Jengibre","Judía verde","Judía plana","Lechuga romana","Maíz dulce","Nabo","Perejil","Pimiento rojo","Pimiento verde","Pimientos tricolor","Puerro","Rabanitos","Remolacha","Rúcula","Seta shiitake","Setas","Mix de setas","Champiñones","Champiñón portobello","Tomate","Tomate cherry","Tomate pera","Zanahoria","Zanahoria rallada"],
     "🌿 Hierbas aromáticas":["Albahaca","Cilantro","Hierbabuena","Menta","Perejil","Cúrcuma","Jengibre"],
@@ -586,8 +586,8 @@ let seasonFilter = false;
 let budgetFilter = false;
 let difficulty = 'Fácil';
 let cookMethods = new Set(['Sartén']);
-let persons = 2;
-let numDays = 3;
+let persons = 1;
+let numDays = 1;
 let selectedMeals = new Set(['desayuno']);
 let kcalTarget = 0;
 let macroPct = { prot: 30, carb: 40, fat: 30 };
