@@ -26,18 +26,18 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .header-tag { font-size: 10px; color: rgba(255,255,255,0.45); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 300; margin-left: 2px; align-self: center; }
 .nav { display: flex; background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(42,157,143,0.1); }
 .nav-btn { flex: 1; padding: 11px 4px 9px; border: none; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); font-size: 16px; font-weight: 400; position: relative; }
-.nav-btn.active { color: var(--green-dark); font-weight: 500; }
-.nav-btn.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2px; background: var(--green-dark); border-radius: 2px 2px 0 0; }
+.nav-btn.active { color: var(--accent); font-weight: 500; }
+.nav-btn.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2px; background: var(--accent); border-radius: 2px 2px 0 0; }
 .nav-icon { font-size: 19px; }
 .screen { display: none; padding: 16px; min-height: calc(100vh - 140px); }
 .screen.active { display: block; }
-.diet-selector-label { font-size: 17px; font-weight: 500; color: var(--text-muted); margin-bottom: 8px; }
+.diet-selector-label { font-size: 17px; font-weight: 600; color: var(--green-dark); margin-bottom: 8px; }
 .diet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
 .diet-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px; cursor: pointer; transition: all 0.15s; }
-.diet-card.active { border-color: var(--green-dark); background: var(--green-light); }
+.diet-card.active { border-color: var(--accent); background: #fff8f3; }
 .diet-card-icon { font-size: 22px; margin-bottom: 4px; }
 .diet-card-name { font-size: 17px; font-weight: 500; color: var(--text); }
-.diet-card.active .diet-card-name { color: var(--green-dark); }
+.diet-card.active .diet-card-name { color: var(--accent); }
 .diet-card-desc { font-size: 15px; color: var(--text-muted); margin-top: 2px; line-height: 1.3; }
 .anti-toggle { display: flex; align-items: center; justify-content: space-between; background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; cursor: pointer; }
 .anti-toggle.active { border-color: var(--accent); background: #fff8f3; }
@@ -51,16 +51,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .counter-bar { background: var(--green-light); border-radius: var(--radius-sm); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
 .counter-text { font-size: 17px; color: var(--green-dark); font-weight: 500; }
 .counter-btns { display: flex; gap: 10px; }
-.cbtn { font-size: 15px; color: var(--green-mid); cursor: pointer; }
+.cbtn { font-size: 15px; color: var(--accent); cursor: pointer; font-weight: 500; padding: 3px 10px; border: 1px solid #fde8d8; border-radius: 20px; background: #fff8f3; }
 .cbtn.red { color: #c0392b; }
 .saved-badge { font-size: 12px; color: var(--green-mid); margin-bottom: 12px; }
 .category-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); padding: 14px; margin-bottom: 10px; }
 .category-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .category-name { font-size: 16px; font-weight: 500; color: var(--text); }
-.toggle-all-cat { font-size: 15px; color: var(--green-mid); cursor: pointer; padding: 3px 8px; border: 1px solid var(--green-light); border-radius: 20px; background: var(--green-pale); }
+.toggle-all-cat { font-size: 15px; color: var(--accent); cursor: pointer; padding: 3px 8px; border: 1px solid #fde8d8; border-radius: 20px; background: #fff8f3; }
+.toggle-all-cat.active { background: var(--accent); color: white; border-color: var(--accent); font-weight: 500; }
 .food-grid { display: flex; flex-wrap: wrap; gap: 6px; }
 .food-chip { font-size: 17px; padding: 6px 14px; border-radius: 20px; cursor: pointer; border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); transition: all 0.15s; user-select: none; -webkit-user-select: none; }
-.food-chip.selected { background: var(--green-light); border-color: var(--green-mid); color: var(--green-dark); font-weight: 500; }
+.food-chip.selected { background: #fff8f3; border-color: var(--accent); color: var(--accent); font-weight: 500; }
 .food-chip.anti { border-color: #e07b39; }
 .btn-generate { width: 100%; padding: 17px; background: var(--green-dark); color: white; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 16px; }
 .btn-generate:active { opacity: 0.9; transform: scale(0.98); }
@@ -116,23 +117,23 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .gen-tips { margin-top: 24px; font-size: 13px; color: var(--text-muted); font-style: italic; min-height: 40px; }
 /* Options panel */
 .options-panel { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 14px; }
-.options-title { font-size: 15px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+.options-title { font-size: 17px; font-weight: 600; color: var(--green-dark); margin-bottom: 12px; }
 .option-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .option-row:last-child { margin-bottom: 0; }
-.option-label { font-size: 17px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.option-label { font-size: 17px; font-weight: 400; color: var(--text); display: flex; align-items: center; gap: 8px; }
 .option-sub { font-size: 14px; color: var(--text-muted); display: block; }
 /* Difficulty selector */
 .diff-btns { display: flex; gap: 6px; }
 .diff-btn { padding: 6px 14px; border-radius: 20px; font-size: 15px; font-weight: 500; border: 1.5px solid var(--border); background: var(--bg); color: var(--text-muted); cursor: pointer; font-family: 'DM Sans', sans-serif; }
-.diff-btn.active { border-color: var(--green-dark); background: var(--green-light); color: var(--green-dark); }
+.diff-btn.active { border-color: var(--accent); background: #fff8f3; color: var(--accent); font-weight: 500; }
 /* Cooking method */
 .method-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .method-btn { padding: 6px 12px; border-radius: 20px; font-size: 15px; border: 1.5px solid var(--border); background: var(--bg); color: var(--text-muted); cursor: pointer; font-family: 'DM Sans', sans-serif; }
 .method-btn.active { border-color: var(--accent); background: #fff8f3; color: var(--accent); font-weight: 500; }
 /* Persons selector */
 .persons-ctrl { display: flex; align-items: center; gap: 10px; }
-.persons-btn { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--bg); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-family: 'DM Sans', sans-serif; }
-.persons-val { font-size: 18px; font-weight: 600; color: var(--green-dark); min-width: 24px; text-align: center; }
+.persons-btn { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--accent); background: var(--bg); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--accent); font-family: 'DM Sans', sans-serif; }
+.persons-val { font-size: 18px; font-weight: 600; color: var(--accent); min-width: 24px; text-align: center; }
 /* Macros display */
 .macros-bar { display: flex; gap: 6px; margin-top: 10px; }
 .macro-pill { flex: 1; text-align: center; background: var(--green-pale); border: 1px solid var(--green-light); border-radius: 8px; padding: 6px 4px; }
@@ -145,10 +146,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .macro-sliders { width: 100%; margin-top: 8px; }
 .macro-slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .macro-slider-row:last-child { margin-bottom: 0; }
-.macro-slider-lbl { font-size: 15px; font-weight: 500; width: 80px; color: var(--text); }
+.macro-slider-lbl { font-size: 15px; font-weight: 500; min-width: 90px; color: var(--text); white-space: nowrap; }
 .macro-slider { flex: 1; -webkit-appearance: none; height: 6px; border-radius: 3px; background: var(--green-light); outline: none; }
-.macro-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--green-dark); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
-.macro-slider-pct { font-size: 16px; font-weight: 600; color: var(--green-dark); width: 36px; text-align: right; }
+.macro-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+.macro-slider-pct { font-size: 16px; font-weight: 600; color: var(--accent); width: 36px; text-align: right; }
 .macro-sum { font-size: 15px; text-align: center; margin-top: 6px; font-weight: 500; }
 .macro-sum.ok { color: var(--green-mid); }
 .macro-sum.err { color: #c0392b; }
@@ -174,7 +175,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 /* Alergias e intolerancias */
 .allergy-grid { display:flex;flex-wrap:wrap;gap:6px;margin-top:8px; }
 .allergy-chip { font-size:15px;padding:5px 12px;border-radius:20px;cursor:pointer;border:1.5px solid var(--border);background:var(--bg);color:var(--text-muted);transition:all 0.15s;user-select:none;-webkit-user-select:none; }
-.allergy-chip.selected { background:#fff0f0;border-color:#c0392b;color:#c0392b;font-weight:500; }
+.allergy-chip.selected { background:#fff8f3;border-color:var(--accent);color:var(--accent);font-weight:500; }
 </style>
 </head>
 <body>
@@ -200,19 +201,75 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
   <!-- 1. SELECTOR DE DIETA -->
   <div style="margin-bottom:16px">
-    <div class="diet-selector-label">Elige tu dieta</div>
+    <div class="diet-selector-label">🥗 Elige tu dieta</div>
     <div class="diet-grid" id="diet-grid"></div>
   </div>
 
   <!-- 2. ALERGIAS E INTOLERANCIAS -->
-  <div style="margin-bottom:14px">
+  <div class="options-panel" style="margin-bottom:14px">
     <div class="diet-selector-label">🚫 Alergias e intolerancias</div>
-    <div class="allergy-grid" id="allergy-grid"></div>
+    <div class="allergy-grid" id="allergy-grid" style="margin-top:8px"></div>
   </div>
 
   <!-- 3. OPCIONES DE RECETAS -->
   <div class="options-panel">
     <div class="options-title">⚙️ Opciones de recetas</div>
+
+    <!-- Personas -->
+    <div class="option-row">
+      <div class="option-label">👥 Personas</div>
+      <div class="persons-ctrl">
+        <button class="persons-btn" onclick="changePersons(-1)">−</button>
+        <span class="persons-val" id="persons-val">2</span>
+        <button class="persons-btn" onclick="changePersons(1)">+</button>
+      </div>
+    </div>
+
+    <!-- Días de menú -->
+    <div class="option-row">
+      <div class="option-label">📅 Días de menú</div>
+      <div class="persons-ctrl">
+        <button class="persons-btn" onclick="changeDays(-1)">−</button>
+        <span class="persons-val" id="days-val">3</span>
+        <button class="persons-btn" onclick="changeDays(1)">+</button>
+      </div>
+    </div>
+
+    <!-- Platos al día -->
+    <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <div class="option-label">🍽️ Platos al día</div>
+      <div class="method-grid">
+        <button class="method-btn active" id="meal-desayuno" onclick="toggleMeal('desayuno',this)">☀️ Desayuno</button>
+        <button class="method-btn" id="meal-comida" onclick="toggleMeal('comida',this)">🍽️ Comida</button>
+        <button class="method-btn" id="meal-cena" onclick="toggleMeal('cena',this)">🌙 Cena</button>
+      </div>
+    </div>
+
+    <!-- Método de cocción -->
+    <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <div class="option-label" style="width:100%;display:flex;justify-content:space-between;align-items:center;">
+        <span>🍳 Métodos de cocción</span>
+        <span id="methods-all-btn" style="font-size:15px;color:var(--accent);cursor:pointer;font-weight:500;padding:3px 8px;border:1px solid #fde8d8;border-radius:20px;background:#fff8f3;" onclick="selectAllMethods()">Todos ✓</span>
+      </div>
+      <div class="method-grid">
+        <button class="method-btn active" id="method-Sartén" onclick="toggleMethod('Sartén',this)">🍳 Sartén</button>
+        <button class="method-btn" id="method-Horno" onclick="toggleMethod('Horno',this)">🔆 Horno</button>
+        <button class="method-btn" id="method-Air Fryer" onclick="toggleMethod('Air Fryer',this)">💨 Air Fryer</button>
+        <button class="method-btn" id="method-Microondas" onclick="toggleMethod('Microondas',this)">📡 Microondas</button>
+        <button class="method-btn" id="method-Olla" onclick="toggleMethod('Olla',this)">🫕 Olla</button>
+        <button class="method-btn" id="method-Thermomix" onclick="toggleMethod('Thermomix',this)">⚙️ Thermomix</button>
+      </div>
+    </div>
+
+    <!-- Dificultad -->
+    <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <div class="option-label">👨‍🍳 Nivel de dificultad de receta</div>
+      <div class="diff-btns">
+        <button class="diff-btn active" onclick="setDiff('Fácil',this)">Fácil</button>
+        <button class="diff-btn" onclick="setDiff('Intermedio',this)">Intermedio</button>
+        <button class="diff-btn" onclick="setDiff('Difícil',this)">Difícil</button>
+      </div>
+    </div>
 
     <!-- Filtro antiinflamatorio -->
     <div class="option-row" id="anti-toggle" onclick="toggleAnti()" style="cursor:pointer">
@@ -239,62 +296,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <div><span>Modo económico</span><span class="option-sub">Ingredientes más baratos</span></div>
       </div>
       <div class="toggle-sw" id="budget-sw" onclick="toggleBudget()"></div>
-    </div>
-
-    <!-- Dificultad -->
-    <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
-      <div class="option-label">👨‍🍳 Nivel de dificultad de receta</div>
-      <div class="diff-btns">
-        <button class="diff-btn active" onclick="setDiff('Fácil',this)">Fácil</button>
-        <button class="diff-btn" onclick="setDiff('Intermedio',this)">Intermedio</button>
-        <button class="diff-btn" onclick="setDiff('Difícil',this)">Difícil</button>
-      </div>
-    </div>
-
-    <!-- Método de cocción -->
-    <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
-      <div class="option-label" style="width:100%;display:flex;justify-content:space-between;align-items:center;">
-        <span>🍳 Métodos de cocción</span>
-        <span style="font-size:13px;color:var(--green-mid);cursor:pointer;font-weight:400;" onclick="selectAllMethods()">Todos ✓</span>
-      </div>
-      <div class="method-grid">
-        <button class="method-btn active" id="method-Sartén" onclick="toggleMethod('Sartén',this)">🍳 Sartén</button>
-        <button class="method-btn" id="method-Horno" onclick="toggleMethod('Horno',this)">🔆 Horno</button>
-        <button class="method-btn" id="method-Air Fryer" onclick="toggleMethod('Air Fryer',this)">💨 Air Fryer</button>
-        <button class="method-btn" id="method-Microondas" onclick="toggleMethod('Microondas',this)">📡 Microondas</button>
-        <button class="method-btn" id="method-Olla" onclick="toggleMethod('Olla',this)">🫕 Olla</button>
-        <button class="method-btn" id="method-Thermomix" onclick="toggleMethod('Thermomix',this)">⚙️ Thermomix</button>
-      </div>
-    </div>
-
-    <!-- Personas -->
-    <div class="option-row">
-      <div class="option-label">👥 Personas</div>
-      <div class="persons-ctrl">
-        <button class="persons-btn" onclick="changePersons(-1)">−</button>
-        <span class="persons-val" id="persons-val">2</span>
-        <button class="persons-btn" onclick="changePersons(1)">+</button>
-      </div>
-    </div>
-
-    <!-- Días de menú -->
-    <div class="option-row">
-      <div class="option-label">📅 Días de menú</div>
-      <div class="persons-ctrl">
-        <button class="persons-btn" onclick="changeDays(-1)">−</button>
-        <span class="persons-val" id="days-val">3</span>
-        <button class="persons-btn" onclick="changeDays(1)">+</button>
-      </div>
-    </div>
-
-    <!-- Platos del día -->
-    <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
-      <div class="option-label">🍽️ Platos cada día</div>
-      <div class="method-grid">
-        <button class="method-btn" id="meal-desayuno" onclick="toggleMeal('desayuno',this)">☀️ Desayuno</button>
-        <button class="method-btn active" id="meal-comida" onclick="toggleMeal('comida',this)">🍽️ Comida</button>
-        <button class="method-btn active" id="meal-cena" onclick="toggleMeal('cena',this)">🌙 Cena</button>
-      </div>
     </div>
 
     <!-- Calorías diarias objetivo -->
@@ -334,8 +335,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   <div class="counter-bar">
     <span class="counter-text" id="counter-text">0 seleccionados</span>
     <div class="counter-btns">
-      <span class="cbtn" onclick="selectAll()">Todos ✓</span>
-      <span class="cbtn red" onclick="deselectAll()">Ninguno ✗</span>
+      <span class="cbtn" id="todos-btn" onclick="toggleAll()">Todos ✓</span>
     </div>
   </div>
   <div class="saved-badge" id="saved-badge" style="display:none">💾 Selección guardada automáticamente</div>
@@ -588,7 +588,7 @@ let difficulty = 'Fácil';
 let cookMethods = new Set(['Sartén']);
 let persons = 2;
 let numDays = 3;
-let selectedMeals = new Set(['comida', 'cena']);
+let selectedMeals = new Set(['desayuno']);
 let kcalTarget = 0;
 let macroPct = { prot: 30, carb: 40, fat: 30 };
 
@@ -631,32 +631,61 @@ function getMealsOrdered() {
   return MEAL_ORDER.filter(m => selectedMeals.has(m));
 }
 
+// Los dos últimos que el usuario tocó manualmente — el tercero se ajusta automáticamente
+const userTouched = new Set(); // máximo 2; el tercero es el ajustado
+
 function updateSliders(changed, val) {
   val = parseInt(val);
   macroPct[changed] = val;
-  const keys = ['prot','carb','fat'];
-  const others = keys.filter(k => k !== changed);
-  const remaining = 100 - val;
-  const sum = others.reduce((a,k) => a + macroPct[k], 0);
-  if (sum > 0) {
-    others.forEach(k => {
-      macroPct[k] = Math.max(5, Math.round(macroPct[k] / sum * remaining));
-    });
-    // Ajustar redondeo para que sumen exactamente 100
-    const total = keys.reduce((a,k) => a + macroPct[k], 0);
-    if (total !== 100) macroPct[others[0]] += 100 - total;
+
+  // Registrar que el usuario tocó este
+  userTouched.add(changed);
+  // Si ha tocado los 3, el más antiguo deja de estar "protegido" — reset al recién tocado
+  if (userTouched.size > 2) {
+    // Quitar el que NO es "changed" y que estaba primero — solo mantenemos los 2 más recientes
+    // Estrategia: el set guarda orden de inserción, borramos el primero que no sea changed
+    for (const k of userTouched) {
+      if (k !== changed) { userTouched.delete(k); break; }
+    }
   }
+
+  const keys = ['prot','carb','fat'];
+  // El que se ajusta automáticamente es el que el usuario NO ha tocado
+  const auto = keys.find(k => !userTouched.has(k));
+
+  if (auto) {
+    // Calcular el valor del automático = 100 - los dos que el usuario controla
+    const controlled = keys.filter(k => k !== auto);
+    let autoVal = 100 - controlled.reduce((a,k) => a + macroPct[k], 0);
+    autoVal = Math.max(5, autoVal);
+    // Si el automático no puede bajar más de 5, ajustar el otro controlado
+    if (autoVal === 5) {
+      const other = controlled.find(k => k !== changed);
+      if (other) macroPct[other] = Math.max(5, 100 - macroPct[changed] - 5);
+      autoVal = Math.max(5, 100 - macroPct[changed] - macroPct[other || controlled[0]]);
+    }
+    macroPct[auto] = autoVal;
+  }
+
+  // Garantizar suma = 100
+  const total = keys.reduce((a,k) => a + macroPct[k], 0);
+  if (total !== 100) {
+    const auto2 = auto || keys.find(k => k !== changed);
+    if (auto2) macroPct[auto2] = Math.max(5, macroPct[auto2] + (100 - total));
+  }
+
+  // Actualizar UI
   keys.forEach(k => {
     const sl = document.getElementById('sl-' + k);
     const pct = document.getElementById('pct-' + k);
     if (sl) sl.value = macroPct[k];
     if (pct) pct.textContent = macroPct[k] + '%';
   });
-  const total = keys.reduce((a,k) => a + macroPct[k], 0);
+  const finalTotal = keys.reduce((a,k) => a + macroPct[k], 0);
   const sumEl = document.getElementById('macro-sum');
   if (sumEl) {
-    sumEl.textContent = `Total: ${total}% ${total === 100 ? '✓' : '⚠️ debe ser 100%'}`;
-    sumEl.className = 'macro-sum ' + (total === 100 ? 'ok' : 'err');
+    sumEl.textContent = `Total: ${finalTotal}% ${finalTotal === 100 ? '✓' : '⚠️ debe ser 100%'}`;
+    sumEl.className = 'macro-sum ' + (finalTotal === 100 ? 'ok' : 'err');
   }
 }
 let selectedFoods = new Set();
@@ -685,14 +714,44 @@ function toggleMethod(val, el) {
     cookMethods.add(val);
     el.classList.add('active');
   }
+  updateMethodsAllBtn();
 }
 function selectAllMethods() {
   const allMethods = ['Sartén','Horno','Air Fryer','Microondas','Olla','Thermomix'];
-  allMethods.forEach(m => {
-    cookMethods.add(m);
-    const btn = document.getElementById('method-' + m);
-    if (btn) btn.classList.add('active');
-  });
+  const allActive = allMethods.every(m => cookMethods.has(m));
+  if (allActive) {
+    // Deseleccionar todos excepto Sartén (mínimo obligatorio)
+    allMethods.forEach(m => {
+      cookMethods.delete(m);
+      const btn = document.getElementById('method-' + m);
+      if (btn) btn.classList.remove('active');
+    });
+    cookMethods.add('Sartén');
+    const sartenBtn = document.getElementById('method-Sartén');
+    if (sartenBtn) sartenBtn.classList.add('active');
+  } else {
+    allMethods.forEach(m => {
+      cookMethods.add(m);
+      const btn = document.getElementById('method-' + m);
+      if (btn) btn.classList.add('active');
+    });
+  }
+  updateMethodsAllBtn();
+}
+function updateMethodsAllBtn() {
+  const allMethods = ['Sartén','Horno','Air Fryer','Microondas','Olla','Thermomix'];
+  const allActive = allMethods.every(m => cookMethods.has(m));
+  const btn = document.getElementById('methods-all-btn');
+  if (!btn) return;
+  if (allActive) {
+    btn.style.background = 'var(--accent)';
+    btn.style.color = 'white';
+    btn.style.borderColor = 'var(--accent)';
+  } else {
+    btn.style.background = '#fff8f3';
+    btn.style.color = 'var(--accent)';
+    btn.style.borderColor = '#fde8d8';
+  }
 }
 function changePersons(delta) {
   persons = Math.min(10, Math.max(1, persons + delta));
@@ -789,7 +848,7 @@ function renderFoods() {
     div.innerHTML = `
       <div class="category-header">
         <span class="category-name">${cat}</span>
-        <span class="toggle-all-cat" onclick="toggleCat('${catId}','${CSS.escape(cat)}')">Activar todos</span>
+        <span class="toggle-all-cat" onclick="toggleCat('${catId}','${CSS.escape(cat)}')">Todos</span>
       </div>
       <div class="food-grid" id="${catId}">
         ${filtered.map(f => `<span class="food-chip ${selectedFoods.has(f)?'selected':''} ${ANTI_FOODS.has(f)&&!antiFilter?'anti':''}" data-food="${f.replace(/"/g,'&quot;')}">${f}${ANTI_FOODS.has(f)&&!antiFilter?' 🔥':''}</span>`).join('')}
@@ -805,6 +864,7 @@ document.addEventListener('click', function(e) {
     if (selectedFoods.has(food)) { selectedFoods.delete(food); e.target.classList.remove('selected'); }
     else { selectedFoods.add(food); e.target.classList.add('selected'); }
     updateCounter();
+    updateCatButtons();
     saveProfile();
   }
 });
@@ -821,21 +881,64 @@ function toggleCat(catId, cat) {
     else { selectedFoods.add(food); chip.classList.add('selected'); }
   });
   updateCounter();
+  updateCatButtons();
   saveProfile();
+}
+
+function toggleAll() {
+  const allChips = document.querySelectorAll('.food-chip');
+  const allSelected = Array.from(allChips).every(c => c.classList.contains('selected'));
+  if (allSelected) {
+    deselectAll();
+  } else {
+    selectAll();
+  }
 }
 
 function selectAll() {
   document.querySelectorAll('.food-chip').forEach(chip => { selectedFoods.add(chip.getAttribute('data-food')); chip.classList.add('selected'); });
-  updateCounter(); saveProfile();
+  updateCounter();
+  updateCatButtons();
+  saveProfile();
 }
 
 function deselectAll() {
   document.querySelectorAll('.food-chip').forEach(chip => { selectedFoods.delete(chip.getAttribute('data-food')); chip.classList.remove('selected'); });
-  updateCounter(); saveProfile();
+  updateCounter();
+  updateCatButtons();
+  saveProfile();
 }
 
 function updateCounter() {
   document.getElementById('counter-text').textContent = selectedFoods.size + ' seleccionados';
+  const allChips = document.querySelectorAll('.food-chip');
+  const allSelected = allChips.length > 0 && Array.from(allChips).every(c => c.classList.contains('selected'));
+  const todosBtn = document.getElementById('todos-btn');
+  if (todosBtn) {
+    if (allSelected) {
+      todosBtn.style.background = 'var(--accent)';
+      todosBtn.style.color = 'white';
+      todosBtn.style.borderColor = 'var(--accent)';
+      todosBtn.style.fontWeight = '500';
+    } else {
+      todosBtn.style.background = '#fff8f3';
+      todosBtn.style.color = 'var(--accent)';
+      todosBtn.style.borderColor = '#fde8d8';
+      todosBtn.style.fontWeight = '500';
+    }
+  }
+}
+
+function updateCatButtons() {
+  // Actualizar cada botón "Activar todos" de categoría
+  document.querySelectorAll('.toggle-all-cat').forEach(btn => {
+    const catId = btn.closest('.category-card').querySelector('.food-grid').id;
+    const chips = document.querySelectorAll('#' + catId + ' .food-chip');
+    if (!chips.length) return;
+    const allOn = Array.from(chips).every(c => c.classList.contains('selected'));
+    btn.classList.toggle('active', allOn);
+    btn.textContent = allOn ? 'Todos ✓' : 'Todos';
+  });
 }
 
 function showScreen(name) {
