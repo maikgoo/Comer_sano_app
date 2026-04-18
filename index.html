@@ -200,7 +200,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <div class="diet-grid" id="diet-grid"></div>
   </div>
 
-  <!-- 2. OPCIONES DE RECETAS -->
+  <!-- 2. ALERGIAS E INTOLERANCIAS -->
+  <div style="margin-bottom:14px">
+    <div class="diet-selector-label">🚫 Alergias e intolerancias</div>
+    <div class="allergy-grid" id="allergy-grid"></div>
+  </div>
+
+  <!-- 3. OPCIONES DE RECETAS -->
   <div class="options-panel">
     <div class="options-title">⚙️ Opciones de recetas</div>
 
@@ -294,12 +300,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <div><span>Calorías/día objetivo</span><span class="option-sub">0 = sin límite</span></div>
       </div>
       <input class="kcal-input" type="number" id="kcal-target" value="0" min="0" max="5000" step="50" oninput="kcalTarget=parseInt(this.value)||0">
-    </div>
-
-    <!-- Alergias e intolerancias -->
-    <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
-      <div class="option-label">🚫 Alergias e intolerancias</div>
-      <div class="allergy-grid" id="allergy-grid"></div>
     </div>
 
     <!-- Distribución de macros -->
