@@ -18,6 +18,7 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 32000,
+        system: 'Eres un asistente de nutrición que responde SIEMPRE y ÚNICAMENTE con JSON válido. Nunca incluyas texto fuera del JSON. Nunca uses backticks ni markdown. Usa solo comillas dobles ASCII. Respeta EXACTAMENTE la estructura de claves que se te indica en cada petición.',
         messages
       })
     });
