@@ -421,6 +421,12 @@ let cookMethods = new Set(['Sartén']);
 let persons = 2;
 let numDays = 3;
 let selectedMeals = new Set(['comida', 'cena']);
+
+// Orden fijo siempre
+const MEAL_ORDER = ['desayuno', 'comida', 'cena'];
+function getMealsOrdered() {
+  return MEAL_ORDER.filter(m => selectedMeals.has(m));
+}
 let selectedFoods = new Set();
 let shopItems = [];
 let currentSuperFilter = 'all';
@@ -602,8 +608,7 @@ function showScreen(name) {
 async function generateRecipes() {
   if (selectedFoods.size < 5) { alert('Selecciona al menos 5 alimentos.'); return; }
 
-  const MEAL_ORDER = ['desayuno', 'comida', 'cena'];
-  const mealsList = MEAL_ORDER.filter(m => selectedMeals.has(m));
+  const mealsList = getMealsOrdered();
   const totalRecipes = numDays * mealsList.length;
   // Tiempo estimado: ~4s por receta base, más si es difícil o hay muchos platos
   const secsPerRecipe = difficulty === 'Difícil' ? 6 : difficulty === 'Intermedio' ? 5 : 4;
@@ -719,7 +724,7 @@ function renderDayMenus(days) {
     dayHeader.textContent = 'Día ' + day.dia + ' — ' + nombre;
     c.appendChild(dayHeader);
 
-    const mealsToShow = ['desayuno', 'comida', 'cena'].filter(m => selectedMeals.has(m));
+    const mealsToShow = getMealsOrdered();
     mealsToShow.forEach(mealKey => {
       const r = day[mealKey];
       if (!r || !r.name) return;
