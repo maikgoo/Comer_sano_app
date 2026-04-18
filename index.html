@@ -170,33 +170,25 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 </nav>
 
 <div id="screen-foods" class="screen active">
+
+  <!-- 1. SELECTOR DE DIETA -->
   <div style="margin-bottom:16px">
     <div class="diet-selector-label">Elige tu dieta</div>
     <div class="diet-grid" id="diet-grid"></div>
   </div>
-  <div class="anti-toggle" id="anti-toggle" onclick="toggleAnti()">
-    <div class="anti-left">
-      <span style="font-size:20px">🔥</span>
-      <div>
-        <div class="anti-text">Filtro antiinflamatorio</div>
-        <div class="anti-sub">Solo alimentos que reducen la inflamación</div>
-      </div>
-    </div>
-    <div class="toggle-sw" id="anti-sw"></div>
-  </div>
-  <div class="counter-bar">
-    <span class="counter-text" id="counter-text">0 seleccionados</span>
-    <div class="counter-btns">
-      <span class="cbtn" onclick="selectAll()">Todos ✓</span>
-      <span class="cbtn red" onclick="deselectAll()">Ninguno ✗</span>
-    </div>
-  </div>
-  <div class="saved-badge" id="saved-badge" style="display:none">💾 Selección guardada automáticamente</div>
-  <div id="food-categories"></div>
 
-  <!-- OPCIONES DE GENERACIÓN -->
+  <!-- 2. OPCIONES DE RECETAS -->
   <div class="options-panel">
     <div class="options-title">⚙️ Opciones de recetas</div>
+
+    <!-- Filtro antiinflamatorio -->
+    <div class="option-row" id="anti-toggle" onclick="toggleAnti()" style="cursor:pointer">
+      <div class="option-label">
+        <span>🔥</span>
+        <div><span>Filtro antiinflamatorio</span><span class="option-sub">Solo alimentos antiinflamatorios</span></div>
+      </div>
+      <div class="toggle-sw" id="anti-sw"></div>
+    </div>
 
     <!-- Temporada -->
     <div class="option-row">
@@ -228,7 +220,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
     <!-- Método de cocción -->
     <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
-      <div class="option-label">🔥 Métodos de cocción</div>
+      <div class="option-label">🍳 Métodos de cocción</div>
       <div class="method-grid">
         <button class="method-btn active" onclick="toggleMethod('Sartén',this)">🍳 Sartén</button>
         <button class="method-btn" onclick="toggleMethod('Horno',this)">🔆 Horno</button>
@@ -239,7 +231,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
     </div>
 
-    <!-- Número de personas -->
+    <!-- Personas -->
     <div class="option-row">
       <div class="option-label">👥 Personas</div>
       <div class="persons-ctrl">
@@ -249,7 +241,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
     </div>
 
-    <!-- Número de días -->
+    <!-- Días de menú -->
     <div class="option-row">
       <div class="option-label">📅 Días de menú</div>
       <div class="persons-ctrl">
@@ -259,7 +251,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
     </div>
 
-    <!-- Platos por día -->
+    <!-- Platos del día -->
     <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
       <div class="option-label">🍽️ Platos del día</div>
       <div class="method-grid">
@@ -272,13 +264,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <!-- Calorías diarias objetivo -->
     <div class="option-row">
       <div class="option-label">
-        <span>🔥</span>
+        <span>🎯</span>
         <div><span>Calorías/día objetivo</span><span class="option-sub">0 = sin límite</span></div>
       </div>
       <input class="kcal-input" type="number" id="kcal-target" value="0" min="0" max="5000" step="50" oninput="kcalTarget=parseInt(this.value)||0">
     </div>
 
-    <!-- Porcentajes de macros -->
+    <!-- Distribución de macros -->
     <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:6px">
       <div class="option-label">📊 Distribución de macros</div>
       <div class="macro-sliders">
@@ -302,6 +294,18 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     </div>
   </div>
 
+  <!-- 3. SELECTOR DE ALIMENTOS -->
+  <div class="counter-bar">
+    <span class="counter-text" id="counter-text">0 seleccionados</span>
+    <div class="counter-btns">
+      <span class="cbtn" onclick="selectAll()">Todos ✓</span>
+      <span class="cbtn red" onclick="deselectAll()">Ninguno ✗</span>
+    </div>
+  </div>
+  <div class="saved-badge" id="saved-badge" style="display:none">💾 Selección guardada automáticamente</div>
+  <div id="food-categories"></div>
+
+  <!-- 4. BOTÓN GENERAR -->
   <button class="btn-generate" onclick="generateRecipes()" id="btn-generate">✨ Generar menú</button>
   <div style="height:20px"></div>
 </div>
