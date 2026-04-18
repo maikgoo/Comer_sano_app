@@ -131,11 +131,25 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .persons-ctrl { display: flex; align-items: center; gap: 10px; }
 .persons-btn { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--bg); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-family: 'DM Sans', sans-serif; }
 .persons-val { font-size: 18px; font-weight: 600; color: var(--green-dark); min-width: 24px; text-align: center; }
-/* Macros */
+/* Macros display */
 .macros-bar { display: flex; gap: 6px; margin-top: 10px; }
 .macro-pill { flex: 1; text-align: center; background: var(--green-pale); border: 1px solid var(--green-light); border-radius: 8px; padding: 6px 4px; }
 .macro-val { font-size: 15px; font-weight: 600; color: var(--green-dark); }
 .macro-lbl { font-size: 11px; color: var(--text-muted); }
+/* Kcal input */
+.kcal-input { width: 90px; padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 16px; font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--bg); text-align: center; }
+.kcal-input:focus { outline: none; border-color: var(--green-mid); }
+/* Macro sliders */
+.macro-sliders { width: 100%; margin-top: 8px; }
+.macro-slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.macro-slider-row:last-child { margin-bottom: 0; }
+.macro-slider-lbl { font-size: 13px; font-weight: 500; width: 80px; color: var(--text); }
+.macro-slider { flex: 1; -webkit-appearance: none; height: 6px; border-radius: 3px; background: var(--green-light); outline: none; }
+.macro-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--green-dark); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+.macro-slider-pct { font-size: 14px; font-weight: 600; color: var(--green-dark); width: 36px; text-align: right; }
+.macro-sum { font-size: 13px; text-align: center; margin-top: 6px; font-weight: 500; }
+.macro-sum.ok { color: var(--green-mid); }
+.macro-sum.err { color: #c0392b; }
 .install-banner { background: var(--accent); color: white; padding: 12px 16px; font-size: 12px; text-align: center; display: none; }
 .install-banner.show { display: block; }
 </style>
@@ -252,6 +266,38 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <button class="method-btn" id="meal-desayuno" onclick="toggleMeal('desayuno',this)">☀️ Desayuno</button>
         <button class="method-btn active" id="meal-comida" onclick="toggleMeal('comida',this)">🍽️ Comida</button>
         <button class="method-btn active" id="meal-cena" onclick="toggleMeal('cena',this)">🌙 Cena</button>
+      </div>
+    </div>
+
+    <!-- Calorías diarias objetivo -->
+    <div class="option-row">
+      <div class="option-label">
+        <span>🔥</span>
+        <div><span>Calorías/día objetivo</span><span class="option-sub">0 = sin límite</span></div>
+      </div>
+      <input class="kcal-input" type="number" id="kcal-target" value="0" min="0" max="5000" step="50" oninput="kcalTarget=parseInt(this.value)||0">
+    </div>
+
+    <!-- Porcentajes de macros -->
+    <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:6px">
+      <div class="option-label">📊 Distribución de macros</div>
+      <div class="macro-sliders">
+        <div class="macro-slider-row">
+          <span class="macro-slider-lbl">🥩 Proteína</span>
+          <input type="range" class="macro-slider" id="sl-prot" min="5" max="70" value="30" oninput="updateSliders('prot',this.value)">
+          <span class="macro-slider-pct" id="pct-prot">30%</span>
+        </div>
+        <div class="macro-slider-row">
+          <span class="macro-slider-lbl">🍞 Carbos</span>
+          <input type="range" class="macro-slider" id="sl-carb" min="5" max="70" value="40" oninput="updateSliders('carb',this.value)">
+          <span class="macro-slider-pct" id="pct-carb">40%</span>
+        </div>
+        <div class="macro-slider-row">
+          <span class="macro-slider-lbl">🫒 Grasas</span>
+          <input type="range" class="macro-slider" id="sl-fat" min="5" max="70" value="30" oninput="updateSliders('fat',this.value)">
+          <span class="macro-slider-pct" id="pct-fat">30%</span>
+        </div>
+        <div class="macro-sum ok" id="macro-sum">Total: 100% ✓</div>
       </div>
     </div>
   </div>
@@ -421,11 +467,42 @@ let cookMethods = new Set(['Sartén']);
 let persons = 2;
 let numDays = 3;
 let selectedMeals = new Set(['comida', 'cena']);
+let kcalTarget = 0;
+let macroPct = { prot: 30, carb: 40, fat: 30 };
 
 // Orden fijo siempre
 const MEAL_ORDER = ['desayuno', 'comida', 'cena'];
 function getMealsOrdered() {
   return MEAL_ORDER.filter(m => selectedMeals.has(m));
+}
+
+function updateSliders(changed, val) {
+  val = parseInt(val);
+  macroPct[changed] = val;
+  const keys = ['prot','carb','fat'];
+  const others = keys.filter(k => k !== changed);
+  const remaining = 100 - val;
+  const sum = others.reduce((a,k) => a + macroPct[k], 0);
+  if (sum > 0) {
+    others.forEach(k => {
+      macroPct[k] = Math.max(5, Math.round(macroPct[k] / sum * remaining));
+    });
+    // Ajustar redondeo para que sumen exactamente 100
+    const total = keys.reduce((a,k) => a + macroPct[k], 0);
+    if (total !== 100) macroPct[others[0]] += 100 - total;
+  }
+  keys.forEach(k => {
+    const sl = document.getElementById('sl-' + k);
+    const pct = document.getElementById('pct-' + k);
+    if (sl) sl.value = macroPct[k];
+    if (pct) pct.textContent = macroPct[k] + '%';
+  });
+  const total = keys.reduce((a,k) => a + macroPct[k], 0);
+  const sumEl = document.getElementById('macro-sum');
+  if (sumEl) {
+    sumEl.textContent = `Total: ${total}% ${total === 100 ? '✓' : '⚠️ debe ser 100%'}`;
+    sumEl.className = 'macro-sum ' + (total === 100 ? 'ok' : 'err');
+  }
 }
 let selectedFoods = new Set();
 let shopItems = [];
@@ -668,7 +745,12 @@ async function generateRecipes() {
   const mealExample = mealsList.map(m => `"${m}":{"name":"","time":"","difficulty":"${difficulty}","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]}`).join(',');
   const dayExample = `{"dia":1,"diaNombre":"Lunes",${mealExample}}`;
 
-  const prompt = `Eres nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}
+  const kcalNote = kcalTarget > 0
+    ? ` Objetivo: ${kcalTarget} kcal/persona/día distribuidas entre los platos del día.`
+    : '';
+  const macroNote = ` Distribución de macros por persona: ${macroPct.prot}% proteínas, ${macroPct.carb}% carbohidratos, ${macroPct.fat}% grasas.`;
+
+  const prompt = `Eres nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}${kcalNote}${macroNote}
 Crea un menú de ${numDays} día${numDays>1?'s':''} para ${persons} persona${persons>1?'s':''}, dificultad ${difficulty}.
 Platos por día: ${mealKeys}.
 Días: ${dayNames.slice(0,numDays).join(', ')}.
@@ -678,7 +760,7 @@ Métodos de cocción: ${methodList}. Para Sartén/Olla usa nivel vitrocerámica 
 Responde ÚNICAMENTE con JSON sin backticks ni texto extra:
 [${dayExample}, ...]
 
-Reglas estrictas: cantidades para ${persons} persona${persons>1?'s':''}. shopItems=cantidad+nombre. Máximo 4 pasos por plato, concisos. macros=totales del plato. Descripción máximo 15 palabras.`;
+Reglas estrictas: cantidades para ${persons} persona${persons>1?'s':''}. macros=valores POR PERSONA (no totales). shopItems=cantidad+nombre total para ${persons} persona${persons>1?'s':''}. Máximo 4 pasos por plato, concisos. Descripción máximo 15 palabras.`;
 
   try {
     const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ messages:[{role:"user",content:prompt}] }) });
@@ -724,6 +806,21 @@ function renderDayMenus(days) {
     dayHeader.textContent = 'Día ' + day.dia + ' — ' + nombre;
     c.appendChild(dayHeader);
 
+    // Resumen kcal del día
+    const mealsOfDay = getMealsOrdered().map(k => day[k]).filter(r => r && r.macros);
+    if (mealsOfDay.length > 0) {
+      const totalKcal = mealsOfDay.reduce((a, r) => a + (r.macros.kcal || 0), 0);
+      const totalProt = mealsOfDay.reduce((a, r) => a + (r.macros.proteinas || 0), 0);
+      const totalCarb = mealsOfDay.reduce((a, r) => a + (r.macros.carbos || 0), 0);
+      const totalFat  = mealsOfDay.reduce((a, r) => a + (r.macros.grasas || 0), 0);
+      const targetNote = kcalTarget > 0
+        ? ` <span style="color:${Math.abs(totalKcal-kcalTarget)<100?'var(--green-mid)':'var(--accent)'}"> · objetivo ${kcalTarget} kcal</span>`
+        : '';
+      const summary = document.createElement('div');
+      summary.style.cssText = 'background:var(--green-pale);border:1px solid var(--green-light);border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:13px;color:var(--text-muted)';
+      summary.innerHTML = `<strong style="color:var(--green-dark)">Total día/persona:</strong> ${totalKcal} kcal · ${totalProt}g prot · ${totalCarb}g carbos · ${totalFat}g grasas${targetNote}`;
+      c.appendChild(summary);
+    }
     const mealsToShow = getMealsOrdered();
     mealsToShow.forEach(mealKey => {
       const r = day[mealKey];
@@ -732,7 +829,7 @@ function renderDayMenus(days) {
       const id = 'detail-' + di + '-' + mealKey;
       const macrosHtml = r.macros ? `
         <div class="macros-bar">
-          <div class="macro-pill"><div class="macro-val">${r.macros.kcal}</div><div class="macro-lbl">kcal</div></div>
+          <div class="macro-pill"><div class="macro-val">${r.macros.kcal}</div><div class="macro-lbl">kcal/p</div></div>
           <div class="macro-pill"><div class="macro-val">${r.macros.proteinas}g</div><div class="macro-lbl">Proteína</div></div>
           <div class="macro-pill"><div class="macro-val">${r.macros.carbos}g</div><div class="macro-lbl">Carbos</div></div>
           <div class="macro-pill"><div class="macro-val">${r.macros.grasas}g</div><div class="macro-lbl">Grasas</div></div>
