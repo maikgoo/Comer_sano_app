@@ -1114,6 +1114,50 @@ function renderShop() {
     });
     container.appendChild(card);
   });
+
+  // Botón compartir
+  const shareBtn = document.createElement('div');
+  shareBtn.style.cssText = 'margin-top:16px;display:flex;gap:8px;';
+  shareBtn.innerHTML = `
+    <button onclick="shareShopList('whatsapp')" style="flex:1;padding:14px;background:#25D366;color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <span style="font-size:20px">💬</span> WhatsApp
+    </button>
+    <button onclick="shareShopList('copy')" style="flex:1;padding:14px;background:var(--green-dark);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <span style="font-size:20px">📋</span> Copiar
+    </button>`;
+  container.appendChild(shareBtn);
+}
+
+function shareShopList(method) {
+  // Agrupar por categoría igual que en render
+  const filtered = currentSuperFilter === 'all' ? shopItems : shopItems.filter(i => i.supers.includes(currentSuperFilter));
+  const groups = {};
+  filtered.forEach(item => {
+    const cat = getShopCategory(stripQty(item.name));
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(item);
+  });
+  const catOrder = [...SHOP_CATEGORIES.map(c => c.label), '🛍️ Otros'];
+  const sortedCats = Object.keys(groups).sort((a,b) => catOrder.indexOf(a) - catOrder.indexOf(b));
+
+  let text = '🛒 *Lista de la compra — Come Sano*\n\n';
+  sortedCats.forEach(cat => {
+    text += `*${cat}*\n`;
+    groups[cat].forEach(item => {
+      const check = item.checked ? '✅' : '⬜';
+      text += `${check} ${item.name}\n`;
+    });
+    text += '\n';
+  });
+  text += '_Generado con Come Sano 🌿_';
+
+  if (method === 'whatsapp') {
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('✅ Lista copiada al portapapeles');
+    });
+  }
 }
 
 function toggleCheck(idx) { shopItems[idx].checked = !shopItems[idx].checked; renderShop(); }
@@ -1276,7 +1320,32 @@ function renderProfile() {
     <div class="profile-card ${p.id === currentProfileId ? 'active' : ''}" onclick="switchProfile('${p.id}')">
       <div class="profile-avatar">${p.avatar}</div>
       <div class="profile-name">${p.name}</div>
+      ${p.id === currentProfileId ? `<div style="font-size:11px;color:var(--green-mid);cursor:pointer" onclick="event.stopPropagation();showAvatarPicker('${p.id}')">cambiar</div>` : ''}
     </div>`).join('');
+
+  // Mostrar selector de avatar si está activo
+  const existing = document.getElementById('avatar-picker-inline');
+  if (existing) existing.remove();
+}
+
+function showAvatarPicker(profileId) {
+  const existing = document.getElementById('avatar-picker-inline');
+  if (existing) { existing.remove(); return; }
+  const avatars = ['👨','👩','👧','👦','👵','👴','🧑','🐶','🐱','🦊'];
+  const picker = document.createElement('div');
+  picker.id = 'avatar-picker-inline';
+  picker.style.cssText = 'background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;width:100%';
+  picker.innerHTML = `<div style="width:100%;font-size:13px;color:var(--text-muted);margin-bottom:4px">Elige tu avatar:</div>` +
+    avatars.map(a => `<span class="avatar-opt" onclick="changeAvatar('${profileId}','${a}')" style="font-size:26px">${a}</span>`).join('');
+  document.getElementById('profile-list').after(picker);
+}
+
+async function changeAvatar(profileId, avatar) {
+  const p = profiles.find(p => p.id === profileId);
+  if (!p) return;
+  p.avatar = avatar;
+  await apiRedis({ action:'saveProfiles', hogarId, data: profiles });
+  renderProfile();
 }
 
 function renderSaved() {
