@@ -169,6 +169,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .btn-delete-saved { position:absolute;top:12px;right:12px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-muted); }
 .avatar-opt { font-size:28px;cursor:pointer;padding:6px;border-radius:10px;border:2px solid transparent;line-height:1; }
 .avatar-opt.selected { border-color:var(--green-dark);background:var(--green-light); }
+/* Alergias e intolerancias */
+.allergy-grid { display:flex;flex-wrap:wrap;gap:6px;margin-top:8px; }
+.allergy-chip { font-size:13px;padding:5px 12px;border-radius:20px;cursor:pointer;border:1.5px solid var(--border);background:var(--bg);color:var(--text-muted);transition:all 0.15s;user-select:none;-webkit-user-select:none; }
+.allergy-chip.selected { background:#fff0f0;border-color:#c0392b;color:#c0392b;font-weight:500; }
 </style>
 </head>
 <body>
@@ -290,6 +294,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <div><span>Calorías/día objetivo</span><span class="option-sub">0 = sin límite</span></div>
       </div>
       <input class="kcal-input" type="number" id="kcal-target" value="0" min="0" max="5000" step="50" oninput="kcalTarget=parseInt(this.value)||0">
+    </div>
+
+    <!-- Alergias e intolerancias -->
+    <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <div class="option-label">🚫 Alergias e intolerancias</div>
+      <div class="allergy-grid" id="allergy-grid"></div>
     </div>
 
     <!-- Distribución de macros -->
@@ -569,6 +579,39 @@ let selectedMeals = new Set(['comida', 'cena']);
 let kcalTarget = 0;
 let macroPct = { prot: 30, carb: 40, fat: 30 };
 
+// Alergias e intolerancias más frecuentes del mundo
+const ALLERGIES = [
+  { id:'gluten',   label:'🌾 Gluten / Celiaquía' },
+  { id:'lactosa',  label:'🥛 Lactosa' },
+  { id:'lacteos',  label:'🧀 Lácteos' },
+  { id:'huevo',    label:'🥚 Huevo' },
+  { id:'pescado',  label:'🐟 Pescado' },
+  { id:'marisco',  label:'🦐 Marisco' },
+  { id:'soja',     label:'🫘 Soja' },
+  { id:'cacahuete',label:'🥜 Cacahuete' },
+  { id:'frutossec',label:'🌰 Frutos secos' },
+  { id:'sesamo',   label:'🌿 Sésamo' },
+  { id:'mostaza',  label:'🟡 Mostaza' },
+  { id:'apio',     label:'🥬 Apio' },
+  { id:'sulfitos', label:'🍷 Sulfitos' },
+  { id:'fructosa', label:'🍎 Fructosa' },
+];
+
+let selectedAllergies = new Set();
+
+function renderAllergyGrid() {
+  const grid = document.getElementById('allergy-grid');
+  if (!grid) return;
+  grid.innerHTML = ALLERGIES.map(a =>
+    `<span class="allergy-chip ${selectedAllergies.has(a.id)?'selected':''}" onclick="toggleAllergy('${a.id}',this)">${a.label}</span>`
+  ).join('');
+}
+
+function toggleAllergy(id, el) {
+  if (selectedAllergies.has(id)) { selectedAllergies.delete(id); el.classList.remove('selected'); }
+  else { selectedAllergies.add(id); el.classList.add('selected'); }
+}
+
 // Orden fijo siempre
 const MEAL_ORDER = ['desayuno', 'comida', 'cena'];
 function getMealsOrdered() {
@@ -661,6 +704,7 @@ function init() {
   loadProfile();
   renderDietGrid();
   renderFoods();
+  renderAllergyGrid();
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
   if (isIOS && !window.navigator.standalone) document.getElementById('install-banner').classList.add('show');
 }
@@ -863,11 +907,49 @@ async function generateRecipes() {
     : '';
   const macroNote = ` Distribución de macros: ${macroPct.prot}% proteínas, ${macroPct.carb}% carbohidratos, ${macroPct.fat}% grasas.`;
 
-  const prompt = `Eres nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}${kcalNote}${macroNote}
+  const allergyMap = {
+    gluten:   'gluten ni trigo, centeno, cebada ni avena',
+    lactosa:  'lactosa (evita leche, yogur, nata; usa versiones sin lactosa)',
+    lacteos:  'ningún lácteo (leche, queso, yogur, mantequilla, nata)',
+    huevo:    'huevo ni productos con huevo',
+    pescado:  'pescado ni productos derivados',
+    marisco:  'marisco ni crustáceos',
+    soja:     'soja ni tofu ni tempeh',
+    cacahuete:'cacahuete ni mantequilla de cacahuete',
+    frutossec:'frutos secos (nueces, almendras, avellanas, pistachos, anacardos, macadamia)',
+    sesamo:   'sésamo ni tahini',
+    mostaza:  'mostaza',
+    apio:     'apio',
+    sulfitos: 'sulfitos (evita vino, vinagre convencional, conservas con sulfitos)',
+    fructosa: 'fructosa en exceso (evita frutas muy dulces, miel, jarabe de maíz)',
+  };
+  const allergyNote = selectedAllergies.size > 0
+    ? ' ALERGIAS/INTOLERANCIAS — NO incluyas en ninguna receta: ' +
+      Array.from(selectedAllergies).map(id => allergyMap[id]).join('; ') + '. Esto es crítico.'
+    : '';
+
+  // Referentes culinarios por dieta
+  const dietReferents = {
+    antiinflamatoria: 'Sandra Moñino (nutricionista antiinflamatoria) y la medicina funcional',
+    vegana: 'Isa Chandra Moskowitz y Derek Sarno',
+    vegetariana: 'Yotam Ottolenghi',
+    carnivora: 'Paul Saladino y Shawn Baker',
+    keto: 'Maria Emmerich y Martina García (ketodiet)',
+    if: 'Jason Fung y el protocolo de ayuno intermitente',
+    slowcarb: 'Tim Ferriss y su libro "The 4-Hour Body"',
+    lowcarb: 'Andreas Eenfeldt (Diet Doctor) y Jorge García Dihinx',
+  };
+  const referentNote = dietReferents[currentDiet]
+    ? ` Inspírate en el estilo culinario de ${dietReferents[currentDiet]}.`
+    : '';
+
+  const prompt = `Eres nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}${kcalNote}${macroNote}${allergyNote}${referentNote}
 Crea un menú de ${numDays} día${numDays>1?'s':''} para ${persons} persona${persons>1?'s':''}, dificultad máxima ${difficulty} (puede haber recetas más sencillas, no todas tienen que ser del mismo nivel).
 Platos por día: ${mealKeys}. Días: ${dayNames.slice(0,numDays).join(', ')}.
 Alimentos: ${foodList}.
 Métodos de cocción: ${methodList}. Para Sartén/Olla usa nivel vitrocerámica 1-9 y tiempo. Para Horno/Air Fryer indica °C y tiempo.
+
+EQUILIBRIO DE PROTEÍNAS — MUY IMPORTANTE: A lo largo de todos los días, distribuye las proteínas de forma variada. NO repitas el mismo tipo de proteína en días consecutivos. Si hay 3 o más platos proteicos, asegúrate de que haya al menos: 1 receta de carne, 1 de pescado, y el resto puede ser huevos, legumbres u otras. Nunca pongas todas las recetas del mismo tipo de proteína.
 
 Responde ÚNICAMENTE con este JSON, sin backticks, sin puntos suspensivos, TODOS los días completos:
 [${allDaysExample}]
