@@ -944,23 +944,25 @@ async function generateRecipes() {
     : '';
 
   const prompt = `Eres nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}${kcalNote}${macroNote}${allergyNote}${referentNote}
-Crea un menú de ${numDays} día${numDays>1?'s':''} para ${persons} persona${persons>1?'s':''}, dificultad máxima ${difficulty} (puede haber recetas más sencillas, no todas tienen que ser del mismo nivel).
+Crea un menú de ${numDays} día${numDays>1?'s':''} para ${persons} persona${persons>1?'s':''}, dificultad máxima ${difficulty}.
 Platos por día: ${mealKeys}. Días: ${dayNames.slice(0,numDays).join(', ')}.
-Alimentos: ${foodList}.
-Métodos de cocción: ${methodList}. Para Sartén/Olla usa nivel vitrocerámica 1-9 y tiempo. Para Horno/Air Fryer indica °C y tiempo.
+Alimentos disponibles: ${foodList}.
+Métodos de cocción: ${methodList}. Para Sartén/Olla indica nivel vitrocerámica 1-9 y tiempo. Para Horno/Air Fryer indica °C y tiempo.
 
-EQUILIBRIO DE PROTEÍNAS — MUY IMPORTANTE: A lo largo de todos los días, distribuye las proteínas de forma variada. NO repitas el mismo tipo de proteína en días consecutivos. Si hay 3 o más platos proteicos, asegúrate de que haya al menos: 1 receta de carne, 1 de pescado, y el resto puede ser huevos, legumbres u otras. Nunca pongas todas las recetas del mismo tipo de proteína.
+EQUILIBRIO DE PROTEÍNAS: distribuye proteínas de forma variada entre los días. Si hay 3+ platos proteicos, incluye al menos 1 de carne, 1 de pescado y el resto variable.
 
-Responde ÚNICAMENTE con este JSON, sin backticks, sin puntos suspensivos, TODOS los días completos:
-[${allDaysExample}]
+FORMATO JSON OBLIGATORIO — sigue EXACTAMENTE esta estructura, sin añadir ni quitar claves:
+[{"dia":1,"diaNombre":"Lunes",${mealExample}}]
 
 REGLAS CRÍTICAS:
-- Genera los ${numDays} días COMPLETOS, no abrevies ningún día
-- macros = valores POR 1 PERSONA
-- Los macros deben ser coherentes: 1g proteína=4kcal, 1g carbos=4kcal, 1g grasa=9kcal
+- Responde SOLO con el array JSON. Sin texto antes ni después. Sin backticks. Sin markdown.
+- Cada día DEBE tener exactamente estas claves en este orden: "dia", "diaNombre", ${mealsList.map(m=>`"${m}"`).join(', ')}
+- NUNCA pongas un objeto de receta sin su clave (${mealsList.map(m=>`"${m}"`).join('/')})
+- macros = valores POR 1 PERSONA. Coherencia: 1g prot=4kcal, 1g carbo=4kcal, 1g grasa=9kcal
 - ingredients y shopItems = cantidades TOTALES para ${persons} persona${persons>1?'s':''}
 - Máximo 4 pasos por plato. Descripción máximo 15 palabras.
-- USA SOLO comillas dobles estándar (") en el JSON. NUNCA comillas tipográficas ni apóstrofes dentro de strings. Si necesitas indicar posesión, usa alternativas sin apóstrofe.`;
+- USA SOLO comillas dobles ASCII ("). NUNCA apóstrofes ni comillas tipográficas dentro de strings.
+- Genera los ${numDays} días COMPLETOS sin abreviar ninguno.`;
 
   try {
     const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ messages:[{role:"user",content:prompt}] }) });
@@ -982,42 +984,50 @@ REGLAS CRÍTICAS:
     if (start === -1 || end === -1) throw new Error('No JSON array found');
     text = text.slice(start, end + 1);
 
-    // Limpieza de errores comunes de la IA en JSON
-    text = text.replace(/,\s*,/g, ',');       // coma doble
-    text = text.replace(/,\s*}/g, '}');        // coma antes de }
-    text = text.replace(/,\s*]/g, ']');        // coma antes de ]
-
-    // Reemplazar comillas tipográficas por comillas estándar
-    text = text.replace(/[\u201C\u201D\u201E\u201F]/g, '"');  // " " „ ‟
-    text = text.replace(/[\u2018\u2019\u201A\u201B]/g, "'");  // ' ' ‚ ‛
-
-    // Escapar caracteres de control que rompen JSON
+    // Limpieza de errores comunes
+    text = text.replace(/,\s*,/g, ',');
+    text = text.replace(/,\s*}/g, '}');
+    text = text.replace(/,\s*]/g, ']');
+    // Comillas tipográficas
+    text = text.replace(/[\u201C\u201D\u201E\u201F]/g, '"');
+    text = text.replace(/[\u2018\u2019\u201A\u201B]/g, "'");
+    // Caracteres de control
     text = text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
 
-    // Intentar parsear; si falla, intentar reparar strings con comillas internas
+    // REPARAR: la IA a veces pone comida/cena sin clave, como objetos anónimos
+    // Patrón: },{"name": dentro de un objeto día → hay que insertar "comida": o "cena":
+    // Detectamos secuencias: (cierre de objeto meal) , { "name": → falta la clave
+    const mealOrder = ['desayuno','comida','cena'];
+    text = text.replace(/("dia"\s*:\s*\d[^}]*?)\}/g, (dayMatch) => {
+      // no tocar — solo trabajamos con el replace de abajo
+      return dayMatch + '}';
+    });
+    // Reparación real: dentro de cada día, insertar claves de meal que falten
+    // Buscamos el patrón: ,{"name": que aparece dentro de un día (no tiene clave antes)
+    let mealIdx = 0;
+    text = text.replace(/,\s*(\{"name"\s*:)/g, (match, objStart, offset) => {
+      // Comprobar que no hay una clave de meal justo antes de este objeto
+      const before = text.slice(Math.max(0, offset - 20), offset);
+      const hasMealKey = /("desayuno"|"comida"|"cena")\s*:\s*$/.test(before);
+      if (hasMealKey) return match; // ya tiene clave, no tocar
+      mealIdx++;
+      const key = mealOrder[mealIdx] || 'extra' + mealIdx;
+      return `,"${key}":${objStart}`;
+    });
+
     let days;
     try {
       days = JSON.parse(text);
     } catch(parseErr) {
-      // Reparar comillas no escapadas dentro de strings JSON
-      // Estrategia: dentro de valores de string, escapar comillas sueltas
-      text = text.replace(/":\s*"((?:[^"\\]|\\.)*)"/g, (match, inner) => {
-        const fixed = inner.replace(/(?<!\\)"/g, '\\"');
-        return `": "${fixed}"`;
+      // Segundo intento: escapar comillas internas en valores string
+      const fixed = text.replace(/":\s*"((?:[^"\\]|\\.)*)"/g, (m, inner) => {
+        const f = inner.replace(/(?<!\\)"/g, '\\"');
+        return `": "${f}"`;
       });
-      // Segunda limpieza de comas
-      text = text.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
       try {
-        days = JSON.parse(text);
+        days = JSON.parse(fixed.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']'));
       } catch(e2) {
-        // Último recurso: extraer solo los días que sí son válidos
-        const dayMatches = text.match(/\{[^{}]*"dia":\s*\d[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g);
-        if (dayMatches && dayMatches.length > 0) {
-          days = dayMatches.map(d => { try { return JSON.parse(d); } catch(e) { return null; } }).filter(Boolean);
-          if (days.length === 0) throw new Error('JSON irreparable: ' + e2.message);
-        } else {
-          throw new Error('JSON inválido: ' + e2.message);
-        }
+        throw new Error('JSON inválido: ' + parseErr.message);
       }
     }
     // Normalizar estructura antes de renderizar
