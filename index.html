@@ -936,7 +936,7 @@ async function generateRecipes() {
     carnivora: 'Paul Saladino y Shawn Baker',
     keto: 'Maria Emmerich y Martina García (ketodiet)',
     if: 'Jason Fung y el protocolo de ayuno intermitente',
-    slowcarb: 'Tim Ferriss y su libro "The 4-Hour Body"',
+    slowcarb: 'Tim Ferriss y su libro The 4-Hour Body',
     lowcarb: 'Andreas Eenfeldt (Diet Doctor) y Jorge García Dihinx',
   };
   const referentNote = dietReferents[currentDiet]
@@ -991,7 +991,8 @@ REGLAS CRÍTICAS:
     buildShopListFromDays(days);
   } catch(e) {
     clearInterval(interval);
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Error al generar recetas. Inténtalo de nuevo.</p></div>`;
+    console.error('generateRecipes error:', e);
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Error al generar recetas. Inténtalo de nuevo.<br><small style="color:#999;font-size:12px">${e.message}</small></p></div>`;
   }
 }
 
@@ -1111,9 +1112,9 @@ function toggleDetail(id) {
 function buildShopListFromDays(days) {
   const allRecipes = [];
   days.forEach(day => {
+    if (day.desayuno) allRecipes.push(day.desayuno);
     if (day.comida) allRecipes.push(day.comida);
     if (day.cena) allRecipes.push(day.cena);
-    if (day.postre) allRecipes.push(day.postre);
   });
   buildShopList(allRecipes);
 }
