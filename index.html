@@ -981,7 +981,6 @@ REGLAS CRÍTICAS:
 
     // Quitar markdown si la IA lo añade
     text = text.replace(/^```json\s*/i, '').replace(/\s*```\s*$/i, '').trim();
-    // Por si usa otros formatos
     text = text.replace(/^```\s*/i, '').replace(/\s*```\s*$/i, '').trim();
 
     // Extraer el array JSON
@@ -990,8 +989,14 @@ REGLAS CRÍTICAS:
     if (start === -1 || end === -1) throw new Error('No JSON array found');
     text = text.slice(start, end + 1);
 
-    // Limpieza mínima de errores comunes
-    text = text.replace(/,(\s*[}\]])/g, '$1');  // comas finales antes de } o ]
+    // Escapar saltos de línea y tabuladores reales dentro de strings JSON
+    // (la IA a veces genera el JSON "pretty" con \n reales, que son inválidos dentro de strings)
+    text = text.replace(/"((?:[^"\\]|\\.)*)"/g, (match) => {
+      return match.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
+    });
+
+    // Eliminar trailing commas
+    text = text.replace(/,(\s*[}\]])/g, '$1');
 
     const days = JSON.parse(text);
     // Normalizar estructura antes de renderizar
