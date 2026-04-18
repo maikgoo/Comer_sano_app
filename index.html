@@ -745,10 +745,13 @@ async function generateRecipes() {
   const mealExample = mealsList.map(m => `"${m}":{"name":"","time":"","difficulty":"${difficulty}","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]}`).join(',');
   const dayExample = `{"dia":1,"diaNombre":"Lunes",${mealExample}}`;
 
+  const kcalPerMeal = kcalTarget > 0
+    ? Math.round(kcalTarget / getMealsOrdered().length)
+    : 0;
   const kcalNote = kcalTarget > 0
-    ? ` Objetivo: ${kcalTarget} kcal/persona/día distribuidas entre los platos del día.`
+    ? ` IMPORTANTE: objetivo EXACTO ${kcalTarget} kcal/persona/día. Cada plato debe tener aproximadamente ${kcalPerMeal} kcal/persona. Ajusta las cantidades para cumplirlo.`
     : '';
-  const macroNote = ` Distribución de macros por persona: ${macroPct.prot}% proteínas, ${macroPct.carb}% carbohidratos, ${macroPct.fat}% grasas.`;
+  const macroNote = ` Macros POR PERSONA por plato: ${macroPct.prot}% proteínas, ${macroPct.carb}% carbohidratos, ${macroPct.fat}% grasas. TODOS los valores de macros en el JSON son por persona, no totales.`;
 
   const prompt = `Eres nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}${kcalNote}${macroNote}
 Crea un menú de ${numDays} día${numDays>1?'s':''} para ${persons} persona${persons>1?'s':''}, dificultad ${difficulty}.
@@ -760,7 +763,7 @@ Métodos de cocción: ${methodList}. Para Sartén/Olla usa nivel vitrocerámica 
 Responde ÚNICAMENTE con JSON sin backticks ni texto extra:
 [${dayExample}, ...]
 
-Reglas estrictas: cantidades para ${persons} persona${persons>1?'s':''}. macros=valores POR PERSONA (no totales). shopItems=cantidad+nombre total para ${persons} persona${persons>1?'s':''}. Máximo 4 pasos por plato, concisos. Descripción máximo 15 palabras.`;
+Reglas estrictas: ingredientes en cantidades TOTALES para ${persons} persona${persons>1?'s':''}. PERO macros y kcal en JSON son SIEMPRE por 1 persona. shopItems=cantidad total para ${persons} persona${persons>1?'s':''}. Máximo 4 pasos por plato, concisos. Descripción máximo 15 palabras.`;
 
   try {
     const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ messages:[{role:"user",content:prompt}] }) });
