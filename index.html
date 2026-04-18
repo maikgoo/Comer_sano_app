@@ -285,7 +285,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
     <!-- Platos del día -->
     <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
-      <div class="option-label">🍽️ Platos del día</div>
+      <div class="option-label">🍽️ Platos cada día</div>
       <div class="method-grid">
         <button class="method-btn" id="meal-desayuno" onclick="toggleMeal('desayuno',this)">☀️ Desayuno</button>
         <button class="method-btn active" id="meal-comida" onclick="toggleMeal('comida',this)">🍽️ Comida</button>
@@ -1136,14 +1136,123 @@ function stripQty(name) {
     .trim();
 }
 
+// Unidades de medida reconocidas y sus grupos para poder sumar
+const UNIT_GROUPS = {
+  // Peso
+  g: 'g', gr: 'g', gramos: 'g', gramo: 'g',
+  kg: 'kg', kilo: 'kg', kilos: 'kg', kilogramo: 'kg', kilogramos: 'kg',
+  // Volumen
+  ml: 'ml', mililitro: 'ml', mililitros: 'ml',
+  cl: 'cl', centilitro: 'cl', centilitros: 'cl',
+  l: 'l', litro: 'l', litros: 'l',
+  // Culinarias
+  cucharada: 'cucharada', cucharadas: 'cucharada',
+  cucharadita: 'cucharadita', cucharaditas: 'cucharadita',
+  taza: 'taza', tazas: 'taza',
+  // Unidades contables
+  unidad: 'ud', unidades: 'ud', ud: 'ud', uds: 'ud',
+  lata: 'lata', latas: 'lata',
+  bote: 'bote', botes: 'bote',
+  paquete: 'paquete', paquetes: 'paquete',
+  diente: 'diente', dientes: 'diente',
+  rama: 'rama', ramas: 'rama',
+  puñado: 'puñado', puñados: 'puñado',
+  rodaja: 'rodaja', rodajas: 'rodaja',
+  filete: 'filete', filetes: 'filete',
+  pechuga: 'pechuga', pechugas: 'pechuga',
+};
+
+// Convierte kg→g, l→ml, cl→ml para poder sumar correctamente
+function normalizeUnit(qty, unit) {
+  const u = (unit || '').toLowerCase();
+  if (u === 'kg') return { qty: qty * 1000, unit: 'g' };
+  if (u === 'l')  return { qty: qty * 1000, unit: 'ml' };
+  if (u === 'cl') return { qty: qty * 10,   unit: 'ml' };
+  return { qty, unit: UNIT_GROUPS[u] || u };
+}
+
+// Formatea cantidad de vuelta: si >=1000g → kg, si >=1000ml → l
+function formatQty(qty, unit) {
+  if (unit === 'g' && qty >= 1000)  return (qty/1000).toFixed(qty%1000===0?0:1).replace('.',',') + ' kg';
+  if (unit === 'ml' && qty >= 1000) return (qty/1000).toFixed(qty%1000===0?0:1).replace('.',',') + ' l';
+  const q = Number.isInteger(qty) ? qty : parseFloat(qty.toFixed(1));
+  return unit ? q + ' ' + unit : String(q);
+}
+
+// Extrae {qty, unit, name} de un string como "200g Pollo" o "Pollo 200g" o "2 cucharadas de aceite"
+function parseShopItem(raw) {
+  const s = raw.trim();
+  // Intenta: número + unidad + nombre  ("200g Pollo", "2 cucharadas aceite")
+  let m = s.match(/^([\d.,\/]+)\s*([a-záéíóúüñA-ZÁÉÍÓÚÜÑ]+)?\s+(.+)$/i);
+  if (m) {
+    const qty = parseFloat(m[1].replace(',','.'));
+    const unit = m[2] ? m[2].toLowerCase() : '';
+    const name = m[3].trim();
+    if (!isNaN(qty) && name.length > 1) {
+      const norm = normalizeUnit(qty, UNIT_GROUPS[unit] !== undefined ? unit : '');
+      return { qty: norm.qty, unit: norm.unit || unit, name: stripQty(name) };
+    }
+  }
+  // Intenta: nombre + número + unidad  ("Pollo 200g", "Aceite de oliva 3 cucharadas")
+  m = s.match(/^(.+?)\s+([\d.,\/]+)\s*([a-záéíóúüñA-ZÁÉÍÓÚÜÑ]*)$/i);
+  if (m) {
+    const qty = parseFloat(m[2].replace(',','.'));
+    const unit = m[3] ? m[3].toLowerCase() : '';
+    const name = m[1].trim();
+    if (!isNaN(qty) && name.length > 1) {
+      const norm = normalizeUnit(qty, UNIT_GROUPS[unit] !== undefined ? unit : '');
+      return { qty: norm.qty, unit: norm.unit || unit, name: stripQty(name) };
+    }
+  }
+  // Sin cantidad reconocible: devuelve solo nombre
+  return { qty: null, unit: null, name: stripQty(s) };
+}
+
 function buildShopList(recipes) {
-  const all = new Set();
-  recipes.forEach(r => { if(r.shopItems) r.shopItems.forEach(item => all.add(item)); });
-  shopItems = Array.from(all).map(name => {
-    const clean = stripQty(name).toLowerCase();
-    const key = Object.keys(SUPER_MAP).find(k => k.toLowerCase() === clean);
-    return { name, supers: key ? SUPER_MAP[key] : ["mercadona","lidl","consum"], checked: false };
+  // Mapa: clave = nombre limpio en minúsculas → { displayName, qty, unit, supers }
+  const grouped = {};
+
+  recipes.forEach(r => {
+    if (!r.shopItems) return;
+    r.shopItems.forEach(raw => {
+      const parsed = parseShopItem(raw);
+      const key = parsed.name.toLowerCase();
+      if (!key) return;
+
+      if (!grouped[key]) {
+        // Primera aparición: guardar nombre con capitalización original
+        const superKey = Object.keys(SUPER_MAP).find(k => k.toLowerCase() === key);
+        grouped[key] = {
+          displayName: parsed.name,
+          qty: parsed.qty,
+          unit: parsed.unit,
+          supers: superKey ? SUPER_MAP[superKey] : ["mercadona","lidl","consum"],
+          checked: false,
+        };
+      } else {
+        // Ya existe: intentar sumar si tienen unidad compatible
+        const existing = grouped[key];
+        if (parsed.qty !== null && existing.qty !== null && existing.unit === parsed.unit) {
+          existing.qty += parsed.qty;
+        } else if (parsed.qty !== null && existing.qty === null) {
+          // La primera entrada no tenía cantidad pero esta sí — añadir
+          existing.qty = parsed.qty;
+          existing.unit = parsed.unit;
+        }
+        // Si unidades distintas o una sin cantidad: dejar la existente sin modificar
+      }
+    });
   });
+
+  shopItems = Object.values(grouped).map(item => {
+    const qtyStr = (item.qty !== null && item.qty > 0) ? formatQty(item.qty, item.unit) + ' ' : '';
+    return {
+      name: qtyStr + item.displayName,
+      supers: item.supers,
+      checked: item.checked,
+    };
+  });
+
   renderShop();
 }
 
