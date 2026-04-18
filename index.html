@@ -5,25 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Come Sano">
-<meta name="theme-color" content="#1a5c35">
-<title>Come Sano</title>
+<meta name="apple-mobile-web-app-title" content="Eatly">
+<meta name="theme-color" content="#2a9d8f">
+<title>Eatly</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --green-dark: #1a5c35; --green-mid: #2d8653; --green-light: #e8f5ee; --green-pale: #f2faf6;
-  --accent: #e07b39; --text: #1c2b22; --text-muted: #6b7f73; --border: rgba(26,92,53,0.12);
-  --bg: #f9fdf9; --white: #ffffff; --radius: 14px; --radius-sm: 8px;
+  --green-dark: #2a9d8f; --green-mid: #3dbdae; --green-light: #e0f5f3; --green-pale: #f0fafa;
+  --accent: #e07b39; --text: #1a2e2c; --text-muted: #5f7b79; --border: rgba(42,157,143,0.15);
+  --bg: #f5fbfb; --white: #ffffff; --radius: 14px; --radius-sm: 8px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); max-width: 430px; margin: 0 auto; min-height: 100vh; overflow-x: hidden; }
-.header { background: var(--green-dark); padding: 48px 20px 18px; position: relative; overflow: hidden; }
-.header::before { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: rgba(255,255,255,0.05); border-radius: 50%; }
-.header h1 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: white; margin-bottom: 3px; }
-.header p { font-size: 13px; color: rgba(255,255,255,0.65); font-weight: 300; }
-.nav { display: flex; background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(26,92,53,0.06); }
-.nav-btn { flex: 1; padding: 11px 4px 9px; border: none; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); font-size: 11px; font-weight: 400; position: relative; }
+.header { background: var(--green-dark); padding: 10px 20px 10px; position: relative; overflow: hidden; display: flex; align-items: center; gap: 10px; }
+.header-logo { display: flex; align-items: baseline; gap: 0; line-height: 1; }
+.header-logo .eat { font-family: 'DM Sans', sans-serif; font-size: 22px; font-weight: 600; color: white; letter-spacing: -0.5px; }
+.header-logo .ly  { font-family: 'DM Sans', sans-serif; font-size: 22px; font-weight: 600; color: rgba(255,255,255,0.55); letter-spacing: -0.5px; }
+.header-logo .dot { width: 6px; height: 6px; background: #e07b39; border-radius: 50%; margin: 0 1px 7px; flex-shrink: 0; }
+.header-tag { font-size: 10px; color: rgba(255,255,255,0.45); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 300; margin-left: 2px; align-self: center; }
+.nav { display: flex; background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(42,157,143,0.1); }
+.nav-btn { flex: 1; padding: 11px 4px 9px; border: none; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); font-size: 14px; font-weight: 400; position: relative; }
 .nav-btn.active { color: var(--green-dark); font-weight: 500; }
 .nav-btn.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2px; background: var(--green-dark); border-radius: 2px 2px 0 0; }
 .nav-icon { font-size: 19px; }
@@ -180,15 +182,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <div class="install-banner" id="install-banner">📱 Safari → compartir → "Añadir a pantalla de inicio"</div>
 
 <div class="header">
-  <h1>🌿 Come Sano</h1>
-  <p>Recetas saludables · Lista de la compra</p>
+  <div class="header-logo">
+    <span class="eat">eat</span><span class="dot"></span><span class="ly">ly</span>
+  </div>
+  <span class="header-tag">AI Recipes</span>
 </div>
 
 <nav class="nav">
   <button class="nav-btn active" onclick="showScreen('foods')"><span class="nav-icon">🥦</span>Alimentos</button>
   <button class="nav-btn" onclick="showScreen('recipes')"><span class="nav-icon">🍳</span>Recetas</button>
   <button class="nav-btn" onclick="showScreen('shop')"><span class="nav-icon">🛒</span>Compra</button>
-  <button class="nav-btn" onclick="showScreen('saved')"><span class="nav-icon">⭐</span>Guardadas</button>
+  <button class="nav-btn" onclick="showScreen('saved')"><span class="nav-icon">❤️</span>Guardadas</button>
   <button class="nav-btn" onclick="showScreen('profile')"><span class="nav-icon">👤</span>Perfil</button>
 </nav>
 
@@ -368,7 +372,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <div id="screen-saved" class="screen">
   <p class="section-sub">Tus recetas favoritas guardadas.</p>
   <div id="saved-container">
-    <div class="empty-state"><div class="empty-icon">⭐</div><p>Aún no has guardado ninguna receta.</p></div>
+    <div class="empty-state"><div class="empty-icon">❤️</div><p>Aún no has guardado ninguna receta.</p></div>
   </div>
 </div>
 
@@ -1446,7 +1450,7 @@ function shareShopList(method) {
   const catOrder = [...SHOP_CATEGORIES.map(c => c.label), '🛍️ Otros'];
   const sortedCats = Object.keys(groups).sort((a,b) => catOrder.indexOf(a) - catOrder.indexOf(b));
 
-  let text = '🛒 *Lista de la compra — Come Sano*\n\n';
+  let text = '🛒 *Lista de la compra — Eatly*\n\n';
   sortedCats.forEach(cat => {
     text += `*${cat}*\n`;
     groups[cat].forEach(item => {
@@ -1455,7 +1459,7 @@ function shareShopList(method) {
     });
     text += '\n';
   });
-  text += '_Generado con Come Sano 🌿_';
+  text += '_Generado con Eatly 🌿_';
 
   if (method === 'whatsapp') {
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
