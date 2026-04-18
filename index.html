@@ -889,8 +889,12 @@ function stripQty(name) {
     .replace(/^[\d.,\/]+\s*(kg|ml|cl|cucharaditas?|cucharadas?|unidades?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?|tazas?|ud|g|l)?\s*/i, '')
     // Quita cantidad al final: "Pollo 400g" → "Pollo"
     .replace(/\s+[\d.,\/]+\s*(kg|ml|cl|cucharaditas?|cucharadas?|unidades?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?|tazas?|ud|g|l)?$/i, '')
-    // Quita cualquier número suelto al final: "Pollo 4" → "Pollo"
+    // Quita cualquier número suelto al final
     .replace(/\s+\d+$/, '')
+    // Quita palabras de preparación al principio: "filetes de", "lomos de", "pechugas de", etc.
+    .replace(/^(filetes?|lomos?|pechugas?|chuletas?|muslos?|contramuslos?|costillas?|rodajas?|trozos?|dados?|tiras?|hojas?|tallos?|ramas?)\s+(de\s+)?/i, '')
+    // Quita "de " suelto al principio si queda tras limpiar
+    .replace(/^de\s+/i, '')
     .replace(/^[^a-zA-Z\u00C0-\u024F]+/, '')
     .trim();
 }
