@@ -718,7 +718,7 @@ function renderDayMenus(days) {
     dayHeader.textContent = 'Día ' + day.dia + ' — ' + nombre;
     c.appendChild(dayHeader);
 
-    const mealsToShow = [...selectedMeals];
+    const mealsToShow = ['desayuno', 'comida', 'cena'].filter(m => selectedMeals.has(m));
     mealsToShow.forEach(mealKey => {
       const r = day[mealKey];
       if (!r || !r.name) return;
