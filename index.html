@@ -25,7 +25,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .header-logo .dot { width: 6px; height: 6px; background: #e07b39; border-radius: 50%; margin: 0 1px 7px; flex-shrink: 0; }
 .header-tag { font-size: 10px; color: rgba(255,255,255,0.45); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 300; margin-left: 2px; align-self: center; }
 .nav { display: flex; background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(42,157,143,0.1); }
-.nav-btn { flex: 1; padding: 11px 4px 9px; border: none; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); font-size: 14px; font-weight: 400; position: relative; }
+.nav-btn { flex: 1; padding: 11px 4px 9px; border: none; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); font-size: 16px; font-weight: 400; position: relative; }
 .nav-btn.active { color: var(--green-dark); font-weight: 500; }
 .nav-btn.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2px; background: var(--green-dark); border-radius: 2px 2px 0 0; }
 .nav-icon { font-size: 19px; }
@@ -185,7 +185,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   <div class="header-logo">
     <span class="eat">eat</span><span class="dot"></span><span class="ly">ly</span>
   </div>
-  <span class="header-tag">AI Recipes</span>
+  <span class="header-tag">Eat well, every day</span>
 </div>
 
 <nav class="nav">
@@ -491,7 +491,7 @@ const DIETS = {
     "🌿 Condimentos":["Ajo","Ajo negro","Jengibre","Cúrcuma","Vinagre de manzana","Mostaza"],
     "🍫 Ocasionales":["Chocolate negro 85%","Eritritol","Stevia"]
   }},
-  if: { name:"Intermittent Fasting", icon:"⏰", desc:"Ventana de alimentación", foods:{
+  if: { name:"Ayuno Intermitente", icon:"⏰", desc:"Ventana de alimentación", foods:{
     "🥦 Verduras y hortalizas":["Acelgas","Ajo","Ajo tierno","Alcachofa","Apio","Berenjena","Boniato","Brócoli","Calabacín verde","Calabaza","Canónigos","Cebolla","Cebollino","Col rizada","Coliflor","Espárragos verdes","Espinacas","Judía verde","Lechuga romana","Lechuga iceberg","Maíz dulce","Patata","Pepino","Pimiento rojo","Pimiento verde","Puerro","Rabanitos","Remolacha","Rúcula","Setas","Champiñones","Tomate","Tomate cherry","Zanahoria","Zanahoria rallada"],
     "🌿 Hierbas aromáticas":["Albahaca","Cilantro","Hierbabuena","Jengibre","Perejil"],
     "🍎 Frutas":["Arándanos","Fresas","Frambuesas","Manzana","Pera","Naranja","Kiwi","Banana","Melocotón"],
