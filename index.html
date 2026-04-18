@@ -104,6 +104,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .empty-icon { font-size: 40px; margin-bottom: 12px; }
 .empty-state p { font-size: 16px; line-height: 1.6; }
 .section-sub { font-size: 15px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; }
+/* Progress loading bar */
+.gen-progress { padding: 40px 20px; text-align: center; }
+.gen-progress-title { font-size: 17px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+.gen-progress-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+.gen-bar-wrap { background: var(--green-light); border-radius: 10px; height: 12px; overflow: hidden; margin-bottom: 10px; }
+.gen-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-mid), var(--green-dark)); border-radius: 10px; transition: width 0.8s ease; width: 0%; }
+.gen-bar-pct { font-size: 13px; color: var(--text-muted); }
+.gen-tips { margin-top: 24px; font-size: 13px; color: var(--text-muted); font-style: italic; min-height: 40px; }
 /* Options panel */
 .options-panel { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 14px; }
 .options-title { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
@@ -226,16 +234,36 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <button class="persons-btn" onclick="changePersons(1)">+</button>
       </div>
     </div>
+
+    <!-- Número de días -->
+    <div class="option-row">
+      <div class="option-label">📅 Días de menú</div>
+      <div class="persons-ctrl">
+        <button class="persons-btn" onclick="changeDays(-1)">−</button>
+        <span class="persons-val" id="days-val">3</span>
+        <button class="persons-btn" onclick="changeDays(1)">+</button>
+      </div>
+    </div>
+
+    <!-- Platos por día -->
+    <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <div class="option-label">🍽️ Platos del día</div>
+      <div class="method-grid">
+        <button class="method-btn" id="meal-desayuno" onclick="toggleMeal('desayuno',this)">☀️ Desayuno</button>
+        <button class="method-btn active" id="meal-comida" onclick="toggleMeal('comida',this)">🍽️ Comida</button>
+        <button class="method-btn active" id="meal-cena" onclick="toggleMeal('cena',this)">🌙 Cena</button>
+      </div>
+    </div>
   </div>
 
-  <button class="btn-generate" onclick="generateRecipes()">✨ Generar menú de 3 días</button>
+  <button class="btn-generate" onclick="generateRecipes()" id="btn-generate">✨ Generar menú</button>
   <div style="height:20px"></div>
 </div>
 
 <div id="screen-recipes" class="screen">
-  <p class="section-sub">Menú de 3 días personalizado: comida, cena y postre.</p>
+  <p class="section-sub" id="recipes-subtitle">Menú personalizado con IA.</p>
   <div id="recipes-container">
-    <div class="empty-state"><div class="empty-icon">🍽️</div><p>Selecciona tus alimentos y pulsa "Generar recetas".</p></div>
+    <div class="empty-state"><div class="empty-icon">🍽️</div><p>Selecciona tus alimentos y pulsa "Generar menú".</p></div>
   </div>
 </div>
 
@@ -391,6 +419,8 @@ let budgetFilter = false;
 let difficulty = 'Fácil';
 let cookMethods = new Set(['Sartén']);
 let persons = 2;
+let numDays = 3;
+let selectedMeals = new Set(['comida', 'cena']);
 let selectedFoods = new Set();
 let shopItems = [];
 let currentSuperFilter = 'all';
@@ -410,7 +440,7 @@ function setDiff(val, el) {
 }
 function toggleMethod(val, el) {
   if (cookMethods.has(val)) {
-    if (cookMethods.size === 1) return; // al menos uno activo
+    if (cookMethods.size === 1) return;
     cookMethods.delete(val);
     el.classList.remove('active');
   } else {
@@ -421,6 +451,20 @@ function toggleMethod(val, el) {
 function changePersons(delta) {
   persons = Math.min(10, Math.max(1, persons + delta));
   document.getElementById('persons-val').textContent = persons;
+}
+function changeDays(delta) {
+  numDays = Math.min(7, Math.max(1, numDays + delta));
+  document.getElementById('days-val').textContent = numDays;
+}
+function toggleMeal(val, el) {
+  if (selectedMeals.has(val)) {
+    if (selectedMeals.size === 1) return;
+    selectedMeals.delete(val);
+    el.classList.remove('active');
+  } else {
+    selectedMeals.add(val);
+    el.classList.add('active');
+  }
 }
 
 function init() {
@@ -557,48 +601,103 @@ function showScreen(name) {
 
 async function generateRecipes() {
   if (selectedFoods.size < 5) { alert('Selecciona al menos 5 alimentos.'); return; }
+
+  const mealsList = [...selectedMeals];
+  const totalRecipes = numDays * mealsList.length;
+  // Tiempo estimado: ~4s por receta base, más si es difícil o hay muchos platos
+  const secsPerRecipe = difficulty === 'Difícil' ? 6 : difficulty === 'Intermedio' ? 5 : 4;
+  const totalSecs = totalRecipes * secsPerRecipe;
+
   showScreen('recipes');
+  document.getElementById('recipes-subtitle').textContent =
+    `Menú de ${numDays} día${numDays>1?'s':''} · ${mealsList.length} plato${mealsList.length>1?'s':''}/día · ${persons} persona${persons>1?'s':''}`;
+
+  const tips = [
+    '💡 Puedes ajustar las porciones en la lista de la compra.',
+    '🌿 Los alimentos de temporada son más nutritivos y baratos.',
+    '❄️ Puedes congelar las raciones que sobren.',
+    '🛒 Revisa la lista de la compra antes de salir.',
+    '⏱ Prepara ingredientes el domingo para ahorrar tiempo.',
+    '🥗 Varía los colores del plato para más nutrientes.',
+  ];
+  let tipIdx = 0;
+
   const container = document.getElementById('recipes-container');
-  container.innerHTML = `<div class="loading"><div class="spinner"></div><p>Generando tu menú de 3 días con IA…</p></div>`;
+  container.innerHTML = `
+    <div class="gen-progress">
+      <div class="gen-progress-title">✨ Generando tu menú…</div>
+      <div class="gen-progress-sub">Creando ${totalRecipes} receta${totalRecipes>1?'s':''} personalizadas</div>
+      <div class="gen-bar-wrap"><div class="gen-bar-fill" id="gen-bar"></div></div>
+      <div class="gen-bar-pct" id="gen-pct">0%</div>
+      <div class="gen-tips" id="gen-tip">${tips[0]}</div>
+    </div>`;
+
+  // Animación de barra
+  let elapsed = 0;
+  const interval = setInterval(() => {
+    elapsed += 0.5;
+    // Curva que llega al 90% y luego se frena esperando respuesta real
+    const pct = Math.min(90, Math.round((elapsed / totalSecs) * 90));
+    const bar = document.getElementById('gen-bar');
+    const pctEl = document.getElementById('gen-pct');
+    const tipEl = document.getElementById('gen-tip');
+    if (bar) bar.style.width = pct + '%';
+    if (pctEl) pctEl.textContent = pct + '%';
+    if (elapsed % 4 < 0.5 && tipEl) {
+      tipIdx = (tipIdx + 1) % tips.length;
+      tipEl.textContent = tips[tipIdx];
+    }
+  }, 500);
+
   const diet = DIETS[currentDiet];
   const foodList = Array.from(selectedFoods).slice(0,60).join(', ');
   const antiNote = antiFilter ? ' Todos los alimentos son antiinflamatorios.' : '';
-  const seasonNote = seasonFilter ? ` Prioriza productos de temporada en España en el mes ${new Date().toLocaleString('es-ES',{month:'long'})}.` : '';
-  const budgetNote = budgetFilter ? ' Usa ingredientes económicos (pollo, huevos, legumbres, verduras baratas). Evita carnes caras, mariscos y pescados premium.' : '';
+  const seasonNote = seasonFilter ? ` Prioriza productos de temporada en España en ${new Date().toLocaleString('es-ES',{month:'long'})}.` : '';
+  const budgetNote = budgetFilter ? ' Usa ingredientes económicos (pollo, huevos, legumbres, verduras). Evita carnes y pescados caros.' : '';
   const methodList = Array.from(cookMethods).join(', ');
-  const prompt = `Eres nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}
-Crea un menú de 3 días para ${persons} persona${persons>1?'s':''}, dificultad ${difficulty}.
-Alimentos: ${foodList}.
-Métodos de cocción: ${methodList}.
+  const mealKeys = mealsList.join(', ');
+  const dayNames = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 
-Responde ÚNICAMENTE con este JSON, sin backticks, sin texto antes ni después:
-[
-  {
-    "dia": 1,
-    "comida": {"name":"","time":"","difficulty":"${difficulty}","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]},
-    "cena": {"name":"","time":"","difficulty":"${difficulty}","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]},
-    "postre": {"name":"","time":"","difficulty":"Fácil","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]}
-  },
-  {"dia": 2, "comida": {}, "cena": {}, "postre": {}},
-  {"dia": 3, "comida": {}, "cena": {}, "postre": {}}
-]
-Reglas: cantidades para ${persons} persona${persons>1?'s':''}. shopItems=cantidad+nombre. Máximo 3 pasos por plato. macros=totales del plato completo.`;
+  // Construir estructura JSON de ejemplo dinámica
+  const mealExample = mealsList.map(m => `"${m}":{"name":"","time":"","difficulty":"${difficulty}","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]}`).join(',');
+  const dayExample = `{"dia":1,"diaNombre":"Lunes",${mealExample}}`;
+
+  const prompt = `Eres nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}
+Crea un menú de ${numDays} día${numDays>1?'s':''} para ${persons} persona${persons>1?'s':''}, dificultad ${difficulty}.
+Platos por día: ${mealKeys}.
+Días: ${dayNames.slice(0,numDays).join(', ')}.
+Alimentos: ${foodList}.
+Métodos de cocción: ${methodList}. Para Sartén/Olla usa nivel vitrocerámica 1-9 y tiempo, nunca °C. Para Horno/Air Fryer indica °C y tiempo.
+
+Responde ÚNICAMENTE con JSON sin backticks ni texto extra:
+[${dayExample}, ...]
+
+Reglas estrictas: cantidades para ${persons} persona${persons>1?'s':''}. shopItems=cantidad+nombre. Máximo 4 pasos por plato, concisos. macros=totales del plato. Descripción máximo 15 palabras.`;
 
   try {
     const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ messages:[{role:"user",content:prompt}] }) });
     const data = await res.json();
+
+    clearInterval(interval);
+    // Completar barra al 100%
+    const bar = document.getElementById('gen-bar');
+    const pctEl = document.getElementById('gen-pct');
+    if (bar) bar.style.width = '100%';
+    if (pctEl) pctEl.textContent = '100%';
+
+    await new Promise(r => setTimeout(r, 600)); // pequeña pausa visual
+
     let text = data.content[0].text.trim();
-    // Limpiar backticks y texto extra
     text = text.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
-    // Extraer solo el array JSON
     const start = text.indexOf('[');
     const end = text.lastIndexOf(']');
-    if (start === -1 || end === -1) throw new Error('No JSON array found');
+    if (start === -1 || end === -1) throw new Error('No JSON');
     text = text.slice(start, end + 1);
     const days = JSON.parse(text);
     renderDayMenus(days);
     buildShopListFromDays(days);
   } catch(e) {
+    clearInterval(interval);
     container.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Error al generar recetas. Inténtalo de nuevo.</p></div>`;
   }
 }
@@ -606,21 +705,25 @@ Reglas: cantidades para ${persons} persona${persons>1?'s':''}. shopItems=cantida
 function renderDayMenus(days) {
   const c = document.getElementById('recipes-container');
   c.innerHTML = '';
-  const dayNames = ['Lunes', 'Martes', 'Miércoles'];
-  const mealTypes = [
-    { key: 'comida', label: '🍽️ Comida', color: '#1a5c35' },
-    { key: 'cena', label: '🌙 Cena', color: '#2d4a8a' },
-    { key: 'postre', label: '🍓 Postre', color: '#8a2d4a' }
-  ];
+  const dayNames = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+  const mealConfig = {
+    desayuno: { label: '☀️ Desayuno', color: '#e07b39' },
+    comida:   { label: '🍽️ Comida',  color: '#1a5c35' },
+    cena:     { label: '🌙 Cena',    color: '#2d4a8a' }
+  };
   days.forEach((day, di) => {
     const dayHeader = document.createElement('div');
     dayHeader.style.cssText = 'font-family:Playfair Display,serif;font-size:21px;font-weight:600;color:var(--text);margin:20px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--green-light)';
-    dayHeader.textContent = 'Día ' + day.dia + ' — ' + dayNames[di];
+    const nombre = day.diaNombre || dayNames[di] || ('Día ' + day.dia);
+    dayHeader.textContent = 'Día ' + day.dia + ' — ' + nombre;
     c.appendChild(dayHeader);
-    mealTypes.forEach(meal => {
-      const r = day[meal.key];
-      if (!r) return;
-      const id = 'detail-' + di + '-' + meal.key;
+
+    const mealsToShow = [...selectedMeals];
+    mealsToShow.forEach(mealKey => {
+      const r = day[mealKey];
+      if (!r || !r.name) return;
+      const meal = mealConfig[mealKey] || { label: mealKey, color: '#1a5c35' };
+      const id = 'detail-' + di + '-' + mealKey;
       const macrosHtml = r.macros ? `
         <div class="macros-bar">
           <div class="macro-pill"><div class="macro-val">${r.macros.kcal}</div><div class="macro-lbl">kcal</div></div>
@@ -648,9 +751,9 @@ function renderDayMenus(days) {
         </div>
         <div class="recipe-detail" id="${id}">
           <div class="detail-label">Ingredientes</div>
-          <ul class="ingredient-list">${r.ingredients.map(x=>`<li>${x}</li>`).join('')}</ul>
+          <ul class="ingredient-list">${(r.ingredients||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
           <div class="detail-label" style="margin-top:14px">Preparación</div>
-          <ol class="steps-list">${r.steps.map(x=>`<li>${x}</li>`).join('')}</ol>
+          <ol class="steps-list">${(r.steps||[]).filter(s=>s).map(x=>`<li>${x}</li>`).join('')}</ol>
         </div>`;
       c.appendChild(card);
     });
