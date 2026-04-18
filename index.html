@@ -636,6 +636,7 @@ function selectAllMethods() {
     if (btn) btn.classList.add('active');
   });
 }
+function changePersons(delta) {
   persons = Math.min(10, Math.max(1, persons + delta));
   document.getElementById('persons-val').textContent = persons;
 }
