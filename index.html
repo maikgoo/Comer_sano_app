@@ -152,6 +152,21 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .macro-sum.err { color: #c0392b; }
 .install-banner { background: var(--accent); color: white; padding: 12px 16px; font-size: 12px; text-align: center; display: none; }
 .install-banner.show { display: block; }
+/* Save button on recipe card */
+.btn-save { position:absolute; top:12px; right:12px; background:none; border:none; font-size:22px; cursor:pointer; padding:4px; line-height:1; }
+.recipe-top { position:relative; }
+/* Profile cards */
+.profile-card { display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 16px;border-radius:12px;border:2px solid var(--border);background:var(--white);cursor:pointer;min-width:70px; }
+.profile-card.active { border-color:var(--green-dark);background:var(--green-light); }
+.profile-avatar { font-size:28px; }
+.profile-name { font-size:13px;font-weight:500;color:var(--text); }
+.profile-card.active .profile-name { color:var(--green-dark); }
+/* Saved recipe card */
+.saved-card { background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;position:relative; }
+.saved-card-title { font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:6px;padding-right:32px; }
+.saved-card-meta { display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px; }
+.saved-card-desc { font-size:14px;color:var(--text-muted); }
+.btn-delete-saved { position:absolute;top:12px;right:12px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-muted); }
 </style>
 </head>
 <body>
@@ -167,6 +182,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   <button class="nav-btn active" onclick="showScreen('foods')"><span class="nav-icon">🥦</span>Alimentos</button>
   <button class="nav-btn" onclick="showScreen('recipes')"><span class="nav-icon">🍳</span>Recetas</button>
   <button class="nav-btn" onclick="showScreen('shop')"><span class="nav-icon">🛒</span>Compra</button>
+  <button class="nav-btn" onclick="showScreen('saved')"><span class="nav-icon">⭐</span>Guardadas</button>
+  <button class="nav-btn" onclick="showScreen('profile')"><span class="nav-icon">👤</span>Perfil</button>
 </nav>
 
 <div id="screen-foods" class="screen active">
@@ -327,6 +344,55 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   </div>
   <div id="shop-container">
     <div class="empty-state"><div class="empty-icon">🛒</div><p>Genera tus recetas primero.</p></div>
+  </div>
+</div>
+
+<!-- PANTALLA RECETAS GUARDADAS -->
+<div id="screen-saved" class="screen">
+  <p class="section-sub">Tus recetas favoritas guardadas.</p>
+  <div id="saved-container">
+    <div class="empty-state"><div class="empty-icon">⭐</div><p>Aún no has guardado ninguna receta.</p></div>
+  </div>
+</div>
+
+<!-- PANTALLA PERFIL -->
+<div id="screen-profile" class="screen">
+  <!-- Sin hogar -->
+  <div id="profile-setup" style="display:none">
+    <div style="text-align:center;padding:30px 0 20px">
+      <div style="font-size:48px;margin-bottom:12px">🏠</div>
+      <div style="font-size:20px;font-weight:600;color:var(--text);margin-bottom:8px">Configura tu hogar</div>
+      <div style="font-size:14px;color:var(--text-muted);margin-bottom:24px">Guarda recetas y comparte entre dispositivos</div>
+    </div>
+    <div class="options-panel">
+      <div class="options-title">Crear nuevo hogar</div>
+      <input id="new-profile-name" type="text" placeholder="Tu nombre (ej: Miguel)" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'DM Sans',sans-serif;margin-bottom:10px">
+      <button onclick="createHogar()" style="width:100%;padding:14px;background:var(--green-dark);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer">Crear hogar</button>
+    </div>
+    <div class="options-panel" style="margin-top:12px">
+      <div class="options-title">Unirse a hogar existente</div>
+      <input id="join-hogar-code" type="text" placeholder="Código de hogar (ej: casa-7842)" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'DM Sans',sans-serif;margin-bottom:6px">
+      <input id="join-profile-name" type="text" placeholder="Tu nombre" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'DM Sans',sans-serif;margin-bottom:10px">
+      <button onclick="joinHogar()" style="width:100%;padding:14px;background:var(--green-mid);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer">Unirse</button>
+    </div>
+  </div>
+
+  <!-- Con hogar -->
+  <div id="profile-home" style="display:none">
+    <div class="options-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="options-title" style="margin-bottom:0">🏠 Tu hogar</div>
+        <span id="hogar-code-display" style="font-size:12px;color:var(--text-muted);cursor:pointer" onclick="copyHogarCode()">Copiar código</span>
+      </div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Comparte el código con tu familia para usar la app juntos.</div>
+      <div class="options-title">Quién usa la app ahora</div>
+      <div id="profile-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px"></div>
+      <div style="display:flex;gap:8px">
+        <input id="add-profile-name" type="text" placeholder="Añadir persona..." style="flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif">
+        <button onclick="addProfile()" style="padding:8px 16px;background:var(--green-dark);color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer">+</button>
+      </div>
+    </div>
+    <button onclick="leaveHogar()" style="width:100%;padding:12px;background:none;color:#c0392b;border:1px solid #c0392b;border-radius:var(--radius);font-size:14px;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:8px">Salir del hogar</button>
   </div>
 </div>
 
@@ -682,8 +748,11 @@ function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('screen-' + name).classList.add('active');
-  document.querySelectorAll('.nav-btn')[['foods','recipes','shop'].indexOf(name)].classList.add('active');
+  const idx = ['foods','recipes','shop','saved','profile'].indexOf(name);
+  if (idx >= 0) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
   window.scrollTo(0,0);
+  if (name === 'saved') renderSaved();
+  if (name === 'profile') renderProfile();
 }
 
 async function generateRecipes() {
@@ -874,10 +943,12 @@ function renderDayMenus(days) {
           <div class="macro-pill"><div class="macro-val">${r.macros.grasas}g</div><div class="macro-lbl">Grasas</div></div>
         </div>` : '';
       const methodTag = r.method ? `<span class="recipe-tag">🔥 ${r.method}</span>` : '';
+      const saveId = `save-${di}-${mealKey}`;
       const card = document.createElement('div');
       card.className = 'recipe-card';
       card.innerHTML = `
         <div class="recipe-top">
+          <button class="btn-save" id="${saveId}" onclick="toggleSaveRecipe(${JSON.stringify(JSON.stringify(r))}, '${saveId}')" title="Guardar receta">🤍</button>
           <div class="recipe-num" style="color:${meal.color}">${meal.label}</div>
           <div class="recipe-title">${r.name}</div>
           <div class="recipe-meta">
@@ -947,6 +1018,31 @@ function buildShopList(recipes) {
   renderShop();
 }
 
+// Categorías de la compra en orden lógico de supermercado
+const SHOP_CATEGORIES = [
+  { label: '🥩 Carne', emoji: '🥩', keywords: ['pollo','pavo','ternera','cerdo','cordero','conejo','pato','venado','bacon','jamón','lomo','chuleta','muslo','pechuga','contramuslo','costilla','hamburguesa','salchicha','chorizo','morcilla','butifarra'] },
+  { label: '🐟 Pescado y marisco', emoji: '🐟', keywords: ['salmón','merluza','bacalao','atún','sardina','anchoa','caballa','trucha','lubina','dorada','rape','gamba','langostino','mejillón','almeja','calamar','sepia','pulpo','ostra','vieira','marisco','pescado','boquerón'] },
+  { label: '🥚 Huevos y lácteos', emoji: '🥚', keywords: ['huevo','leche','yogur','kéfir','queso','mantequilla','nata','ghee','mozzarella','parmesano','requesón','crema','cuajada'] },
+  { label: '🥦 Verdura y hortaliza', emoji: '🥦', keywords: ['lechuga','espinaca','acelga','rúcula','canónigo','brócoli','coliflor','col','repollo','lombarda','zanahoria','pepino','tomate','pimiento','calabacín','berenjena','cebolla','ajo','puerro','apio','espárrago','alcachofa','judía','champiñón','seta','remolacha','nabo','chirivía','hinojo','endibia','escarola','rábano','boniato','patata','yuca','batata','calabaza','maíz','aguacate'] },
+  { label: '🍎 Fruta', emoji: '🍎', keywords: ['manzana','pera','naranja','limón','lima','mandarina','kiwi','plátano','banana','fresa','frambuesa','arándano','mora','cereza','melocotón','nectarina','albaricoque','ciruela','uva','mango','piña','papaya','granada','higo','melón','sandía','coco'] },
+  { label: '🌾 Cereales y pasta', emoji: '🌾', keywords: ['arroz','pasta','fideos','quinoa','avena','mijo','cuscús','bulgur','pan','harina','galleta','tostada','cereales','macarrón','espagueti','tallarín','lasaña'] },
+  { label: '🫘 Legumbres', emoji: '🫘', keywords: ['lenteja','garbanzo','alubia','judía','guisante','haba','soja','edamame','tofu','tempeh','seitán'] },
+  { label: '🫒 Aceites y grasas', emoji: '🫒', keywords: ['aceite','mantequilla','ghee','margarina','aceituna','tahini'] },
+  { label: '🌰 Frutos secos y semillas', emoji: '🌰', keywords: ['nuez','almendra','avellana','pistacho','anacardo','cacahuete','macadamia','piñón','semilla','chía','lino','sésamo','girasol','calabaza','cáñamo'] },
+  { label: '🧀 Conservas y fermentados', emoji: '🧀', keywords: ['conserva','lata','miso','chucrut','kimchi','vinagre','salsa','caldo','tomate triturado','concentrado'] },
+  { label: '🍫 Dulces y otros', emoji: '🍫', keywords: ['chocolate','cacao','miel','sirope','agave','stevia','eritritol','azúcar','mermelada','vainilla'] },
+  { label: '🌿 Especias y hierbas', emoji: '🌿', keywords: ['sal','pimienta','cúrcuma','jengibre','canela','comino','pimentón','curry','orégano','tomillo','romero','albahaca','perejil','cilantro','menta','hierbabuena','cebollino','laurel','nuez moscada','mostaza','paprika','cayena','ajo en polvo','cebolla en polvo'] },
+  { label: '🥛 Bebidas vegetales', emoji: '🥛', keywords: ['leche de','bebida de','avena','almendra','soja','coco','arroz','agua','té','café','infusión'] },
+];
+
+function getShopCategory(itemName) {
+  const clean = itemName.toLowerCase();
+  for (const cat of SHOP_CATEGORIES) {
+    if (cat.keywords.some(k => clean.includes(k))) return cat.label;
+  }
+  return '🛍️ Otros';
+}
+
 function renderShop() {
   const container = document.getElementById('shop-container');
   if (!shopItems.length) return;
@@ -954,26 +1050,42 @@ function renderShop() {
   if (!filtered.length) { container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p>No hay productos en este supermercado.</p></div>`; return; }
   const done = filtered.filter(i => i.checked).length;
   container.innerHTML = `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(done/filtered.length*100)}%"></div></div><div style="font-size:13px;color:var(--text-muted);margin-bottom:12px">${done} de ${filtered.length} marcados</div>`;
-  const card = document.createElement('div');
-  card.className = 'shop-card';
-  card.innerHTML = `<div class="shop-card-header">${filtered.length} productos</div>`;
+
+  // Agrupar por categoría
+  const groups = {};
   filtered.forEach(item => {
-    const idx = shopItems.indexOf(item);
-    const cn = stripQty(item.name);
-    const links = item.supers.map(s => {
-      const urls = { 
-        mercadona: `https://tienda.mercadona.es/search-results?query=${encodeURIComponent(cn)}`, 
-        lidl: `https://www.google.com/search?q=${encodeURIComponent(cn + ' site:lidl.es')}`, 
-        consum: `https://www.google.com/search?q=${encodeURIComponent(cn + ' site:consum.es')}` 
-      };
-      return `<a href="${urls[s]}" class="shop-link" target="_blank">${{mercadona:'Mercadona',lidl:'Lidl',consum:'Consum'}[s]}</a>`;
-    }).join('');
-    const row = document.createElement('div');
-    row.className = 'shop-item';
-    row.innerHTML = `<div class="shop-check ${item.checked?'checked':''}" onclick="toggleCheck(${idx})"></div><div class="shop-name ${item.checked?'done':''}">${item.name}</div><div class="shop-links">${links}</div>`;
-    card.appendChild(row);
+    const cat = getShopCategory(stripQty(item.name));
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(item);
   });
-  container.appendChild(card);
+
+  // Ordenar categorías según SHOP_CATEGORIES
+  const catOrder = [...SHOP_CATEGORIES.map(c => c.label), '🛍️ Otros'];
+  const sortedCats = Object.keys(groups).sort((a,b) => catOrder.indexOf(a) - catOrder.indexOf(b));
+
+  sortedCats.forEach(cat => {
+    const items = groups[cat];
+    const card = document.createElement('div');
+    card.className = 'shop-card';
+    card.innerHTML = `<div class="shop-card-header">${cat} <span style="font-weight:400;opacity:0.7">(${items.length})</span></div>`;
+    items.forEach(item => {
+      const idx = shopItems.indexOf(item);
+      const cn = stripQty(item.name);
+      const links = item.supers.map(s => {
+        const urls = {
+          mercadona: `https://tienda.mercadona.es/search-results?query=${encodeURIComponent(cn)}`,
+          lidl: `https://www.google.com/search?q=${encodeURIComponent(cn + ' site:lidl.es')}`,
+          consum: `https://www.google.com/search?q=${encodeURIComponent(cn + ' site:consum.es')}`
+        };
+        return `<a href="${urls[s]}" class="shop-link" target="_blank">${{mercadona:'Mercadona',lidl:'Lidl',consum:'Consum'}[s]}</a>`;
+      }).join('');
+      const row = document.createElement('div');
+      row.className = 'shop-item';
+      row.innerHTML = `<div class="shop-check ${item.checked?'checked':''}" onclick="toggleCheck(${idx})"></div><div class="shop-name ${item.checked?'done':''}">${item.name}</div><div class="shop-links">${links}</div>`;
+      card.appendChild(row);
+    });
+    container.appendChild(card);
+  });
 }
 
 function toggleCheck(idx) { shopItems[idx].checked = !shopItems[idx].checked; renderShop(); }
@@ -985,7 +1097,194 @@ function filterSuper(name, el) {
   renderShop();
 }
 
+// ====== PERFILES Y RECETAS GUARDADAS ======
+const AVATARS = ['👤','👩','👨','👧','👦','👵','👴','🧑'];
+let hogarId = localStorage.getItem('comesano_hogar') || null;
+let currentProfileId = localStorage.getItem('comesano_profile') || null;
+let profiles = [];
+let savedRecipes = [];
+
+async function apiRedis(body) {
+  const res = await fetch('/api/redis', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+function genId() {
+  return Math.random().toString(36).slice(2,8);
+}
+
+async function createHogar() {
+  const name = document.getElementById('new-profile-name').value.trim();
+  if (!name) { alert('Escribe tu nombre'); return; }
+  hogarId = 'casa-' + genId();
+  localStorage.setItem('comesano_hogar', hogarId);
+  const profile = { id: genId(), name, avatar: AVATARS[0] };
+  profiles = [profile];
+  currentProfileId = profile.id;
+  localStorage.setItem('comesano_profile', currentProfileId);
+  await apiRedis({ action:'saveProfiles', hogarId, data: profiles });
+  await loadSaved();
+  renderProfile();
+}
+
+async function joinHogar() {
+  const code = document.getElementById('join-hogar-code').value.trim();
+  const name = document.getElementById('join-profile-name').value.trim();
+  if (!code || !name) { alert('Rellena todos los campos'); return; }
+  hogarId = code;
+  localStorage.setItem('comesano_hogar', hogarId);
+  const res = await apiRedis({ action:'getProfiles', hogarId });
+  profiles = res.profiles || [];
+  const existing = profiles.find(p => p.name.toLowerCase() === name.toLowerCase());
+  if (existing) {
+    currentProfileId = existing.id;
+  } else {
+    const profile = { id: genId(), name, avatar: AVATARS[profiles.length % AVATARS.length] };
+    profiles.push(profile);
+    currentProfileId = profile.id;
+    await apiRedis({ action:'saveProfiles', hogarId, data: profiles });
+  }
+  localStorage.setItem('comesano_profile', currentProfileId);
+  await loadSaved();
+  renderProfile();
+}
+
+async function addProfile() {
+  const name = document.getElementById('add-profile-name').value.trim();
+  if (!name) return;
+  const profile = { id: genId(), name, avatar: AVATARS[profiles.length % AVATARS.length] };
+  profiles.push(profile);
+  await apiRedis({ action:'saveProfiles', hogarId, data: profiles });
+  document.getElementById('add-profile-name').value = '';
+  renderProfile();
+}
+
+function switchProfile(id) {
+  currentProfileId = id;
+  localStorage.setItem('comesano_profile', id);
+  loadSaved();
+  renderProfile();
+}
+
+function leaveHogar() {
+  if (!confirm('¿Salir del hogar? Perderás acceso a las recetas guardadas en este dispositivo.')) return;
+  hogarId = null;
+  currentProfileId = null;
+  profiles = [];
+  savedRecipes = [];
+  localStorage.removeItem('comesano_hogar');
+  localStorage.removeItem('comesano_profile');
+  renderProfile();
+}
+
+function copyHogarCode() {
+  navigator.clipboard.writeText(hogarId).then(() => {
+    const el = document.getElementById('hogar-code-display');
+    el.textContent = '✓ Copiado';
+    setTimeout(() => el.textContent = 'Copiar código', 2000);
+  });
+}
+
+async function loadSaved() {
+  if (!hogarId || !currentProfileId) { savedRecipes = []; return; }
+  const res = await apiRedis({ action:'getSaved', hogarId, profileId: currentProfileId });
+  savedRecipes = res.saved || [];
+}
+
+async function toggleSaveRecipe(recipeJson, btnId) {
+  if (!hogarId || !currentProfileId) {
+    alert('Ve a "Perfil" y crea tu hogar primero para guardar recetas.');
+    return;
+  }
+  const recipe = JSON.parse(recipeJson);
+  const btn = document.getElementById(btnId);
+  const already = savedRecipes.find(s => s.name === recipe.name);
+  if (already) {
+    // Eliminar
+    await apiRedis({ action:'deleteRecipe', hogarId, profileId: currentProfileId, data: { savedAt: already.savedAt } });
+    if (btn) btn.textContent = '🤍';
+  } else {
+    // Guardar
+    await apiRedis({ action:'saveRecipe', hogarId, profileId: currentProfileId, data: recipe });
+    if (btn) btn.textContent = '❤️';
+  }
+  await loadSaved();
+}
+
+async function deleteSaved(savedAt) {
+  await apiRedis({ action:'deleteRecipe', hogarId, profileId: currentProfileId, data: { savedAt } });
+  await loadSaved();
+  renderSaved();
+}
+
+function renderProfile() {
+  const setup = document.getElementById('profile-setup');
+  const home = document.getElementById('profile-home');
+  if (!hogarId) {
+    setup.style.display = 'block';
+    home.style.display = 'none';
+    return;
+  }
+  setup.style.display = 'none';
+  home.style.display = 'block';
+  document.getElementById('hogar-code-display').textContent = `🏠 ${hogarId} · Copiar`;
+  const list = document.getElementById('profile-list');
+  list.innerHTML = profiles.map(p => `
+    <div class="profile-card ${p.id === currentProfileId ? 'active' : ''}" onclick="switchProfile('${p.id}')">
+      <div class="profile-avatar">${p.avatar}</div>
+      <div class="profile-name">${p.name}</div>
+    </div>`).join('');
+}
+
+function renderSaved() {
+  const c = document.getElementById('saved-container');
+  if (!hogarId || !currentProfileId) {
+    c.innerHTML = `<div class="empty-state"><div class="empty-icon">👤</div><p>Ve a "Perfil" y crea tu hogar para guardar recetas.</p></div>`;
+    return;
+  }
+  if (!savedRecipes.length) {
+    const profile = profiles.find(p => p.id === currentProfileId);
+    c.innerHTML = `<div class="empty-state"><div class="empty-icon">⭐</div><p>${profile ? profile.name + ' no' : 'No'} tiene recetas guardadas aún.<br>Pulsa 🤍 en cualquier receta para guardarla.</p></div>`;
+    return;
+  }
+  const profile = profiles.find(p => p.id === currentProfileId);
+  c.innerHTML = `<p style="font-size:14px;color:var(--text-muted);margin-bottom:16px">${profile?.name || 'Tus'} recetas guardadas (${savedRecipes.length})</p>`;
+  savedRecipes.forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'saved-card';
+    div.innerHTML = `
+      <button class="btn-delete-saved" onclick="deleteSaved(${r.savedAt})">🗑️</button>
+      <div class="saved-card-title">${r.name}</div>
+      <div class="saved-card-meta">
+        <span class="recipe-tag">⏱ ${r.time||''}</span>
+        <span class="recipe-tag">👨‍🍳 ${r.difficulty||''}</span>
+        ${r.method ? `<span class="recipe-tag">🔥 ${r.method}</span>` : ''}
+      </div>
+      <div class="saved-card-desc">${r.description||''}</div>
+      ${r.macros ? `<div class="macros-bar" style="margin-top:8px">
+        <div class="macro-pill"><div class="macro-val">${r.macros.kcal}</div><div class="macro-lbl">kcal/p</div></div>
+        <div class="macro-pill"><div class="macro-val">${r.macros.proteinas}g</div><div class="macro-lbl">Proteína</div></div>
+        <div class="macro-pill"><div class="macro-val">${r.macros.carbos}g</div><div class="macro-lbl">Carbos</div></div>
+        <div class="macro-pill"><div class="macro-val">${r.macros.grasas}g</div><div class="macro-lbl">Grasas</div></div>
+      </div>` : ''}`;
+    c.appendChild(div);
+  });
+}
+
+// Cargar perfil al inicio
+async function initProfile() {
+  if (!hogarId) return;
+  const res = await apiRedis({ action:'getProfiles', hogarId });
+  profiles = res.profiles || [];
+  if (currentProfileId) await loadSaved();
+}
+
 init();
+initProfile();
 </script>
 </body>
 </html>
