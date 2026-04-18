@@ -986,11 +986,14 @@ function renderDayMenus(days) {
         </div>` : '';
       const methodTag = r.method ? `<span class="recipe-tag">🔥 ${r.method}</span>` : '';
       const saveId = `save-${di}-${mealKey}`;
+      // Guardar receta en objeto global para evitar problemas con JSON en onclick
+      window._recipeStore = window._recipeStore || {};
+      window._recipeStore[saveId] = r;
       const card = document.createElement('div');
       card.className = 'recipe-card';
       card.innerHTML = `
         <div class="recipe-top">
-          <button class="btn-save" id="${saveId}" onclick="toggleSaveRecipe(${JSON.stringify(JSON.stringify(r))}, '${saveId}')" title="Guardar receta">🤍</button>
+          <button class="btn-save" id="${saveId}" onclick="toggleSaveRecipe('${saveId}')" title="Guardar receta">🤍</button>
           <div class="recipe-num" style="color:${meal.color}">${meal.label}</div>
           <div class="recipe-title">${r.name}</div>
           <div class="recipe-meta">
@@ -1292,20 +1295,19 @@ async function loadSaved() {
   savedRecipes = res.saved || [];
 }
 
-async function toggleSaveRecipe(recipeJson, btnId) {
+async function toggleSaveRecipe(btnId) {
   if (!hogarId || !currentProfileId) {
     alert('Ve a "Perfil" y crea tu hogar primero para guardar recetas.');
     return;
   }
-  const recipe = JSON.parse(recipeJson);
+  const recipe = (window._recipeStore || {})[btnId];
+  if (!recipe) return;
   const btn = document.getElementById(btnId);
   const already = savedRecipes.find(s => s.name === recipe.name);
   if (already) {
-    // Eliminar
     await apiRedis({ action:'deleteRecipe', hogarId, profileId: currentProfileId, data: { savedAt: already.savedAt } });
     if (btn) btn.textContent = '🤍';
   } else {
-    // Guardar
     await apiRedis({ action:'saveRecipe', hogarId, profileId: currentProfileId, data: recipe });
     if (btn) btn.textContent = '❤️';
   }
