@@ -263,11 +263,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
     <!-- Dificultad -->
     <div class="option-row" style="flex-direction:column;align-items:flex-start;gap:8px">
-      <div class="option-label">👨‍🍳 Nivel de dificultad de receta</div>
+      <div class="option-label" style="width:100%;display:flex;justify-content:space-between;align-items:center;">
+        <span>👨‍🍳 Nivel de dificultad</span>
+        <span id="diff-all-btn" style="font-size:15px;color:var(--accent);cursor:pointer;font-weight:500;padding:3px 8px;border:1px solid #C8E6C9;border-radius:20px;background:#E8F5E9;" onclick="toggleAllDiff()">Todos</span>
+      </div>
       <div class="diff-btns">
-        <button class="diff-btn active" onclick="setDiff('Fácil',this)">Fácil</button>
-        <button class="diff-btn" onclick="setDiff('Intermedio',this)">Intermedio</button>
-        <button class="diff-btn" onclick="setDiff('Difícil',this)">Difícil</button>
+        <button class="diff-btn active" id="diff-Fácil" onclick="toggleDiff('Fácil',this)">Fácil</button>
+        <button class="diff-btn" id="diff-Intermedio" onclick="toggleDiff('Intermedio',this)">Intermedio</button>
+        <button class="diff-btn" id="diff-Difícil" onclick="toggleDiff('Difícil',this)">Difícil</button>
       </div>
     </div>
 
@@ -584,7 +587,7 @@ let currentDiet = 'antiinflamatoria';
 let antiFilter = false;
 let seasonFilter = false;
 let budgetFilter = false;
-let difficulty = 'Fácil';
+let difficultySet = new Set(['Fácil']);
 let cookMethods = new Set(['Sartén']);
 let persons = 1;
 let numDays = 1;
@@ -700,10 +703,40 @@ function toggleBudget() {
   budgetFilter = !budgetFilter;
   document.getElementById('budget-sw').classList.toggle('on', budgetFilter);
 }
-function setDiff(val, el) {
-  difficulty = val;
-  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
+function toggleDiff(val, el) {
+  if (difficultySet.has(val)) {
+    if (difficultySet.size === 1) return; // mínimo uno
+    difficultySet.delete(val);
+    el.classList.remove('active');
+  } else {
+    difficultySet.add(val);
+    el.classList.add('active');
+  }
+  updateDiffAllBtn();
+}
+function toggleAllDiff() {
+  const all = ['Fácil','Intermedio','Difícil'];
+  const allActive = all.every(d => difficultySet.has(d));
+  if (allActive) {
+    // Dejar solo Fácil
+    all.forEach(d => { difficultySet.delete(d); document.getElementById('diff-'+d)?.classList.remove('active'); });
+    difficultySet.add('Fácil');
+    document.getElementById('diff-Fácil')?.classList.add('active');
+  } else {
+    all.forEach(d => { difficultySet.add(d); document.getElementById('diff-'+d)?.classList.add('active'); });
+  }
+  updateDiffAllBtn();
+}
+function updateDiffAllBtn() {
+  const all = ['Fácil','Intermedio','Difícil'];
+  const allActive = all.every(d => difficultySet.has(d));
+  const btn = document.getElementById('diff-all-btn');
+  if (!btn) return;
+  if (allActive) {
+    btn.style.background = 'var(--accent)'; btn.style.color = 'white'; btn.style.borderColor = 'var(--accent)';
+  } else {
+    btn.style.background = '#E8F5E9'; btn.style.color = 'var(--accent)'; btn.style.borderColor = '#C8E6C9';
+  }
 }
 function toggleMethod(val, el) {
   if (cookMethods.has(val)) {
@@ -958,7 +991,7 @@ async function generateRecipes() {
   const mealsList = getMealsOrdered();
   const totalRecipes = numDays * mealsList.length;
   // Tiempo estimado: ~4s por receta base, más si es difícil o hay muchos platos
-  const secsPerRecipe = difficulty === 'Difícil' ? 6 : difficulty === 'Intermedio' ? 5 : 4;
+  const secsPerRecipe = difficultySet.has('Difícil') ? 6 : difficultySet.has('Intermedio') ? 5 : 4;
   const totalSecs = totalRecipes * secsPerRecipe;
 
   showScreen('recipes');
@@ -1012,7 +1045,8 @@ async function generateRecipes() {
   const dayNames = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 
   // Construir estructura JSON de ejemplo dinámica
-  const mealExample = mealsList.map(m => `"${m}":{"name":"","time":"","difficulty":"${difficulty}","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]}`).join(',');
+  const diffList = Array.from(difficultySet).join(', ');
+  const mealExample = mealsList.map(m => `"${m}":{"name":"","time":"","difficulty":"${diffList}","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]}`).join(',');
   const allDaysExample = dayNames.slice(0, numDays).map((dName, i) =>
     `{"dia":${i+1},"diaNombre":"${dName}",${mealExample}}`
   ).join(',');
@@ -1060,7 +1094,7 @@ async function generateRecipes() {
     : '';
 
   const prompt = `Eres nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}${kcalNote}${macroNote}${allergyNote}${referentNote}
-Crea un menú de ${numDays} día${numDays>1?'s':''} para ${persons} persona${persons>1?'s':''}, dificultad máxima ${difficulty}.
+Crea un menú de ${numDays} día${numDays>1?'s':''} para ${persons} persona${persons>1?'s':''}, niveles de dificultad permitidos: ${diffList} (mezcla recetas de estos niveles).
 Platos por día: ${mealKeys}. Días: ${dayNames.slice(0,numDays).join(', ')}.
 Alimentos disponibles: ${foodList}.
 Métodos de cocción: ${methodList}. Para Sartén/Olla indica nivel vitrocerámica 1-9 y tiempo. Para Horno/Air Fryer indica °C y tiempo.
