@@ -1119,139 +1119,215 @@ function buildShopListFromDays(days) {
   buildShopList(allRecipes);
 }
 
-function stripQty(name) {
-  return name
-    // Quita cantidad al principio: "400g Pollo" → "Pollo"
-    .replace(/^[\d.,\/]+\s*(kg|ml|cl|cucharaditas?|cucharadas?|unidades?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?|tazas?|ud|g|l)?\s*/i, '')
-    // Quita cantidad al final: "Pollo 400g" → "Pollo"
-    .replace(/\s+[\d.,\/]+\s*(kg|ml|cl|cucharaditas?|cucharadas?|unidades?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?|tazas?|ud|g|l)?$/i, '')
-    // Quita cualquier número suelto al final
-    .replace(/\s+\d+$/, '')
-    // Quita palabras de preparación al principio: "filetes de", "lomos de", "pechugas de", etc.
-    .replace(/^(filetes?|lomos?|pechugas?|chuletas?|muslos?|contramuslos?|costillas?|rodajas?|trozos?|dados?|tiras?|hojas?|tallos?|ramas?)\s+(de\s+)?/i, '')
-    // Quita palabras de preparación al final (repetido para múltiples): "Ternera filetes frescos" → "Ternera"
-    .replace(/(\s+(filetes?|lomos?|pechugas?|chuletas?|muslos?|contramuslos?|costillas?|rodajas?|trozos?|dados?|tiras?|hojas?|tallos?|ramas?|frescos?|congelados?|limpios?|pelados?|cocidos?|crudos?))+$/i, '')
-    // Quita "de " suelto al principio si queda tras limpiar
+// Tabla de unidades → forma canónica
+const UNIT_MAP = {
+  // Peso
+  'g':'g','gr':'g','gramo':'g','gramos':'g',
+  'kg':'kg','kilo':'kg','kilos':'kg','kilogramo':'kg','kilogramos':'kg',
+  // Volumen
+  'ml':'ml','mililitro':'ml','mililitros':'ml',
+  'cl':'cl','centilitro':'cl','centilitros':'cl',
+  'dl':'dl','decilitro':'dl','decilitros':'dl',
+  'l':'l','litro':'l','litros':'l',
+  // Culinarias
+  'cucharada':'cda','cucharadas':'cda','cda':'cda','cdas':'cda',
+  'cucharadita':'cdta','cucharaditas':'cdta','cdta':'cdta','cdtas':'cdta',
+  'taza':'taza','tazas':'taza',
+  'vaso':'vaso','vasos':'vaso',
+  // Contables
+  'unidad':'ud','unidades':'ud','ud':'ud','uds':'ud','u':'ud',
+  'lata':'lata','latas':'lata',
+  'bote':'bote','botes':'bote',
+  'paquete':'paq','paquetes':'paq','paq':'paq',
+  'sobre':'sobre','sobres':'sobre',
+  'diente':'diente','dientes':'diente',
+  'rama':'rama','ramas':'rama',
+  'hoja':'hoja','hojas':'hoja',
+  'puñado':'puñado','puñados':'puñado',
+  'rodaja':'rodaja','rodajas':'rodaja',
+  'filete':'filete','filetes':'filete',
+  'pechuga':'pechuga','pechugas':'pechuga',
+  'muslo':'muslo','muslos':'muslo',
+  'loncha':'loncha','lonchas':'loncha',
+  'trozo':'trozo','trozos':'trozo',
+};
+
+// Palabras que indican "sin cantidad definida" — se tratan como null
+const VAGUE_QTY = /^(al gusto|a gusto|c\/s|cs|cantidad suficiente|una pizca|pizca|un poco|al punto|opcional|según gusto|q\.?s\.?|s\/c)$/i;
+
+// Palabras numerales en texto → número
+const WORD_NUMS = { 'un':1,'una':1,'uno':1,'dos':2,'tres':3,'cuatro':4,'cinco':5,'seis':6,'media':0.5,'medio':0.5 };
+
+// Convierte kg→g, l→ml, cl→ml, dl→ml para sumar con misma unidad
+function normalizeUnitQty(qty, unit) {
+  const u = (unit||'').toLowerCase();
+  if (u === 'kg') return { qty: qty * 1000, unit: 'g' };
+  if (u === 'l')  return { qty: qty * 1000, unit: 'ml' };
+  if (u === 'cl') return { qty: qty * 10,   unit: 'ml' };
+  if (u === 'dl') return { qty: qty * 100,  unit: 'ml' };
+  return { qty, unit: UNIT_MAP[u] || u };
+}
+
+// Formatea cantidad para mostrar: >=1000g→kg, >=1000ml→l
+function formatQty(qty, unit) {
+  if (!qty || qty <= 0) return '';
+  if (unit === 'g'  && qty >= 1000) return (qty/1000 % 1 === 0 ? qty/1000 : (qty/1000).toFixed(1)) + ' kg';
+  if (unit === 'ml' && qty >= 1000) return (qty/1000 % 1 === 0 ? qty/1000 : (qty/1000).toFixed(1)) + ' l';
+  const q = qty % 1 === 0 ? qty : parseFloat(qty.toFixed(1));
+  return unit ? q + ' ' + unit : String(q);
+}
+
+// Quita del nombre: preparaciones, adjetivos de estado, "de" suelto al inicio
+function cleanIngredientName(s) {
+  return s
+    .replace(/^(filetes?|lomos?|pechugas?|muslos?|contramuslos?|chuletas?|costillas?|rodajas?|trozos?|dados?|tiras?|hojas?|tallos?|ramas?|dientes?)\s+(de\s+)?/i, '')
+    .replace(/(\s+(filetes?|lomos?|pechugas?|muslos?|chuletas?|costillas?|rodajas?|trozos?|dados?|tiras?|frescos?|congelados?|limpios?|pelados?|cocidos?|crudos?|picados?|laminados?|cortados?|troceados?))+$/i, '')
     .replace(/^de\s+/i, '')
     .replace(/^[^a-zA-Z\u00C0-\u024F]+/, '')
     .trim();
 }
 
-// Unidades de medida reconocidas y sus grupos para poder sumar
-const UNIT_GROUPS = {
-  // Peso
-  g: 'g', gr: 'g', gramos: 'g', gramo: 'g',
-  kg: 'kg', kilo: 'kg', kilos: 'kg', kilogramo: 'kg', kilogramos: 'kg',
-  // Volumen
-  ml: 'ml', mililitro: 'ml', mililitros: 'ml',
-  cl: 'cl', centilitro: 'cl', centilitros: 'cl',
-  l: 'l', litro: 'l', litros: 'l',
-  // Culinarias
-  cucharada: 'cucharada', cucharadas: 'cucharada',
-  cucharadita: 'cucharadita', cucharaditas: 'cucharadita',
-  taza: 'taza', tazas: 'taza',
-  // Unidades contables
-  unidad: 'ud', unidades: 'ud', ud: 'ud', uds: 'ud',
-  lata: 'lata', latas: 'lata',
-  bote: 'bote', botes: 'bote',
-  paquete: 'paquete', paquetes: 'paquete',
-  diente: 'diente', dientes: 'diente',
-  rama: 'rama', ramas: 'rama',
-  puñado: 'puñado', puñados: 'puñado',
-  rodaja: 'rodaja', rodajas: 'rodaja',
-  filete: 'filete', filetes: 'filete',
-  pechuga: 'pechuga', pechugas: 'pechuga',
-};
-
-// Convierte kg→g, l→ml, cl→ml para poder sumar correctamente
-function normalizeUnit(qty, unit) {
-  const u = (unit || '').toLowerCase();
-  if (u === 'kg') return { qty: qty * 1000, unit: 'g' };
-  if (u === 'l')  return { qty: qty * 1000, unit: 'ml' };
-  if (u === 'cl') return { qty: qty * 10,   unit: 'ml' };
-  return { qty, unit: UNIT_GROUPS[u] || u };
-}
-
-// Formatea cantidad de vuelta: si >=1000g → kg, si >=1000ml → l
-function formatQty(qty, unit) {
-  if (unit === 'g' && qty >= 1000)  return (qty/1000).toFixed(qty%1000===0?0:1).replace('.',',') + ' kg';
-  if (unit === 'ml' && qty >= 1000) return (qty/1000).toFixed(qty%1000===0?0:1).replace('.',',') + ' l';
-  const q = Number.isInteger(qty) ? qty : parseFloat(qty.toFixed(1));
-  return unit ? q + ' ' + unit : String(q);
-}
-
-// Extrae {qty, unit, name} de un string como "200g Pollo" o "Pollo 200g" o "2 cucharadas de aceite"
+// Parser principal: extrae { qty, unit, name } de cualquier formato de shopItem
 function parseShopItem(raw) {
-  const s = raw.trim();
-  // Intenta: número + unidad + nombre  ("200g Pollo", "2 cucharadas aceite")
-  let m = s.match(/^([\d.,\/]+)\s*([a-záéíóúüñA-ZÁÉÍÓÚÜÑ]+)?\s+(.+)$/i);
+  if (!raw || typeof raw !== 'string') return { qty: null, unit: null, name: '' };
+  let s = raw.trim();
+
+  // Eliminar paréntesis aclaratorios al final: "Pollo (sin piel)" → "Pollo"
+  s = s.replace(/\s*\([^)]*\)\s*$/, '').trim();
+
+  // Detectar frases vagas: "al gusto", "una pizca", "c/s"
+  // Formato: "ingrediente, al gusto" o "al gusto de cúrcuma" o solo "cúrcuma al gusto"
+  const vagueMatch = s.match(/^(.+?)\s*,?\s*(al gusto|a gusto|c\/s|cs|cantidad suficiente|una pizca|pizca|un poco|al punto|opcional|según gusto|q\.?s\.?)$/i)
+                  || s.match(/^(al gusto|a gusto|c\/s|una pizca|pizca|un poco)\s+(?:de\s+)?(.+)$/i);
+  if (vagueMatch) {
+    const name = cleanIngredientName(vagueMatch[1] || vagueMatch[2]);
+    return { qty: null, unit: 'al gusto', name };
+  }
+
+  // Patrón 1: número pegado a unidad + nombre → "200g Pollo", "150ml Nata", "100 ml nata"
+  let m = s.match(/^([\d.,\/]+)\s*(g|gr|kg|ml|cl|dl|l|cda|cdas|cdta|cdtas)\s*(?:de\s+)?(.+)$/i);
   if (m) {
-    const qty = parseFloat(m[1].replace(',','.'));
-    const unit = m[2] ? m[2].toLowerCase() : '';
-    const name = m[3].trim();
-    if (!isNaN(qty) && name.length > 1) {
-      const norm = normalizeUnit(qty, UNIT_GROUPS[unit] !== undefined ? unit : '');
-      return { qty: norm.qty, unit: norm.unit || unit, name: stripQty(name) };
+    const qty = parseFloat(m[1].replace(',', '.'));
+    const norm = normalizeUnitQty(qty, m[2]);
+    return { qty: norm.qty, unit: norm.unit, name: cleanIngredientName(m[3]) };
+  }
+
+  // Patrón 2: número + unidad en palabra + (de) + nombre → "2 cucharadas de aceite", "3 filetes de salmón"
+  const unitPattern = Object.keys(UNIT_MAP).sort((a,b) => b.length - a.length).join('|');
+  const re2 = new RegExp(`^([\\d.,\\/]+)\\s+(${unitPattern})s?\\s+(?:de\\s+)?(.+)$`, 'i');
+  m = s.match(re2);
+  if (m) {
+    const qty = parseFloat(m[1].replace(',', '.'));
+    const norm = normalizeUnitQty(qty, m[2]);
+    return { qty: norm.qty, unit: norm.unit, name: cleanIngredientName(m[3]) };
+  }
+
+  // Patrón 3: numeral en texto + unidad + nombre → "una cucharada de aceite", "dos dientes de ajo"
+  const wordNumPattern = Object.keys(WORD_NUMS).join('|');
+  const re3 = new RegExp(`^(${wordNumPattern})\\s+(${unitPattern})s?\\s+(?:de\\s+)?(.+)$`, 'i');
+  m = s.match(re3);
+  if (m) {
+    const qty = WORD_NUMS[m[1].toLowerCase()];
+    const norm = normalizeUnitQty(qty, m[2]);
+    return { qty: norm.qty, unit: norm.unit, name: cleanIngredientName(m[3]) };
+  }
+
+  // Patrón 4: numeral en texto + nombre (sin unidad) → "una cebolla", "dos limones"
+  const re4 = new RegExp(`^(${wordNumPattern})\\s+(?:de\\s+)?(.+)$`, 'i');
+  m = s.match(re4);
+  if (m) {
+    const qty = WORD_NUMS[m[1].toLowerCase()];
+    return { qty, unit: 'ud', name: cleanIngredientName(m[2]) };
+  }
+
+  // Patrón 5: número + nombre sin unidad → "2 Huevos", "1 Limón", "3 Zanahorias"
+  m = s.match(/^([\d.,\/]+)\s+(?:de\s+)?(.+)$/i);
+  if (m) {
+    const qty = parseFloat(m[1].replace(',', '.'));
+    if (!isNaN(qty)) {
+      return { qty, unit: 'ud', name: cleanIngredientName(m[2]) };
     }
   }
-  // Intenta: nombre + número + unidad  ("Pollo 200g", "Aceite de oliva 3 cucharadas")
-  m = s.match(/^(.+?)\s+([\d.,\/]+)\s*([a-záéíóúüñA-ZÁÉÍÓÚÜÑ]*)$/i);
+
+  // Patrón 6: nombre + número + unidad al final → "Aceite de oliva 3 cucharadas", "Pollo 400g"
+  const re6 = new RegExp(`^(.+?)\\s+([\\d.,\\/]+)\\s*(${unitPattern})?s?$`, 'i');
+  m = s.match(re6);
   if (m) {
-    const qty = parseFloat(m[2].replace(',','.'));
-    const unit = m[3] ? m[3].toLowerCase() : '';
-    const name = m[1].trim();
-    if (!isNaN(qty) && name.length > 1) {
-      const norm = normalizeUnit(qty, UNIT_GROUPS[unit] !== undefined ? unit : '');
-      return { qty: norm.qty, unit: norm.unit || unit, name: stripQty(name) };
+    const qty = parseFloat(m[2].replace(',', '.'));
+    if (!isNaN(qty)) {
+      const norm = normalizeUnitQty(qty, m[3] || '');
+      return { qty: norm.qty, unit: norm.unit || 'ud', name: cleanIngredientName(m[1]) };
     }
   }
-  // Sin cantidad reconocible: devuelve solo nombre
-  return { qty: null, unit: null, name: stripQty(s) };
+
+  // Sin cantidad reconocible → solo nombre
+  return { qty: null, unit: null, name: cleanIngredientName(s) };
+}
+
+// Genera clave de agrupación normalizada: quita plurales simples y acento para comparar
+function groupKey(name) {
+  return name.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // quita acentos
+    .replace(/es$/, '').replace(/s$/, '')              // quita plural simple
+    .trim();
+}
+
+// stripQty se mantiene para compatibilidad con renderShop (links supermercado)
+function stripQty(name) {
+  return name
+    .replace(/^[\d.,\/]+\s*(kg|ml|cl|cda|cdas|cdta|cdtas|cucharadas?|cucharaditas?|tazas?|vasos?|unidades?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?|ud|g|l)?\s*/i, '')
+    .replace(/\s+[\d.,\/]+\s*(kg|ml|cl|g|l|ud)?$/i, '')
+    .replace(/\s+\d+$/, '')
+    .replace(/^de\s+/i, '')
+    .replace(/^[^a-zA-Z\u00C0-\u024F]+/, '')
+    .trim();
 }
 
 function buildShopList(recipes) {
-  // Mapa: clave = nombre limpio en minúsculas → { displayName, qty, unit, supers }
-  const grouped = {};
+  const grouped = {}; // clave normalizada → datos
 
   recipes.forEach(r => {
     if (!r.shopItems) return;
     r.shopItems.forEach(raw => {
       const parsed = parseShopItem(raw);
-      const key = parsed.name.toLowerCase();
+      if (!parsed.name) return;
+      const key = groupKey(parsed.name);
       if (!key) return;
 
       if (!grouped[key]) {
-        // Primera aparición: guardar nombre con capitalización original
-        const superKey = Object.keys(SUPER_MAP).find(k => k.toLowerCase() === key);
+        const superKey = Object.keys(SUPER_MAP).find(k => groupKey(k) === key);
         grouped[key] = {
           displayName: parsed.name,
           qty: parsed.qty,
           unit: parsed.unit,
-          supers: superKey ? SUPER_MAP[superKey] : ["mercadona","lidl","consum"],
+          supers: superKey ? SUPER_MAP[superKey] : ['mercadona','lidl','consum'],
           checked: false,
         };
       } else {
-        // Ya existe: intentar sumar si tienen unidad compatible
-        const existing = grouped[key];
-        if (parsed.qty !== null && existing.qty !== null && existing.unit === parsed.unit) {
-          existing.qty += parsed.qty;
-        } else if (parsed.qty !== null && existing.qty === null) {
-          // La primera entrada no tenía cantidad pero esta sí — añadir
-          existing.qty = parsed.qty;
-          existing.unit = parsed.unit;
+        const ex = grouped[key];
+        if (parsed.qty !== null && ex.qty !== null && ex.unit === parsed.unit) {
+          // Misma unidad → sumar
+          ex.qty += parsed.qty;
+        } else if (parsed.qty !== null && ex.qty === null && parsed.unit !== 'al gusto') {
+          // La primera no tenía cantidad → adoptar esta
+          ex.qty = parsed.qty;
+          ex.unit = parsed.unit;
         }
-        // Si unidades distintas o una sin cantidad: dejar la existente sin modificar
+        // Distintas unidades o ambas vagas → dejar la existente
       }
     });
   });
 
   shopItems = Object.values(grouped).map(item => {
-    const qtyStr = (item.qty !== null && item.qty > 0) ? formatQty(item.qty, item.unit) + ' ' : '';
-    return {
-      name: qtyStr + item.displayName,
-      supers: item.supers,
-      checked: item.checked,
-    };
+    let label = '';
+    if (item.unit === 'al gusto') {
+      label = item.displayName + ' (al gusto)';
+    } else if (item.qty !== null && item.qty > 0) {
+      label = formatQty(item.qty, item.unit) + ' ' + item.displayName;
+    } else {
+      label = item.displayName;
+    }
+    return { name: label, supers: item.supers, checked: item.checked };
   });
 
   renderShop();
