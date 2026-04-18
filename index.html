@@ -340,12 +340,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 </div>
 
 <div id="screen-shop" class="screen">
-  <p class="section-sub">Lista de la compra. Filtra por supermercado.</p>
-  <div class="super-tabs">
-    <div class="super-tab active" onclick="filterSuper('all',this)">🛒 Todos</div>
-    <div class="super-tab" onclick="filterSuper('mercadona',this)">Mercadona</div>
-    <div class="super-tab" onclick="filterSuper('lidl',this)">Lidl</div>
-    <div class="super-tab" onclick="filterSuper('consum',this)">Consum</div>
+  <p class="section-sub">Lista de la compra organizada por categorías.</p>
+  <div style="display:flex;gap:8px;margin-bottom:16px;">
+    <button onclick="shareShopList('whatsapp')" style="flex:1;padding:12px;background:#25D366;color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <span style="font-size:18px">💬</span> WhatsApp
+    </button>
+    <button onclick="shareShopList('copy')" style="flex:1;padding:12px;background:var(--green-dark);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <span style="font-size:18px">📋</span> Copiar
+    </button>
   </div>
   <div id="shop-container">
     <div class="empty-state"><div class="empty-icon">🛒</div><p>Genera tus recetas primero.</p></div>
@@ -1091,8 +1093,8 @@ function getShopCategory(itemName) {
 function renderShop() {
   const container = document.getElementById('shop-container');
   if (!shopItems.length) return;
-  const filtered = currentSuperFilter === 'all' ? shopItems : shopItems.filter(i => i.supers.includes(currentSuperFilter));
-  if (!filtered.length) { container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p>No hay productos en este supermercado.</p></div>`; return; }
+  const filtered = shopItems;
+  if (!filtered.length) return;
   const done = filtered.filter(i => i.checked).length;
   container.innerHTML = `<div class="progress-bar"><div class="progress-fill" style="width:${Math.round(done/filtered.length*100)}%"></div></div><div style="font-size:13px;color:var(--text-muted);margin-bottom:12px">${done} de ${filtered.length} marcados</div>`;
 
@@ -1131,23 +1133,11 @@ function renderShop() {
     });
     container.appendChild(card);
   });
-
-  // Botón compartir
-  const shareBtn = document.createElement('div');
-  shareBtn.style.cssText = 'margin-top:16px;display:flex;gap:8px;';
-  shareBtn.innerHTML = `
-    <button onclick="shareShopList('whatsapp')" style="flex:1;padding:14px;background:#25D366;color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-      <span style="font-size:20px">💬</span> WhatsApp
-    </button>
-    <button onclick="shareShopList('copy')" style="flex:1;padding:14px;background:var(--green-dark);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-      <span style="font-size:20px">📋</span> Copiar
-    </button>`;
-  container.appendChild(shareBtn);
 }
 
 function shareShopList(method) {
   // Agrupar por categoría igual que en render
-  const filtered = currentSuperFilter === 'all' ? shopItems : shopItems.filter(i => i.supers.includes(currentSuperFilter));
+  const filtered = shopItems;
   const groups = {};
   filtered.forEach(item => {
     const cat = getShopCategory(stripQty(item.name));
