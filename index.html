@@ -476,7 +476,7 @@ function renderDayMenus(days) {
 }
 
 function toggleDetail(id) {
-  const d = document.getElementById('detail-'+id);
+  const d = document.getElementById(id);
   d.classList.toggle('open');
   document.getElementById('icon-'+id).textContent = d.classList.contains('open') ? '▴' : '▾';
 }
@@ -520,7 +520,7 @@ function renderShop() {
     const idx = shopItems.indexOf(item);
     const cn = stripQty(item.name);
     const links = item.supers.map(s => {
-      const urls = { mercadona:`https://tienda.mercadona.es/search-results?query=${encodeURIComponent(cn)}`, lidl:`https://www.lidl.es/es/buscar?query=${encodeURIComponent(cn)}`, consum:`https://www.consum.es/es/buscar?text=${encodeURIComponent(cn)}` };
+      const urls = { mercadona:`https://tienda.mercadona.es/search-results?query=${encodeURIComponent(cn)}`, lidl:`https://www.lidl.es/busqueda?q=${encodeURIComponent(cn)}`, consum:`https://www.consum.es/search?q=${encodeURIComponent(cn)}` };
       return `<a href="${urls[s]}" class="shop-link" target="_blank">${{mercadona:'Mercadona',lidl:'Lidl',consum:'Consum'}[s]}</a>`;
     }).join('');
     const row = document.createElement('div');
