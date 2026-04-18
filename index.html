@@ -893,6 +893,8 @@ function stripQty(name) {
     .replace(/\s+\d+$/, '')
     // Quita palabras de preparación al principio: "filetes de", "lomos de", "pechugas de", etc.
     .replace(/^(filetes?|lomos?|pechugas?|chuletas?|muslos?|contramuslos?|costillas?|rodajas?|trozos?|dados?|tiras?|hojas?|tallos?|ramas?)\s+(de\s+)?/i, '')
+    // Quita palabras de preparación al final (repetido para múltiples): "Ternera filetes frescos" → "Ternera"
+    .replace(/(\s+(filetes?|lomos?|pechugas?|chuletas?|muslos?|contramuslos?|costillas?|rodajas?|trozos?|dados?|tiras?|hojas?|tallos?|ramas?|frescos?|congelados?|limpios?|pelados?|cocidos?|crudos?))+$/i, '')
     // Quita "de " suelto al principio si queda tras limpiar
     .replace(/^de\s+/i, '')
     .replace(/^[^a-zA-Z\u00C0-\u024F]+/, '')
