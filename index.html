@@ -602,7 +602,8 @@ function showScreen(name) {
 async function generateRecipes() {
   if (selectedFoods.size < 5) { alert('Selecciona al menos 5 alimentos.'); return; }
 
-  const mealsList = [...selectedMeals];
+  const MEAL_ORDER = ['desayuno', 'comida', 'cena'];
+  const mealsList = MEAL_ORDER.filter(m => selectedMeals.has(m));
   const totalRecipes = numDays * mealsList.length;
   // Tiempo estimado: ~4s por receta base, más si es difícil o hay muchos platos
   const secsPerRecipe = difficulty === 'Difícil' ? 6 : difficulty === 'Intermedio' ? 5 : 4;
