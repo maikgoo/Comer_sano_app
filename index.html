@@ -790,12 +790,43 @@ REGLAS CRÍTICAS:
     if (start === -1 || end === -1) throw new Error('No JSON');
     text = text.slice(start, end + 1);
     const days = JSON.parse(text);
+    // Normalizar estructura antes de renderizar
+    normalizeDays(days);
     renderDayMenus(days);
     buildShopListFromDays(days);
   } catch(e) {
     clearInterval(interval);
     container.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Error al generar recetas. Inténtalo de nuevo.</p></div>`;
   }
+}
+
+// Convierte cualquier formato de ingrediente/paso/shopItem a string limpio
+function normalizeStr(x) {
+  if (typeof x === 'string') return x;
+  if (typeof x === 'object' && x !== null) {
+    // {"item":"Huevos","cantidad":"4 unidades"} → "4 unidades Huevos"
+    if (x.cantidad && x.item) return x.cantidad + ' ' + x.item;
+    if (x.item) return x.item;
+    // {"paso":1,"descripcion":"..."} → "..."
+    if (x.descripcion) return x.descripcion;
+    if (x.description) return x.description;
+    if (x.step) return x.step;
+    if (x.text) return x.text;
+    return Object.values(x).filter(v => typeof v === 'string').join(' ');
+  }
+  return String(x);
+}
+
+function normalizeDays(days) {
+  days.forEach(day => {
+    ['desayuno','comida','cena'].forEach(meal => {
+      const r = day[meal];
+      if (!r) return;
+      if (Array.isArray(r.ingredients)) r.ingredients = r.ingredients.map(normalizeStr);
+      if (Array.isArray(r.steps)) r.steps = r.steps.map(normalizeStr).filter(s => s);
+      if (Array.isArray(r.shopItems)) r.shopItems = r.shopItems.map(normalizeStr);
+    });
+  });
 }
 
 function renderDayMenus(days) {
@@ -862,9 +893,9 @@ function renderDayMenus(days) {
         </div>
         <div class="recipe-detail" id="${id}">
           <div class="detail-label">Ingredientes</div>
-          <ul class="ingredient-list">${(r.ingredients||[]).map(x => `<li>${typeof x === 'object' ? (x.amount ? x.amount+' '+x.name : JSON.stringify(x)) : x}</li>`).join('')}</ul>
+          <ul class="ingredient-list">${(r.ingredients||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
           <div class="detail-label" style="margin-top:14px">Preparación</div>
-          <ol class="steps-list">${(r.steps||[]).filter(s=>s).map(x => `<li>${typeof x === 'object' ? (x.description || x.step || JSON.stringify(x)) : x}</li>`).join('')}</ol>
+          <ol class="steps-list">${(r.steps||[]).filter(s=>s).map(x=>`<li>${x}</li>`).join('')}</ol>
         </div>`;
       c.appendChild(card);
     });
