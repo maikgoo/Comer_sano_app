@@ -959,7 +959,8 @@ REGLAS CRÍTICAS:
 - macros = valores POR 1 PERSONA
 - Los macros deben ser coherentes: 1g proteína=4kcal, 1g carbos=4kcal, 1g grasa=9kcal
 - ingredients y shopItems = cantidades TOTALES para ${persons} persona${persons>1?'s':''}
-- Máximo 4 pasos por plato. Descripción máximo 15 palabras.`;
+- Máximo 4 pasos por plato. Descripción máximo 15 palabras.
+- USA SOLO comillas dobles estándar (") en el JSON. NUNCA comillas tipográficas ni apóstrofes dentro de strings. Si necesitas indicar posesión, usa alternativas sin apóstrofe.`;
 
   try {
     const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ messages:[{role:"user",content:prompt}] }) });
@@ -978,13 +979,47 @@ REGLAS CRÍTICAS:
     text = text.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
     const start = text.indexOf('[');
     const end = text.lastIndexOf(']');
-    if (start === -1 || end === -1) throw new Error('No JSON');
+    if (start === -1 || end === -1) throw new Error('No JSON array found');
     text = text.slice(start, end + 1);
-    // Limpiar errores comunes de la IA en JSON
-    text = text.replace(/,\s*,/g, ',');        // coma doble: ,, → ,
-    text = text.replace(/,\s*}/g, '}');         // coma antes de }: ,} → }
-    text = text.replace(/,\s*]/g, ']');         // coma antes de ]: ,] → ]
-    const days = JSON.parse(text);
+
+    // Limpieza de errores comunes de la IA en JSON
+    text = text.replace(/,\s*,/g, ',');       // coma doble
+    text = text.replace(/,\s*}/g, '}');        // coma antes de }
+    text = text.replace(/,\s*]/g, ']');        // coma antes de ]
+
+    // Reemplazar comillas tipográficas por comillas estándar
+    text = text.replace(/[\u201C\u201D\u201E\u201F]/g, '"');  // " " „ ‟
+    text = text.replace(/[\u2018\u2019\u201A\u201B]/g, "'");  // ' ' ‚ ‛
+
+    // Escapar caracteres de control que rompen JSON
+    text = text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
+
+    // Intentar parsear; si falla, intentar reparar strings con comillas internas
+    let days;
+    try {
+      days = JSON.parse(text);
+    } catch(parseErr) {
+      // Reparar comillas no escapadas dentro de strings JSON
+      // Estrategia: dentro de valores de string, escapar comillas sueltas
+      text = text.replace(/":\s*"((?:[^"\\]|\\.)*)"/g, (match, inner) => {
+        const fixed = inner.replace(/(?<!\\)"/g, '\\"');
+        return `": "${fixed}"`;
+      });
+      // Segunda limpieza de comas
+      text = text.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
+      try {
+        days = JSON.parse(text);
+      } catch(e2) {
+        // Último recurso: extraer solo los días que sí son válidos
+        const dayMatches = text.match(/\{[^{}]*"dia":\s*\d[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g);
+        if (dayMatches && dayMatches.length > 0) {
+          days = dayMatches.map(d => { try { return JSON.parse(d); } catch(e) { return null; } }).filter(Boolean);
+          if (days.length === 0) throw new Error('JSON irreparable: ' + e2.message);
+        } else {
+          throw new Error('JSON inválido: ' + e2.message);
+        }
+      }
+    }
     // Normalizar estructura antes de renderizar
     normalizeDays(days);
     renderDayMenus(days);
