@@ -566,30 +566,15 @@ async function generateRecipes() {
   const seasonNote = seasonFilter ? ` Prioriza productos de temporada en España en el mes ${new Date().toLocaleString('es-ES',{month:'long'})}.` : '';
   const budgetNote = budgetFilter ? ' Usa ingredientes económicos (pollo, huevos, legumbres, verduras baratas). Evita carnes caras, mariscos y pescados premium.' : '';
   const methodList = Array.from(cookMethods).join(', ');
-  const prompt = `Eres nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}
-Crea un menú de 3 días (comida, cena y postre cada día) para ${persons} persona${persons>1?'s':''} con dificultad ${difficulty}.
-Usa estos alimentos: ${foodList}.
-Métodos de cocción disponibles: ${methodList}. Adapta los pasos, tiempos y temperaturas al método usado (ej: "Horno 200°C 25 min", "Air Fryer 180°C 15 min", "Thermomix vel.5 10 min").
+  const prompt = `Nutricionista experto en dieta ${diet.name}.${antiNote}${seasonNote}${budgetNote}
+Menú 3 días (comida+cena+postre) para ${persons} persona${persons>1?'s':''}, dificultad ${difficulty}.
+Alimentos disponibles: ${foodList}.
+Métodos de cocción: ${methodList}. Indica tiempo y temperatura en cada paso si aplica.
 
-Responde SOLO con este JSON exacto sin backticks ni texto extra:
-[
-  {
-    "dia": 1,
-    "comida": {
-      "name":"Nombre","time":"30 min","difficulty":"${difficulty}","method":"Sartén",
-      "description":"Una frase.",
-      "macros":{"kcal":450,"proteinas":35,"carbos":20,"grasas":18},
-      "ingredients":["200g Pollo","1 Zanahoria"],
-      "steps":["Paso 1 con tiempo/temp si aplica.","Paso 2."],
-      "shopItems":["200g Pollo","1 Zanahoria"]
-    },
-    "cena": {"name":"Nombre","time":"20 min","difficulty":"${difficulty}","method":"Olla","description":"Una frase.","macros":{"kcal":350,"proteinas":25,"carbos":30,"grasas":10},"ingredients":["2 Huevos"],"steps":["Paso 1."],"shopItems":["2 Huevos"]},
-    "postre": {"name":"Nombre","time":"10 min","difficulty":"Fácil","method":"Sin cocción","description":"Una frase.","macros":{"kcal":150,"proteinas":3,"carbos":25,"grasas":5},"ingredients":["100g Fresas"],"steps":["Paso 1."],"shopItems":["100g Fresas"]}
-  },
-  {"dia": 2, "comida": {}, "cena": {}, "postre": {}},
-  {"dia": 3, "comida": {}, "cena": {}, "postre": {}}
-]
-Reglas: cantidades para ${persons} persona${persons>1?'s':''}. shopItems con cantidad+nombre. Máximo 4 pasos por plato. macros son totales del plato.`;
+JSON exacto, sin texto extra, sin backticks:
+[{"dia":1,"comida":{"name":"","time":"","difficulty":"","method":"","description":"","macros":{"kcal":0,"proteinas":0,"carbos":0,"grasas":0},"ingredients":[],"steps":[],"shopItems":[]},"cena":{...},"postre":{...}},{"dia":2,...},{"dia":3,...}]
+
+Reglas: cantidades para ${persons} persona${persons>1?'s':''}. shopItems=cantidad+nombre. Máximo 4 pasos. macros=totales del plato. Steps concisos.`;
 
   try {
     const res = await fetch("/api/claude", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ messages:[{role:"user",content:prompt}] }) });
