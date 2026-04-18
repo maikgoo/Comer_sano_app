@@ -884,7 +884,15 @@ function buildShopListFromDays(days) {
 }
 
 function stripQty(name) {
-  return name.replace(/^[\d.,\/]+\s*(kg|ml|cl|cucharaditas?|cucharadas?|unidades?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?|tazas?|ud|g|l)?\s*/i,'').replace(/^[^a-zA-Z\u00C0-\u024F]+/,'').trim();
+  return name
+    // Quita cantidad al principio: "400g Pollo" → "Pollo"
+    .replace(/^[\d.,\/]+\s*(kg|ml|cl|cucharaditas?|cucharadas?|unidades?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?|tazas?|ud|g|l)?\s*/i, '')
+    // Quita cantidad al final: "Pollo 400g" → "Pollo"
+    .replace(/\s+[\d.,\/]+\s*(kg|ml|cl|cucharaditas?|cucharadas?|unidades?|latas?|botes?|paquetes?|puñados?|rodajas?|dientes?|ramas?|hojas?|trozos?|filetes?|pechugas?|tazas?|ud|g|l)?$/i, '')
+    // Quita cualquier número suelto al final: "Pollo 4" → "Pollo"
+    .replace(/\s+\d+$/, '')
+    .replace(/^[^a-zA-Z\u00C0-\u024F]+/, '')
+    .trim();
 }
 
 function buildShopList(recipes) {
