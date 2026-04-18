@@ -1191,9 +1191,10 @@ function formatQty(qty, unit) {
   return unit ? q + ' ' + unit : String(q);
 }
 
-// Quita del nombre: preparaciones, adjetivos de estado, "de" suelto al inicio
+// Quita del nombre: preparaciones, adjetivos de estado, "de" suelto al inicio, dos puntos finales
 function cleanIngredientName(s) {
   return s
+    .replace(/:\s*$/, '')                          // dos puntos al final: "Aguacate:" → "Aguacate"
     .replace(/^(filetes?|lomos?|pechugas?|muslos?|contramuslos?|chuletas?|costillas?|rodajas?|trozos?|dados?|tiras?|hojas?|tallos?|ramas?|dientes?)\s+(de\s+)?/i, '')
     .replace(/(\s+(filetes?|lomos?|pechugas?|muslos?|chuletas?|costillas?|rodajas?|trozos?|dados?|tiras?|frescos?|congelados?|limpios?|pelados?|cocidos?|crudos?|picados?|laminados?|cortados?|troceados?))+$/i, '')
     .replace(/^de\s+/i, '')
@@ -1208,6 +1209,14 @@ function parseShopItem(raw) {
 
   // Eliminar paréntesis aclaratorios al final: "Pollo (sin piel)" → "Pollo"
   s = s.replace(/\s*\([^)]*\)\s*$/, '').trim();
+
+  // Normalizar formato "Nombre: cantidad unidad" → "cantidad unidad Nombre"
+  // Ej: "Aguacate: 1 unidad grande" → tratar como "1 unidad grande Aguacate"
+  // Ej: "Col rizada: 150g" → "150g Col rizada"
+  const colonFormat = s.match(/^([^:]+):\s*([\d.,\/]+\s*\S.*|[a-záéíóúüñA-Z].*)$/i);
+  if (colonFormat) {
+    s = colonFormat[2].trim() + ' ' + colonFormat[1].trim();
+  }
 
   // Detectar frases vagas: "al gusto", "una pizca", "c/s"
   // Formato: "ingrediente, al gusto" o "al gusto de cúrcuma" o solo "cúrcuma al gusto"
