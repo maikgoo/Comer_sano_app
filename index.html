@@ -175,87 +175,132 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 const DIETS = {
   antiinflamatoria: { name:"Antiinflamatoria", icon:"🔥", desc:"Reduce la inflamación", foods:{
     "🫒 Aceites y grasas":["Aceite de oliva","Aceite de coco","Aceite de aguacate","Aceite de macadamia","Aceite de nuez","Aceite de sésamo","Aceitunas","Ghee","Mantequilla","Nata orgánica"],
-    "🥦 Verduras":["Acelgas","Aguacate","Ajo","Alcachofas","Apio","Berros","Brécol","Boniato","Cebolla","Cebolla tierna","Col rizada","Coles de Bruselas","Coliflor","Endivias","Espárragos","Espinacas","Hinojo","Lechuga romana","Lombarda","Nabo","Ocra","Puerros","Rábanos","Remolacha cruda","Repollo","Rúcula","Setas","Tomate pelado","Zanahoria cruda"],
-    "🍎 Frutas":["Albaricoques","Arándanos","Ciruelas","Cítricos","Frambuesas","Fresas","Granadas","Higos","Kiwis","Manzanas","Melocotones","Moras","Peras"],
-    "🥩 Proteínas animales":["Atún enlatado","Cordero","Gambas","Huevos ecológicos","Jamón curado","Mejillones","Ostras","Pato","Pavo","Pescado blanco","Pollo","Sardinas","Venado","Vieiras","Almejas","Anchoas","Calamar"],
-    "🧀 Lácteos y fermentados":["Kéfir de cabra","Kimchi","Leche de coco","Miso","Mozzarella de búfala","Parmesano","Queso de cabra","Queso de oveja","Yogur de cabra","Yogur de coco","Chucrut crudo"],
-    "🌰 Frutos secos y semillas":["Avellanas","Nueces","Nueces de macadamia","Nueces pecanas","Pistachos","Semillas de cáñamo","Semillas de lino","Semillas de sésamo","Harina de almendra","Harina de coco"],
-    "🌿 Hierbas y especias":["Albahaca","Cilantro","Cúrcuma","Jengibre","Menta","Perejil","Vinagres"],
-    "🫘 Legumbres y carbohidratos":["Legumbres","Mijo","Fideos de algas","Fideos shirataki"],
+    "🥦 Verduras y hortalizas":["Acelgas","Ajo","Ajo tierno","Ajo negro","Alcachofa","Apio","Berenjena","Berenjena rayada","Boniato","Brócoli","Calabacín verde","Calabacín blanco","Calabaza","Canónigos","Cebolla","Cebolla tierna","Cebolla morada","Cebollino","Col lombarda","Col rizada","Coliflor","Endibia","Escarola","Espárragos verdes","Espárrago grueso","Espinacas","Jengibre","Judía verde","Judía plana","Lechuga romana","Maíz dulce","Nabo","Perejil","Pimiento rojo","Pimiento verde","Pimientos tricolor","Puerro","Rabanitos","Remolacha","Rúcula","Seta shiitake","Setas","Mix de setas","Champiñones","Champiñón portobello","Tomate","Tomate cherry","Tomate pera","Zanahoria","Zanahoria rallada"],
+    "🌿 Hierbas aromáticas":["Albahaca","Cilantro","Hierbabuena","Menta","Perejil","Cúrcuma","Jengibre"],
+    "🍎 Frutas":["Albaricoques","Arándanos","Ciruelas","Frambuesas","Fresas","Granadas","Kiwi","Manzana","Melocotón","Moras","Pera"],
+    "🥩 Proteínas animales":["Atún","Cordero","Gambas","Huevos","Jamón curado","Mejillones","Ostras","Pato","Pavo","Pescado blanco","Pollo","Sardinas","Venado","Almejas","Anchoas"],
+    "🧀 Lácteos y fermentados":["Kéfir","Kimchi","Leche de coco","Miso","Mozzarella","Parmesano","Queso de cabra","Yogur de coco","Chucrut"],
+    "🌰 Frutos secos y semillas":["Avellanas","Nueces","Nueces de macadamia","Pistachos","Semillas de lino","Semillas de sésamo","Semillas de chía"],
+    "🫘 Legumbres":["Lentejas","Garbanzos","Alubias negras"],
     "🍫 Edulcorantes":["Chocolate negro 72%","Eritritol","Stevia"]
   }},
   vegana: { name:"Vegana", icon:"🌱", desc:"Sin productos animales", foods:{
     "🫒 Aceites y grasas":["Aceite de oliva","Aceite de coco","Aceite de aguacate","Aceite de girasol","Aceite de sésamo","Aceitunas","Margarina vegana"],
-    "🥦 Verduras":["Acelgas","Aguacate","Ajo","Alcachofas","Apio","Berros","Brécol","Boniato","Calabacín","Calabaza","Cebolla","Col rizada","Coles de Bruselas","Coliflor","Espárragos","Espinacas","Hinojo","Lechuga","Lombarda","Nabo","Puerros","Rábanos","Remolacha","Repollo","Rúcula","Setas","Tomate","Zanahoria","Berenjena","Pimiento"],
+    "🥦 Verduras y hortalizas":["Acelgas","Ajo","Ajo tierno","Ajo negro","Alcachofa","Apio","Berenjena","Berenjena rayada","Boniato","Brócoli","Calabacín verde","Calabacín blanco","Calabaza","Canónigos","Cebolla","Cebolla tierna","Cebolla morada","Cebolla francesa","Cebollino","Col lombarda","Col rizada","Coliflor","Chirivía","Endibia","Escarola","Espárragos verdes","Espárrago grueso","Espinacas","Judía verde","Judía plana","Lechuga romana","Lechuga iceberg","Maíz dulce","Nabo","Patata","Pepino","Pimiento rojo","Pimiento verde","Pimiento italiano","Pimientos tricolor","Pimiento picante","Puerro","Rabanitos","Remolacha","Repollo","Rúcula","Setas","Seta shiitake","Mix de setas","Champiñones","Champiñón portobello","Tomate","Tomate cherry","Tomate pera","Tomate negro","Yuca","Zanahoria","Zanahoria rallada"],
+    "🌿 Hierbas aromáticas":["Albahaca","Cilantro","Cúrcuma","Hierbabuena","Jengibre","Menta","Perejil"],
     "🍎 Frutas":["Arándanos","Banana","Ciruelas","Frambuesas","Fresas","Granada","Kiwi","Mango","Manzana","Melocotón","Naranja","Pera","Piña","Uvas"],
     "🫘 Legumbres y proteínas vegetales":["Lentejas","Garbanzos","Alubias negras","Alubias blancas","Tofu","Tempeh","Edamame","Seitán","Guisantes","Habas"],
     "🌾 Cereales":["Arroz integral","Avena","Quinoa","Mijo","Pan integral","Pasta integral"],
     "🌰 Frutos secos y semillas":["Almendras","Anacardos","Avellanas","Nueces","Pistachos","Semillas de chía","Semillas de girasol","Semillas de lino","Semillas de sésamo","Tahini"],
     "🥛 Bebidas vegetales":["Leche de almendra","Leche de avena","Leche de coco","Leche de soja","Yogur de coco","Yogur de soja"],
-    "🌿 Hierbas y especias":["Albahaca","Cilantro","Cúrcuma","Jengibre","Menta","Orégano","Perejil","Romero","Tomillo"],
     "🍫 Otros":["Chocolate negro 70%","Levadura nutricional","Miso","Chucrut","Kimchi","Stevia","Sirope de agave"]
   }},
   vegetariana: { name:"Vegetariana", icon:"🥗", desc:"Sin carne ni pescado", foods:{
     "🫒 Aceites y grasas":["Aceite de oliva","Aceite de coco","Aceite de aguacate","Aceite de girasol","Aceite de sésamo","Aceitunas","Mantequilla","Ghee"],
-    "🥦 Verduras":["Acelgas","Aguacate","Ajo","Alcachofas","Apio","Berros","Brécol","Boniato","Calabacín","Calabaza","Cebolla","Col rizada","Coles de Bruselas","Coliflor","Espárragos","Espinacas","Lechuga","Lombarda","Nabo","Puerros","Rábanos","Remolacha","Repollo","Rúcula","Setas","Tomate","Zanahoria","Berenjena","Pimiento"],
+    "🥦 Verduras y hortalizas":["Acelgas","Ajo","Ajo tierno","Ajo negro","Alcachofa","Apio","Berenjena","Berenjena rayada","Boniato","Brócoli","Calabacín verde","Calabacín blanco","Calabaza","Canónigos","Cebolla","Cebolla tierna","Cebolla morada","Cebolla francesa","Cebollino","Col lombarda","Col rizada","Coliflor","Chirivía","Endibia","Escarola","Espárragos verdes","Espárrago grueso","Espinacas","Judía verde","Judía plana","Lechuga romana","Lechuga iceberg","Maíz dulce","Nabo","Patata","Pepino","Pimiento rojo","Pimiento verde","Pimiento italiano","Pimientos tricolor","Puerro","Rabanitos","Remolacha","Repollo","Rúcula","Setas","Seta shiitake","Mix de setas","Champiñones","Champiñón portobello","Tomate","Tomate cherry","Tomate pera","Tomate negro","Zanahoria","Zanahoria rallada"],
+    "🌿 Hierbas aromáticas":["Albahaca","Cilantro","Cúrcuma","Hierbabuena","Jengibre","Menta","Perejil"],
     "🍎 Frutas":["Arándanos","Banana","Ciruelas","Frambuesas","Fresas","Granada","Kiwi","Mango","Manzana","Melocotón","Naranja","Pera","Piña","Uvas"],
     "🥚 Huevos y lácteos":["Huevos","Leche","Yogur natural","Queso fresco","Queso de cabra","Mozzarella","Parmesano","Kéfir","Mantequilla","Nata"],
-    "🫘 Legumbres y proteínas":["Lentejas","Garbanzos","Alubias","Tofu","Tempeh","Edamame","Guisantes","Habas"],
+    "🫘 Legumbres y proteínas":["Lentejas","Garbanzos","Alubias negras","Alubias blancas","Tofu","Tempeh","Edamame","Guisantes","Habas"],
     "🌾 Cereales":["Arroz integral","Avena","Quinoa","Mijo","Pan integral","Pasta integral"],
     "🌰 Frutos secos y semillas":["Almendras","Anacardos","Avellanas","Nueces","Pistachos","Semillas de chía","Semillas de girasol","Semillas de lino","Semillas de sésamo"],
-    "🌿 Hierbas y especias":["Albahaca","Cilantro","Cúrcuma","Jengibre","Menta","Orégano","Perejil","Romero","Tomillo"],
     "🍫 Otros":["Chocolate negro 70%","Miso","Chucrut","Kimchi","Stevia","Miel"]
   }},
   carnivora: { name:"Carnívora", icon:"🥩", desc:"Solo productos animales", foods:{
-    "🥩 Carnes":["Ternera","Cordero","Cerdo","Pollo","Pavo","Pato","Conejo","Venado","Bisonte","Hígado de ternera","Corazón de ternera","Riñones","Tuétano","Bacon","Jamón curado","Lomo curado"],
-    "🐟 Pescados y mariscos":["Salmón","Sardinas","Atún","Caballa","Anchoas","Trucha","Bacalao","Merluza","Gambas","Langostinos","Mejillones","Ostras","Almejas","Vieiras","Langosta"],
-    "🥚 Huevos":["Huevos de gallina","Huevos de codorniz"],
-    "🧀 Lácteos":["Mantequilla","Ghee","Nata","Queso curado","Queso de cabra","Queso de oveja","Parmesano","Kéfir","Yogur natural"],
-    "🫙 Grasas animales":["Grasa de ternera","Grasa de cerdo","Sebo","Tuétano","Aceite de hígado de bacalao"]
+    "🥩 Carnes":["Ternera","Cordero","Cerdo","Pollo","Pavo","Pato","Conejo","Venado","Bacon","Jamón curado","Lomo curado"],
+    "🐟 Pescados y mariscos":["Salmón","Sardinas","Atún","Caballa","Anchoas","Trucha","Bacalao","Merluza","Gambas","Langostinos","Mejillones","Ostras","Almejas","Vieiras"],
+    "🥚 Huevos":["Huevos"],
+    "🧀 Lácteos":["Mantequilla","Ghee","Nata","Queso curado","Queso de cabra","Parmesano","Kéfir","Yogur natural"],
+    "🫙 Grasas animales":["Grasa de ternera","Grasa de cerdo","Tuétano","Aceite de hígado de bacalao"]
   }},
   keto: { name:"Keto", icon:"⚡", desc:"Muy baja en carbohidratos", foods:{
-    "🫒 Grasas saludables":["Aceite de oliva","Aceite de coco","Aceite de TCM","Mantequilla","Ghee","Nata","Aceitunas","Aguacate"],
+    "🫒 Grasas saludables":["Aceite de oliva","Aceite de coco","Mantequilla","Ghee","Nata","Aceitunas","Aguacate"],
     "🥩 Proteínas":["Ternera","Cordero","Cerdo","Pollo","Pavo","Salmón","Sardinas","Atún","Gambas","Huevos","Bacon","Jamón curado"],
-    "🥦 Verduras bajas en carbos":["Espinacas","Col rizada","Brécol","Coliflor","Espárragos","Pepino","Apio","Lechuga","Rúcula","Setas","Pimiento","Cebollino"],
-    "🧀 Lácteos":["Queso curado","Queso de cabra","Mozzarella","Parmesano","Mantequilla","Nata","Yogur griego natural","Kéfir","Queso crema"],
-    "🌰 Frutos secos y semillas":["Nueces de macadamia","Nueces pecanas","Almendras","Avellanas","Semillas de chía","Semillas de lino","Semillas de sésamo"],
-    "🌿 Condimentos":["Cúrcuma","Jengibre","Ajo","Vinagre de manzana","Mostaza"],
+    "🥦 Verduras bajas en carbos":["Acelgas","Apio","Berenjena","Brócoli","Calabacín verde","Calabacín blanco","Cebollino","Col rizada","Coliflor","Espárragos verdes","Espinacas","Judía verde","Judía plana","Lechuga romana","Lechuga iceberg","Pepino","Pimiento rojo","Pimiento verde","Pimientos tricolor","Rúcula","Setas","Seta shiitake","Champiñones","Champiñón portobello","Tomate cherry","Zanahoria"],
+    "🌿 Hierbas aromáticas":["Albahaca","Cilantro","Cúrcuma","Jengibre","Perejil","Cebollino"],
+    "🧀 Lácteos":["Queso curado","Queso de cabra","Mozzarella","Parmesano","Mantequilla","Nata","Yogur griego","Kéfir"],
+    "🌰 Frutos secos y semillas":["Nueces de macadamia","Almendras","Avellanas","Semillas de chía","Semillas de lino","Semillas de sésamo"],
+    "🌿 Condimentos":["Ajo","Ajo negro","Jengibre","Cúrcuma","Vinagre de manzana","Mostaza"],
     "🍫 Ocasionales":["Chocolate negro 85%","Eritritol","Stevia"]
   }},
   if: { name:"Intermittent Fasting", icon:"⏰", desc:"Ventana de alimentación", foods:{
-    "🥦 Verduras":["Brécol","Espinacas","Col rizada","Coliflor","Espárragos","Pepino","Apio","Lechuga","Rúcula","Tomate","Pimiento","Cebolla","Ajo","Setas","Zanahoria","Boniato"],
+    "🥦 Verduras y hortalizas":["Acelgas","Ajo","Ajo tierno","Alcachofa","Apio","Berenjena","Boniato","Brócoli","Calabacín verde","Calabaza","Canónigos","Cebolla","Cebollino","Col rizada","Coliflor","Espárragos verdes","Espinacas","Judía verde","Lechuga romana","Lechuga iceberg","Maíz dulce","Patata","Pepino","Pimiento rojo","Pimiento verde","Puerro","Rabanitos","Remolacha","Rúcula","Setas","Champiñones","Tomate","Tomate cherry","Zanahoria","Zanahoria rallada"],
+    "🌿 Hierbas aromáticas":["Albahaca","Cilantro","Hierbabuena","Jengibre","Perejil"],
     "🍎 Frutas":["Arándanos","Fresas","Frambuesas","Manzana","Pera","Naranja","Kiwi","Banana","Melocotón"],
     "🥩 Proteínas":["Pollo","Pavo","Ternera","Salmón","Atún","Sardinas","Huevos","Gambas","Tofu","Lentejas","Garbanzos"],
-    "🌾 Carbohidratos complejos":["Arroz integral","Quinoa","Avena","Boniato","Pan integral","Pasta integral"],
+    "🌾 Carbohidratos complejos":["Arroz integral","Quinoa","Avena","Pan integral","Pasta integral"],
     "🫒 Grasas saludables":["Aceite de oliva","Aguacate","Nueces","Almendras","Semillas de chía"],
     "🧀 Lácteos y alternativas":["Yogur griego","Queso fresco","Kéfir","Leche de almendra","Leche de avena"],
     "💧 Durante el ayuno":["Agua","Café negro","Té verde","Té negro","Caldo de huesos"],
-    "🌿 Condimentos":["Limón","Vinagre de manzana","Hierbas frescas","Especias"]
+    "🌿 Condimentos":["Limón","Vinagre de manzana","Especias"]
   }},
   slowcarb: { name:"Slow Carb", icon:"🐢", desc:"Tim Ferriss · 4-Hour Body", foods:{
     "🫘 Legumbres (base de cada comida)":["Lentejas","Garbanzos","Alubias negras","Alubias blancas","Alubias pintas","Guisantes","Habas"],
     "🥩 Proteínas":["Huevos","Pollo","Pavo","Ternera","Cerdo","Salmón","Sardinas","Atún","Gambas","Tofu"],
-    "🥦 Verduras permitidas":["Espinacas","Col rizada","Brécol","Coliflor","Espárragos","Pepino","Apio","Lechuga","Rúcula","Tomate","Pimiento","Cebolla","Ajo","Setas","Judías verdes","Aceitunas"],
-    "🫒 Grasas":["Aceite de oliva","Aceite de coco","Mantequilla","Aguacate","Nueces","Almendras"],
-    "🌿 Condimentos":["Salsa picante","Mostaza","Vinagre","Ajo","Limón","Hierbas y especias"],
+    "🥦 Verduras y hortalizas":["Acelgas","Ajo","Ajo tierno","Apio","Berenjena","Brócoli","Calabacín verde","Canónigos","Cebolla","Cebolla tierna","Col rizada","Coliflor","Espárragos verdes","Espinacas","Judía verde","Judía plana","Lechuga romana","Lechuga iceberg","Pepino","Pimiento rojo","Pimiento verde","Pimientos tricolor","Rúcula","Setas","Champiñones","Tomate","Tomate cherry","Zanahoria"],
+    "🌿 Hierbas aromáticas":["Albahaca","Cilantro","Jengibre","Perejil"],
+    "🫒 Grasas":["Aceite de oliva","Aceite de coco","Mantequilla","Aguacate","Nueces","Almendras","Aceitunas"],
+    "🌿 Condimentos":["Mostaza","Vinagre de manzana","Limón"],
     "☕ Bebidas":["Agua","Café negro","Té sin azúcar","Leche de almendra sin azúcar"]
   }},
   lowcarb: { name:"Low Carb", icon:"📉", desc:"Reducción de carbohidratos", foods:{
     "🥩 Proteínas":["Ternera","Cordero","Cerdo","Pollo","Pavo","Salmón","Sardinas","Atún","Gambas","Mejillones","Huevos","Jamón curado","Bacon"],
     "🫒 Grasas saludables":["Aceite de oliva","Aceite de coco","Mantequilla","Ghee","Aguacate","Aceitunas","Nata"],
-    "🥦 Verduras bajas en carbos":["Espinacas","Col rizada","Brécol","Coliflor","Espárragos","Pepino","Apio","Lechuga","Rúcula","Setas","Pimiento","Judías verdes","Berenjena","Calabacín"],
-    "🧀 Lácteos":["Queso curado","Queso de cabra","Mozzarella","Mantequilla","Nata","Yogur griego natural","Kéfir"],
+    "🥦 Verduras bajas en carbos":["Acelgas","Apio","Berenjena","Berenjena rayada","Brócoli","Calabacín verde","Calabacín blanco","Canónigos","Cebollino","Col rizada","Coliflor","Espárragos verdes","Espinacas","Judía verde","Judía plana","Lechuga romana","Lechuga iceberg","Pepino","Pimiento rojo","Pimiento verde","Pimientos tricolor","Rúcula","Setas","Seta shiitake","Champiñones","Champiñón portobello","Tomate cherry","Zanahoria"],
+    "🌿 Hierbas aromáticas":["Albahaca","Cilantro","Cúrcuma","Jengibre","Perejil"],
+    "🧀 Lácteos":["Queso curado","Queso de cabra","Mozzarella","Mantequilla","Nata","Yogur griego","Kéfir"],
     "🌰 Frutos secos y semillas":["Almendras","Nueces","Nueces de macadamia","Avellanas","Semillas de chía","Semillas de lino","Semillas de sésamo"],
     "🍎 Frutas bajas en azúcar":["Arándanos","Fresas","Frambuesas","Moras","Limón"],
-    "🌿 Condimentos":["Ajo","Jengibre","Cúrcuma","Vinagre de manzana","Mostaza","Hierbas frescas"],
+    "🌿 Condimentos":["Ajo","Ajo negro","Jengibre","Cúrcuma","Vinagre de manzana","Mostaza"],
     "🍫 Ocasionales":["Chocolate negro 85%","Eritritol","Stevia"]
   }}
 };
 
-const ANTI_FOODS = new Set(["Aceite de oliva","Aceite de coco","Aceite de aguacate","Aceite de macadamia","Aceite de nuez","Aceite de sésamo","Aceitunas","Ghee","Aguacate","Ajo","Alcachofas","Berros","Brécol","Boniato","Cebolla","Col rizada","Coles de Bruselas","Coliflor","Espárragos","Espinacas","Rúcula","Setas","Zanahoria","Remolacha","Arándanos","Frambuesas","Fresas","Moras","Granada","Kiwi","Manzana","Pollo","Pavo","Salmón","Sardinas","Anchoas","Atún","Huevos","Gambas","Mejillones","Ostras","Kéfir","Yogur de cabra","Yogur de coco","Queso de cabra","Leche de coco","Chucrut","Kimchi","Miso","Nueces","Almendras","Nueces de macadamia","Semillas de lino","Semillas de sésamo","Semillas de chía","Cúrcuma","Jengibre","Albahaca","Perejil","Cilantro","Menta","Lentejas","Garbanzos","Alubias negras","Chocolate negro 85%","Chocolate negro 70%","Chocolate negro 72%","Stevia","Eritritol","Limón","Parmesano","Vinagre","Té verde","Cordero","Pato","Venado","Atún enlatado"]);
+const ANTI_FOODS = new Set(["Aceite de oliva","Aceite de coco","Aceite de aguacate","Aceite de macadamia","Aceite de nuez","Aceite de sésamo","Aceitunas","Ghee","Aguacate","Ajo","Ajo tierno","Ajo negro","Alcachofa","Apio","Berenjena","Boniato","Brócoli","Calabacín verde","Calabacín blanco","Calabaza","Canónigos","Cebolla","Cebolla tierna","Cebolla morada","Cebollino","Col lombarda","Col rizada","Coliflor","Endibia","Escarola","Espárragos verdes","Espárrago grueso","Espinacas","Acelgas","Judía verde","Judía plana","Lechuga romana","Lechuga iceberg","Maíz dulce","Nabo","Perejil","Pimiento rojo","Pimiento verde","Pimientos tricolor","Puerro","Rabanitos","Remolacha","Rúcula","Seta shiitake","Setas","Mix de setas","Champiñones","Champiñón portobello","Tomate","Tomate cherry","Tomate pera","Zanahoria","Zanahoria rallada","Arándanos","Frambuesas","Fresas","Granada","Kiwi","Manzana","Melocotón","Moras","Pera","Pollo","Pavo","Salmón","Sardinas","Anchoas","Atún","Huevos","Gambas","Mejillones","Ostras","Kéfir","Yogur de coco","Queso de cabra","Leche de coco","Chucrut","Kimchi","Miso","Nueces","Almendras","Nueces de macadamia","Semillas de lino","Semillas de sésamo","Semillas de chía","Cúrcuma","Jengibre","Albahaca","Perejil","Cilantro","Menta","Hierbabuena","Lentejas","Garbanzos","Alubias negras","Chocolate negro 85%","Chocolate negro 70%","Chocolate negro 72%","Stevia","Eritritol","Limón","Parmesano","Vinagre de manzana","Té verde","Cordero","Pato","Venado"]);
 
 const SUPER_MAP = {
-  "Aceite de oliva":["mercadona","lidl","consum"],"Aceite de coco":["mercadona","lidl"],"Aceite de aguacate":["mercadona"],"Aceite de girasol":["mercadona","lidl","consum"],"Aceitunas":["mercadona","lidl","consum"],"Ghee":["mercadona"],"Mantequilla":["mercadona","lidl","consum"],"Margarina vegana":["mercadona","lidl"],"Aguacate":["mercadona","lidl","consum"],"Ajo":["mercadona","lidl","consum"],"Brécol":["mercadona","lidl","consum"],"Coliflor":["mercadona","lidl","consum"],"Espinacas":["mercadona","lidl","consum"],"Col rizada":["mercadona","lidl"],"Boniato":["mercadona","lidl","consum"],"Zanahoria":["mercadona","lidl","consum"],"Cebolla":["mercadona","lidl","consum"],"Tomate":["mercadona","lidl","consum"],"Setas":["mercadona","lidl","consum"],"Puerros":["mercadona","lidl","consum"],"Espárragos":["mercadona","lidl","consum"],"Rúcula":["mercadona","lidl","consum"],"Berenjena":["mercadona","lidl","consum"],"Pimiento":["mercadona","lidl","consum"],"Pepino":["mercadona","lidl","consum"],"Calabacín":["mercadona","lidl","consum"],"Apio":["mercadona","lidl","consum"],"Lechuga":["mercadona","lidl","consum"],"Remolacha":["mercadona","lidl","consum"],"Arándanos":["mercadona","lidl","consum"],"Fresas":["mercadona","lidl","consum"],"Manzana":["mercadona","lidl","consum"],"Pera":["mercadona","lidl","consum"],"Naranja":["mercadona","lidl","consum"],"Kiwi":["mercadona","lidl","consum"],"Banana":["mercadona","lidl","consum"],"Frambuesas":["mercadona","lidl","consum"],"Mango":["mercadona","lidl"],"Melocotón":["mercadona","lidl","consum"],"Limón":["mercadona","lidl","consum"],"Pollo":["mercadona","lidl","consum"],"Pavo":["mercadona","lidl","consum"],"Ternera":["mercadona","lidl","consum"],"Cerdo":["mercadona","lidl","consum"],"Cordero":["mercadona","lidl"],"Salmón":["mercadona","lidl","consum"],"Sardinas":["mercadona","lidl","consum"],"Atún":["mercadona","lidl","consum"],"Caballa":["mercadona","lidl"],"Huevos":["mercadona","lidl","consum"],"Gambas":["mercadona","lidl","consum"],"Mejillones":["mercadona","lidl","consum"],"Pescado blanco":["mercadona","lidl","consum"],"Almejas":["mercadona","lidl","consum"],"Bacon":["mercadona","lidl","consum"],"Jamón curado":["mercadona","lidl","consum"],"Kéfir":["mercadona","consum"],"Yogur natural":["mercadona","lidl","consum"],"Yogur griego":["mercadona","lidl","consum"],"Queso de cabra":["mercadona","lidl","consum"],"Queso curado":["mercadona","lidl","consum"],"Mozzarella":["mercadona","lidl","consum"],"Parmesano":["mercadona","lidl","consum"],"Leche de coco":["mercadona","lidl"],"Leche de almendra":["mercadona","lidl","consum"],"Leche de avena":["mercadona","lidl","consum"],"Leche de soja":["mercadona","lidl","consum"],"Yogur de coco":["mercadona","lidl"],"Nata":["mercadona","lidl","consum"],"Nueces":["mercadona","lidl","consum"],"Almendras":["mercadona","lidl","consum"],"Pistachos":["mercadona","lidl","consum"],"Avellanas":["mercadona","lidl","consum"],"Nueces de macadamia":["mercadona"],"Semillas de lino":["mercadona","lidl"],"Semillas de sésamo":["mercadona","lidl"],"Semillas de chía":["mercadona","lidl","consum"],"Tahini":["mercadona","consum"],"Lentejas":["mercadona","lidl","consum"],"Garbanzos":["mercadona","lidl","consum"],"Alubias negras":["mercadona","lidl","consum"],"Alubias blancas":["mercadona","lidl","consum"],"Tofu":["mercadona","consum"],"Tempeh":["consum"],"Seitán":["mercadona","consum"],"Arroz integral":["mercadona","lidl","consum"],"Avena":["mercadona","lidl","consum"],"Quinoa":["mercadona","lidl","consum"],"Mijo":["lidl","consum"],"Pan integral":["mercadona","lidl","consum"],"Pasta integral":["mercadona","lidl","consum"],"Cúrcuma":["mercadona","lidl","consum"],"Jengibre":["mercadona","lidl","consum"],"Miso":["consum"],"Chucrut":["lidl","consum"],"Kimchi":["consum","lidl"],"Chocolate negro 85%":["mercadona","lidl","consum"],"Chocolate negro 70%":["mercadona","lidl","consum"],"Chocolate negro 72%":["mercadona","lidl","consum"],"Eritritol":["mercadona"],"Stevia":["mercadona","lidl","consum"],"Vinagre de manzana":["mercadona","lidl","consum"],"Mostaza":["mercadona","lidl","consum"]
+  // Aceites y grasas
+  "Aceite de oliva":["mercadona","lidl","consum"],"Aceite de coco":["mercadona","lidl"],"Aceite de aguacate":["mercadona"],"Aceite de girasol":["mercadona","lidl","consum"],"Aceitunas":["mercadona","lidl","consum"],"Ghee":["mercadona"],"Mantequilla":["mercadona","lidl","consum"],"Margarina vegana":["mercadona","lidl"],"Nata":["mercadona","lidl","consum"],
+  // Verduras — patatas y tubérculos
+  "Patata":["mercadona","lidl","consum"],"Patatas rojas":["mercadona","consum"],"Patatas guarnición":["mercadona","consum"],"Batata":["mercadona","consum"],"Boniato":["mercadona","lidl","consum"],"Yuca":["mercadona","consum"],
+  // Verduras — cebolla y ajo
+  "Cebolla":["mercadona","lidl","consum"],"Cebolla tierna":["mercadona","consum"],"Cebolla dulce":["mercadona","consum"],"Cebolla morada":["mercadona","consum"],"Cebolla francesa":["consum"],"Cebollino":["mercadona","consum"],"Ajo":["mercadona","lidl","consum"],"Ajo tierno":["mercadona","consum"],"Ajo negro":["mercadona","consum"],
+  // Verduras — tomate
+  "Tomate":["mercadona","lidl","consum"],"Tomate canario":["mercadona","consum"],"Tomate pera":["mercadona","consum"],"Tomate cherry":["mercadona","lidl","consum"],"Tomate negro":["mercadona","consum"],"Tomate en rama":["mercadona","consum"],"Tomate rallado":["mercadona","consum"],
+  // Verduras — pimiento y calabacín
+  "Pimiento rojo":["mercadona","lidl","consum"],"Pimiento verde":["mercadona","lidl","consum"],"Pimiento italiano":["consum"],"Pimientos tricolor":["mercadona","consum"],"Pimiento picante":["consum"],"Pimiento padrón":["consum"],"Calabacín verde":["mercadona","lidl","consum"],"Calabacín blanco":["mercadona","consum"],
+  // Verduras — col y brásicas
+  "Brócoli":["mercadona","lidl","consum"],"Coliflor":["mercadona","lidl","consum"],"Repollo":["mercadona","consum"],"Col lombarda":["mercadona","consum"],"Col rizada":["mercadona","consum"],
+  // Verduras — zanahoria y raíces
+  "Zanahoria":["mercadona","lidl","consum"],"Zanahoria rallada":["mercadona","consum"],"Palitos de zanahoria":["mercadona","consum"],"Remolacha":["mercadona","lidl","consum"],"Rabanitos":["mercadona","consum"],"Nabo":["mercadona","consum"],"Chirivía":["consum"],
+  // Verduras — pepino
+  "Pepino":["mercadona","lidl","consum"],
+  // Verduras — hoja verde
+  "Espinacas":["mercadona","lidl","consum"],"Acelgas":["mercadona","lidl","consum"],"Rúcula":["mercadona","lidl","consum"],"Lechuga romana":["mercadona","lidl","consum"],"Lechuga iceberg":["mercadona","lidl","consum"],"Canónigos":["mercadona","lidl","consum"],"Endibia":["mercadona","consum"],"Escarola":["consum"],
+  // Verduras — setas
+  "Champiñones":["mercadona","lidl","consum"],"Champiñón portobello":["mercadona","consum"],"Champiñón laminado":["mercadona","consum"],"Setas":["mercadona","lidl","consum"],"Seta shiitake":["consum"],"Mix de setas":["mercadona","consum"],
+  // Verduras — otras hortalizas
+  "Berenjena":["mercadona","lidl","consum"],"Berenjena rayada":["mercadona","consum"],"Judía verde":["mercadona","lidl","consum"],"Judía plana":["mercadona","consum"],"Puerro":["mercadona","lidl","consum"],"Alcachofa":["mercadona","lidl","consum"],"Calabaza":["mercadona","consum"],"Apio":["mercadona","lidl","consum"],"Espárragos verdes":["mercadona","lidl","consum"],"Espárrago grueso":["mercadona","consum"],"Maíz dulce":["mercadona","consum"],"Cardo":["consum"],
+  // Hierbas aromáticas
+  "Perejil":["mercadona","lidl","consum"],"Cilantro":["mercadona","lidl","consum"],"Albahaca":["mercadona","lidl","consum"],"Hierbabuena":["mercadona","consum"],"Menta":["mercadona","consum"],"Jengibre":["mercadona","lidl","consum"],"Cúrcuma":["mercadona","lidl","consum"],
+  // Frutas
+  "Aguacate":["mercadona","lidl","consum"],"Arándanos":["mercadona","lidl","consum"],"Fresas":["mercadona","lidl","consum"],"Frambuesas":["mercadona","lidl","consum"],"Manzana":["mercadona","lidl","consum"],"Pera":["mercadona","lidl","consum"],"Naranja":["mercadona","lidl","consum"],"Kiwi":["mercadona","lidl","consum"],"Banana":["mercadona","lidl","consum"],"Mango":["mercadona","lidl"],"Melocotón":["mercadona","lidl","consum"],"Limón":["mercadona","lidl","consum"],"Granada":["mercadona","lidl","consum"],"Moras":["mercadona","lidl","consum"],
+  // Proteínas animales
+  "Pollo":["mercadona","lidl","consum"],"Pavo":["mercadona","lidl","consum"],"Ternera":["mercadona","lidl","consum"],"Cerdo":["mercadona","lidl","consum"],"Cordero":["mercadona","lidl"],"Bacon":["mercadona","lidl","consum"],"Jamón curado":["mercadona","lidl","consum"],"Salmón":["mercadona","lidl","consum"],"Sardinas":["mercadona","lidl","consum"],"Atún":["mercadona","lidl","consum"],"Caballa":["mercadona","lidl"],"Huevos":["mercadona","lidl","consum"],"Gambas":["mercadona","lidl","consum"],"Mejillones":["mercadona","lidl","consum"],"Pescado blanco":["mercadona","lidl","consum"],"Almejas":["mercadona","lidl","consum"],"Anchoas":["mercadona","lidl","consum"],
+  // Lácteos
+  "Kéfir":["mercadona","consum"],"Yogur natural":["mercadona","lidl","consum"],"Yogur griego":["mercadona","lidl","consum"],"Queso de cabra":["mercadona","lidl","consum"],"Queso curado":["mercadona","lidl","consum"],"Mozzarella":["mercadona","lidl","consum"],"Parmesano":["mercadona","lidl","consum"],"Leche de coco":["mercadona","lidl"],"Leche de almendra":["mercadona","lidl","consum"],"Leche de avena":["mercadona","lidl","consum"],"Leche de soja":["mercadona","lidl","consum"],"Yogur de coco":["mercadona","lidl"],
+  // Frutos secos y semillas
+  "Nueces":["mercadona","lidl","consum"],"Almendras":["mercadona","lidl","consum"],"Pistachos":["mercadona","lidl","consum"],"Avellanas":["mercadona","lidl","consum"],"Nueces de macadamia":["mercadona"],"Semillas de lino":["mercadona","lidl"],"Semillas de sésamo":["mercadona","lidl"],"Semillas de chía":["mercadona","lidl","consum"],"Tahini":["mercadona","consum"],
+  // Legumbres
+  "Lentejas":["mercadona","lidl","consum"],"Garbanzos":["mercadona","lidl","consum"],"Alubias negras":["mercadona","lidl","consum"],"Alubias blancas":["mercadona","lidl","consum"],"Guisantes":["mercadona","lidl","consum"],"Habas":["mercadona","consum"],"Tofu":["mercadona","consum"],"Tempeh":["consum"],"Seitán":["mercadona","consum"],
+  // Cereales
+  "Arroz integral":["mercadona","lidl","consum"],"Avena":["mercadona","lidl","consum"],"Quinoa":["mercadona","lidl","consum"],"Mijo":["lidl","consum"],"Pan integral":["mercadona","lidl","consum"],"Pasta integral":["mercadona","lidl","consum"],
+  // Fermentados y otros
+  "Miso":["consum"],"Chucrut":["lidl","consum"],"Kimchi":["consum","lidl"],
+  // Dulces y edulcorantes
+  "Chocolate negro 85%":["mercadona","lidl","consum"],"Chocolate negro 70%":["mercadona","lidl","consum"],"Chocolate negro 72%":["mercadona","lidl","consum"],"Eritritol":["mercadona"],"Stevia":["mercadona","lidl","consum"],
+  // Condimentos
+  "Vinagre de manzana":["mercadona","lidl","consum"],"Mostaza":["mercadona","lidl","consum"]
 };
 
 let currentDiet = 'antiinflamatoria';
